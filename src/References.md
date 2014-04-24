@@ -9,6 +9,8 @@
 
 [Brian Beckman: Don't fear the Monad](https://www.youtube.com/watch?v=ZhuHCtR3xq8&list=PLk1rxAmpqRVLeBfjaQnULpDrN-FI9BOij)
 
+[Learn You a Haskell for Great Good!](http://learnyouahaskell.com/introduction)
+
 ### Scalaz
 [Scalaz - The Good Parts](http://www.youtube.com/watch?v=jPdHQZnF56A)
 
