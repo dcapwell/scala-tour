@@ -17,7 +17,7 @@ Collections.sort(myArray, oddNumbersFirst)
 ```
 This basic idea gives the developer using these apis flexability with how to reuse them.  In the above example, the array is placing all odd numbers first.
 
-## Taking it further
+## The Scala Way
 In scala, there is short hand for this kind of behavior; implicits.  Lets go over the example above in a more scala friendly way.
 ```scala
 trait Comparator[T] {
@@ -36,9 +36,57 @@ object Foo {
     }
 }
 
-List(Foo("david"), Foo("john")).sorted
+List(Foo("hi"), Foo("there")).sorted
 ```
 As we see, the user no longer needs to care about providing a comparator since the compiler will do that for us.  If we want to override and use a different one, we are still free to.
 ```scala
-List(Foo("david"), Foo("john")).sorted(reverse(Foo.naturalComparator))
+List(Foo("hi"), Foo("there")).sorted(reverse(Foo.naturalComparator))
+```
+## Taking It Further
+Now that we see the core idea, can we find more places where they can come in handy?  One easy one is to provide a type safe equals method!
+```scala
+trait Equal[A] {
+    def equal(a1: A, a2: A): Boolean
+}
+
+implicit class EqualOpt[A](val self: A) extends AnyVal {
+    def ===(a2: A)(implicit eq: Equal[A]): Boolean = eq.equal(self, a2)
+    def =/=(a2: A)(implicit eq: Equal[A]): Boolean = !eq.equal(self, a2)
+}
+
+class Foo(val name: String)
+object Foo {
+    def apply(name: String): Foo = new Foo(name)
+    implicit val naturalEqual: Equal[Foo] = new Equal[Foo] {
+        def equal(a1: Foo, a2: Foo): Boolean = a1.name == a2.name
+    }
+}
+import Foo._
+Foo("hi") === Foo("there") // returns false
+Foo("hi") === Foo("hi") // returns true
+// Foo("hi") === "1" // compiler rejects this
+```
+What about serialization to json, protobuf, etc.?
+```scala
+trait Serialize[T, O] {
+    def serialize(t: T): O
+}
+implicit class SerializeOpt[A](val self: A) extends AnyVal {
+    def serialize[O](implicit ser: Serialize[A, O]): O = ser.serialize(self)
+}
+
+class Node(val value: String)
+object Node {
+    type Json = String
+    type Length = Int
+    implicit val jsonSer: Serialize[Node, Json] = new Serialize[Node, Json] {
+        def serialize(t: Node): Json = s"{'value': '${t.value}'}"
+    }
+    implicit val avroSer: Serialize[Node, Length] = new Serialize[Node, Length] {
+        def serialize(t: Node): Length = t.value.length
+    }
+}
+import Node._
+val json: Json = new Node("hi").serialize[Json] // {'value': 'hi'}
+val avro: Length = new Node("hi").serialize[Length] // 2
 ```
