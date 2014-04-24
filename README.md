@@ -9,4 +9,4 @@ $ npm install -g grunt-cli
 $ npm install
 ```
 
-The page can be (found here)[http://dcapwell.github.io/scala-tour/README.html]
+The page can be [found here](http://dcapwell.github.io/scala-tour/README.html)
