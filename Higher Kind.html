@@ -182,7 +182,7 @@ Foo<span class="hljs-string">'s kind is (* -&gt; *) -&gt; *. This is a type cons
     <span class="hljs-keyword">def</span> leftFold[A, B](ob: F[A])(zero: B)(fn: (B, A) =&gt; B): B
 }
 </code></pre>
-<p>Now lets tie this to lists</p>
+<p>Now lets tie this to <code>List</code></p>
 <pre><code class="lang-scala">implicit <span class="hljs-keyword">val</span> listFolable: Foldable[List] = <span class="hljs-keyword">new</span> Foldable[List] {
     <span class="hljs-keyword">def</span> leftFold[A, B](ob: List[A])(zero: B)(fn: (B, A) =&gt; B): B =
         ob.foldLeft(zero)(fn)
