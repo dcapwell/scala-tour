@@ -1,1 +1,3 @@
 _book
+.grunt
+node_modules

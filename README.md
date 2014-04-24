@@ -1,3 +1,10 @@
-# Scala Tour
+# Scala Tour Book
 
-This doc is my list of features and ideas implemented in scala.
+## Setup
+
+```
+# Install Grunt
+$ npm install -g grunt-cli
+# install dependencies
+$ npm install
+```
