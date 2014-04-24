@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
+        
+        <meta charset="UTF-8">
+        <title>Value Classes | Scala Tour</title>
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="robots" content="index, follow">
+        <meta name="author" content="dcapwell">
+        <meta name="description" content="My location for adding scala findings">
+        <meta name="keywords" content="gitbook,github" >
+        <meta name="generator" content="www.gitbook.io">
+
+        
+        <link rel="next" href="./Type Classes.html" />
+        
+        
+        <link rel="prev" href="./Types.html" />
+        
+
+        <meta property="og:title" content="Value Classes | Scala Tour">
+        <meta property="og:site_name" content="Scala Tour">
+        <meta property="og:type" content="book">
+        <meta property="og:locale" content="en_US">
+
+        <meta property="book:author" content="https://github.com/dcapwell">
+        <meta property="book:tag" content="GitBook">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+        
+        <link rel="stylesheet" href="gitbook/style.css">
+        
+        
+    </head>
+    <body>
+        
+<div class="book" data-github="dcapwell/scala-tour" data-level="2.1">
+    <div class="book-header">
+    <!-- Actions Left -->
+    <a href="https://github.com/dcapwell/scala-tour" target="_blank" class="btn pull-left"><i class="fa fa-github-alt"></i></a>
+    <a href="#" class="btn pull-left toggle-summary"><i class="fa fa-align-justify"></i></a>
+
+    <!-- Actions Right -->
+    <a href="#" target="_blank" class="btn pull-right" data-sharing="google-plus"><i class="fa fa-google-plus"></i></a>
+    <a href="#" target="_blank" class="btn pull-right" data-sharing="facebook"><i class="fa fa-facebook"></i></a>
+    <a href="#" target="_blank" class="btn pull-right" data-sharing="twitter"><i class="fa fa-twitter"></i></a>
+
+    <a href="https://github.com/dcapwell/scala-tour/stargazers" target="_blank" class="btn pull-right count-star"><i class="fa fa-star-o"></i> Star (<span>-</span>)</a>
+    <a href="https://github.com/dcapwell/scala-tour/watchers" target="_blank" class="btn pull-right count-watch"><i class="fa fa-eye"></i> Watch (<span>-</span>)</a>
+
+
+    <!-- Title -->
+    <h1><a href="./README.html" >Scala Tour</a></h1>
+</div>
+
+    <div class="book-summary">
+    <ul class="summary">
+        <li>
+            <a href="https://github.com/dcapwell" target="blank">About the author</a>
+        </li>
+        <li>
+            <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
+        </li>
+        <li>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/Value Classes.md" target="blank">Edit and Contribute</a>
+        </li>
+        <li class="divider"></li>
+        <li data-level="0">
+            <a href="./README.html"><i class="fa fa-check"></i> Introduction</a>
+        </li>
+        
+            <li  data-level="1">
+                
+                <a href="./Language.html">
+                    <i class="fa fa-check"></i> <b>1)</b> Language
+                </a>
+                
+                
+            </li>
+        
+            <li  data-level="2">
+                
+                <a href="./Types.html">
+                    <i class="fa fa-check"></i> <b>2)</b> Types
+                </a>
+                
+                
+                <ul class="articles">
+                    
+                        <li  data-level="2.1">
+                            
+                            <a href="./Value Classes.html">
+                                <i class="fa fa-check"></i> <b>2.1)</b> Value Classes
+                            </a>
+                            
+                        </li>
+                    
+                        <li  data-level="2.2">
+                            
+                            <a href="./Type Classes.html">
+                                <i class="fa fa-check"></i> <b>2.2)</b> Type Classes
+                            </a>
+                            
+                        </li>
+                    
+                </ul>
+                
+            </li>
+        
+            <li  data-level="3">
+                
+                <a href="./References.html">
+                    <i class="fa fa-check"></i> <b>3)</b> References
+                </a>
+                
+                
+            </li>
+        
+    </ul>
+</div>
+
+    <div class="book-body" tabindex="-1">
+        <div class="page-wrapper">
+            <div class="book-progress">
+    <div class="bar">
+        <div class="inner" style="width: 60%;min-width: 40%;"></div>
+    </div>
+    <div class="chapters">
+    
+        <a href="./README.html" title="Introduction" class="chapter done new-chapter" data-progress="0" style="left: 0%;"></a>
+    
+        <a href="./Language.html" title="Language" class="chapter done new-chapter" data-progress="1" style="left: 20%;"></a>
+    
+        <a href="./Types.html" title="Types" class="chapter done new-chapter" data-progress="2" style="left: 40%;"></a>
+    
+        <a href="./Value Classes.html" title="Value Classes" class="chapter done " data-progress="2.1" style="left: 60%;"></a>
+    
+        <a href="./Type Classes.html" title="Type Classes" class="chapter  " data-progress="2.2" style="left: 80%;"></a>
+    
+        <a href="./References.html" title="References" class="chapter  new-chapter" data-progress="3" style="left: 100%;"></a>
+    
+    </div>
+</div>
+
+            <div class="page-inner">
+            
+                <section class="normal" id="section-gitbook_6">
+                
+                    <h1 id="value-classes">Value Classes</h1>
+<p>In java you had primative types (<code>int</code>, <code>long</code>, <code>double</code>, <code>float</code>, etc.) and their wrapper objects (<code>Integer</code>, <code>Long</code>, <code>Double</code>, <code>Float</code>, etc.).  &quot;Autoboxing&quot; was the process of the java compiler to switch back and forth between a object and a primative depending on the context.  You had no way of taking advantage of this autoboxing in your own types.  Thats where value classes comes in!</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span><span class="hljs-params">(val name: String)</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AnyVal</span> {</span>
+  <span class="hljs-keyword">def</span> print = println(name)
+}
+</code></pre>
+<p>The above is simple, but very powerful.  Lets go over it more in detail</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span><span class="hljs-params">(val name: String)</span></span>
+</code></pre>
+<p>The first part of this statement is like any normal class.  There are a few things to call out that make this class different from others: name is <code>val</code> and class takes exactly one paramater, and no case statement in front of class.</p>
+<p>The next part</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">extends</span> AnyVal
+</code></pre>
+<p>is how we let scala know that we are creating a value class.</p>
+<p>The rest of the statement looks like any other class</p>
+<pre><code class="lang-scala">{
+  <span class="hljs-keyword">def</span> print = println(name)
+}
+</code></pre>
+<p>we define a method print that will take the value of name and pass it to println.</p>
+<p>So whats so special here?  What scala will do for us is replace code that talks to <code>Foo</code> directly and replace them with function calls.  Lets try looking at javap to see if this gets more clear.</p>
+<pre><code class="lang-scala">:javap Foo
+public <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">java</span>.<span class="hljs-title">lang</span>.<span class="hljs-title">Object</span>{</span>
+    public java.lang.String name();
+    public void print();
+    public int hashCode();
+    public boolean equals(java.lang.Object);
+    public Foo(java.lang.String);
+}
+</code></pre>
+<p>There is nothing special here, this looks like very other reference type.  So how does scala remove the reference to Foo for the callers?  By sending them to the companion object.</p>
+<pre><code class="lang-scala">:javap Foo$
+public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span>$ <span class="hljs-keyword">extends</span> <span class="hljs-title">java</span>.<span class="hljs-title">lang</span>.<span class="hljs-title">Object</span>{</span>
+    public static <span class="hljs-keyword">final</span> Foo$ MODULE$;
+    public static {};
+    public <span class="hljs-keyword">final</span> void print$extension(java.lang.String);
+    public <span class="hljs-keyword">final</span> int hashCode$extension(java.lang.String);
+    public <span class="hljs-keyword">final</span> boolean equals$extension(java.lang.String, java.lang.Object);
+    public Foo$();
+}
+</code></pre>
+<p>See the <code>void print$extension(java.lang.String)</code> function there?  That function is what scala will select for the caller to try to avoid the object creation overhead.  The <code>$extension</code> postfix is given to all methods from the Foo class and has the same logic that the method has, but acts on a argument rather than field/method lookup.</p>
+<p>So, why should I care?  This seems more of a microlevel optomisation, so why would I need this?  Well, one nice place to put this is in implicit classes.</p>
+<pre><code class="lang-scala">scala&gt; implicit <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BetterIntOpt</span><span class="hljs-params">(val value: Int)</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AnyVal</span> {</span>
+     | <span class="hljs-keyword">def</span> makeBetter = <span class="hljs-number">42</span> + value
+     | }
+defined <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BetterIntOpt</span></span>
+
+scala&gt; <span class="hljs-number">1</span> makeBetter
+res0: Int = <span class="hljs-number">43</span>
+
+scala&gt; :javap BetterIntOpt$
+Compiled from <span class="hljs-string">"&lt;console&gt;"</span>
+public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BetterIntOpt</span>$ <span class="hljs-keyword">extends</span> <span class="hljs-title">java</span>.<span class="hljs-title">lang</span>.<span class="hljs-title">Object</span>{</span>
+    public static <span class="hljs-keyword">final</span> BetterIntOpt$ MODULE$;
+    public static {};
+    public <span class="hljs-keyword">final</span> int makeBetter$extension(int);
+    public <span class="hljs-keyword">final</span> int hashCode$extension(int);
+    public <span class="hljs-keyword">final</span> boolean equals$extension(int, java.lang.Object);
+    public BetterIntOpt$();
+}
+</code></pre>
+<p>When the compile see <code>1 makeBetter</code> it will rewrite it out as <code>BetterIntOpt$.makeBetter$extension(1)</code> and skip the object creation.</p>
+
+                
+                </section>
+            
+            </div>
+
+            <div class="page-footer">
+    
+        
+            
+            <a href="./Type Classes.html" class="navigation-link next">Next</a>
+            
+        
+    
+</div>
+        </div>
+    </div>
+</div>
+
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/mode-javascript.js"></script>
+        <script src="gitbook/jsrepl/jsrepl.js" id="jsrepl-script"></script>
+        <script src="gitbook/app.js"></script>
+        
+    </body>
+</html>

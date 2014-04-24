@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
+        
+        <meta charset="UTF-8">
+        <title>Type Classes | Scala Tour</title>
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="robots" content="index, follow">
+        <meta name="author" content="dcapwell">
+        <meta name="description" content="My location for adding scala findings">
+        <meta name="keywords" content="gitbook,github" >
+        <meta name="generator" content="www.gitbook.io">
+
+        
+        <link rel="next" href="./References.html" />
+        
+        
+        <link rel="prev" href="./Value Classes.html" />
+        
+
+        <meta property="og:title" content="Type Classes | Scala Tour">
+        <meta property="og:site_name" content="Scala Tour">
+        <meta property="og:type" content="book">
+        <meta property="og:locale" content="en_US">
+
+        <meta property="book:author" content="https://github.com/dcapwell">
+        <meta property="book:tag" content="GitBook">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+        
+        <link rel="stylesheet" href="gitbook/style.css">
+        
+        
+    </head>
+    <body>
+        
+<div class="book" data-github="dcapwell/scala-tour" data-level="2.2">
+    <div class="book-header">
+    <!-- Actions Left -->
+    <a href="https://github.com/dcapwell/scala-tour" target="_blank" class="btn pull-left"><i class="fa fa-github-alt"></i></a>
+    <a href="#" class="btn pull-left toggle-summary"><i class="fa fa-align-justify"></i></a>
+
+    <!-- Actions Right -->
+    <a href="#" target="_blank" class="btn pull-right" data-sharing="google-plus"><i class="fa fa-google-plus"></i></a>
+    <a href="#" target="_blank" class="btn pull-right" data-sharing="facebook"><i class="fa fa-facebook"></i></a>
+    <a href="#" target="_blank" class="btn pull-right" data-sharing="twitter"><i class="fa fa-twitter"></i></a>
+
+    <a href="https://github.com/dcapwell/scala-tour/stargazers" target="_blank" class="btn pull-right count-star"><i class="fa fa-star-o"></i> Star (<span>-</span>)</a>
+    <a href="https://github.com/dcapwell/scala-tour/watchers" target="_blank" class="btn pull-right count-watch"><i class="fa fa-eye"></i> Watch (<span>-</span>)</a>
+
+
+    <!-- Title -->
+    <h1><a href="./README.html" >Scala Tour</a></h1>
+</div>
+
+    <div class="book-summary">
+    <ul class="summary">
+        <li>
+            <a href="https://github.com/dcapwell" target="blank">About the author</a>
+        </li>
+        <li>
+            <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
+        </li>
+        <li>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/Type Classes.md" target="blank">Edit and Contribute</a>
+        </li>
+        <li class="divider"></li>
+        <li data-level="0">
+            <a href="./README.html"><i class="fa fa-check"></i> Introduction</a>
+        </li>
+        
+            <li  data-level="1">
+                
+                <a href="./Language.html">
+                    <i class="fa fa-check"></i> <b>1)</b> Language
+                </a>
+                
+                
+            </li>
+        
+            <li  data-level="2">
+                
+                <a href="./Types.html">
+                    <i class="fa fa-check"></i> <b>2)</b> Types
+                </a>
+                
+                
+                <ul class="articles">
+                    
+                        <li  data-level="2.1">
+                            
+                            <a href="./Value Classes.html">
+                                <i class="fa fa-check"></i> <b>2.1)</b> Value Classes
+                            </a>
+                            
+                        </li>
+                    
+                        <li  data-level="2.2">
+                            
+                            <a href="./Type Classes.html">
+                                <i class="fa fa-check"></i> <b>2.2)</b> Type Classes
+                            </a>
+                            
+                        </li>
+                    
+                </ul>
+                
+            </li>
+        
+            <li  data-level="3">
+                
+                <a href="./References.html">
+                    <i class="fa fa-check"></i> <b>3)</b> References
+                </a>
+                
+                
+            </li>
+        
+    </ul>
+</div>
+
+    <div class="book-body" tabindex="-1">
+        <div class="page-wrapper">
+            <div class="book-progress">
+    <div class="bar">
+        <div class="inner" style="width: 80%;min-width: 60%;"></div>
+    </div>
+    <div class="chapters">
+    
+        <a href="./README.html" title="Introduction" class="chapter done new-chapter" data-progress="0" style="left: 0%;"></a>
+    
+        <a href="./Language.html" title="Language" class="chapter done new-chapter" data-progress="1" style="left: 20%;"></a>
+    
+        <a href="./Types.html" title="Types" class="chapter done new-chapter" data-progress="2" style="left: 40%;"></a>
+    
+        <a href="./Value Classes.html" title="Value Classes" class="chapter done " data-progress="2.1" style="left: 60%;"></a>
+    
+        <a href="./Type Classes.html" title="Type Classes" class="chapter done " data-progress="2.2" style="left: 80%;"></a>
+    
+        <a href="./References.html" title="References" class="chapter  new-chapter" data-progress="3" style="left: 100%;"></a>
+    
+    </div>
+</div>
+
+            <div class="page-inner">
+            
+                <section class="normal" id="section-gitbook_4">
+                
+                    <h1 id="type-classes">Type Classes</h1>
+<p>Type classes are a functional way to get inheritence like behavior and polymorphism without relying on inheritence.  The core idea for type classes is that you seperate the behavior from the class that gets effected by it.  Before going into type classes in scala, lets go over type classes in java.</p>
+<pre><code class="lang-java">public interface Comparator&lt;T&gt; {
+    int compare(T o1, T o2);
+}
+
+public interface Comparable&lt;T&gt; {
+    public int compareTo(T o);
+}
+</code></pre>
+<p>Most people will be familiar with <code>Comparator</code> and <code>Comparable</code> if they have dealt with collection sorting and/or <code>TreeMap</code>.  When working with sorting a collection, you tell the sort method how to compare items together and then <code>sort</code> will use that to determine order.</p>
+<pre><code class="lang-java">Collections.sort(myArray, oddNumbersFirst)
+</code></pre>
+<p>This basic idea gives the developer using these apis flexability with how to reuse them.  In the above example, the array is placing all odd numbers first.</p>
+<h2 id="the-scala-way">The Scala Way</h2>
+<p>In scala, there is short hand for this kind of behavior; implicits.  Lets go over the example above in a more scala friendly way.</p>
+<pre><code class="lang-scala">trait Comparator[T] {
+    def compare(t1: T, t2: T): Int
+}
+// Think of T &lt;: Comparable[T] as weird syntax for "the implementing type"
+trait Comparable[T &lt;: Comparable[T]] { self: T =&gt;
+    def compareTo(t2: T)(implicit comp: Comparator[T]): Int = comp.compare(self, t2)
+}
+</code></pre>
+<p>The main change between the <code>Comparable</code> here and the java one above is that it relies on <code>Comparator</code> implicitly.  How would this look like to the user?</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Age</span><span class="hljs-params">(val age: Int)</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Comparable</span>[<span class="hljs-title">Age</span>]</span>
+<span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Age</span> {</span>
+    <span class="hljs-keyword">def</span> apply(age: Int): Age = <span class="hljs-keyword">new</span> Age(age)
+
+    implicit <span class="hljs-keyword">val</span> naturalAgeComparator: Comparator[Age] = <span class="hljs-keyword">new</span> Comparator[Age] {
+        <span class="hljs-keyword">def</span> compare(t1: Age, t2: Age): Int = t1.age - t2.age
+    }
+}
+<span class="hljs-keyword">import</span> Age._
+Age(<span class="hljs-number">1</span>) compareTo Age(<span class="hljs-number">2</span>) <span class="hljs-comment">// -1</span>
+Age(<span class="hljs-number">1</span>) compareTo Age(<span class="hljs-number">1</span>) <span class="hljs-comment">// 0</span>
+<span class="hljs-comment">// Age(1) compareTo 1 // won't compile</span>
+</code></pre>
+<p>As we see, the user no longer needs to care about providing a <code>Comparator</code> since the compiler will do that for us.  If we want to override and use a different one, we are still free to (unlike the java one).</p>
+<pre><code class="lang-scala">Age(<span class="hljs-number">1</span>).compareTo(Age(<span class="hljs-number">2</span>))(Age.naturalAgeComparator) <span class="hljs-comment">// -1</span>
+</code></pre>
+<h2 id="taking-it-further">Taking It Further</h2>
+<p>Now that we see the core idea, can we find more places where they can come in handy?  One easy one is to provide a type safe equals method!</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Equal</span>[<span class="hljs-title">A</span>] {</span>
+    <span class="hljs-keyword">def</span> equal(a1: A, a2: A): Boolean
+}
+
+<span class="hljs-comment">// acts like the Comparable trait, but doesn't rely on extending the trait</span>
+implicit <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EqualOpt</span>[<span class="hljs-title">A</span>]<span class="hljs-params">(val self: A)</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AnyVal</span> {</span>
+    <span class="hljs-keyword">def</span> ===(a2: A)(implicit eq: Equal[A]): Boolean = eq.equal(self, a2)
+    <span class="hljs-keyword">def</span> =/=(a2: A)(implicit eq: Equal[A]): Boolean = !eq.equal(self, a2)
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span><span class="hljs-params">(val name: String)</span></span>
+<span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Foo</span> {</span>
+    <span class="hljs-keyword">def</span> apply(name: String): Foo = <span class="hljs-keyword">new</span> Foo(name)
+    implicit <span class="hljs-keyword">val</span> naturalEqual: Equal[Foo] = <span class="hljs-keyword">new</span> Equal[Foo] {
+        <span class="hljs-keyword">def</span> equal(a1: Foo, a2: Foo): Boolean = a1.name == a2.name
+    }
+}
+<span class="hljs-keyword">import</span> Foo._
+Foo(<span class="hljs-string">"hi"</span>) === Foo(<span class="hljs-string">"there"</span>) <span class="hljs-comment">// returns false</span>
+Foo(<span class="hljs-string">"hi"</span>) === Foo(<span class="hljs-string">"hi"</span>) <span class="hljs-comment">// returns true</span>
+<span class="hljs-comment">// Foo("hi") === "1" // compiler rejects this</span>
+</code></pre>
+<p>What about serialization to json, protobuf, etc.?</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Serialize</span>[<span class="hljs-title">T</span>, <span class="hljs-title">O</span>] {</span>
+    <span class="hljs-keyword">def</span> serialize(t: T): O
+}
+implicit <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SerializeOpt</span>[<span class="hljs-title">A</span>]<span class="hljs-params">(val self: A)</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AnyVal</span> {</span>
+    <span class="hljs-keyword">def</span> serialize[O](implicit ser: Serialize[A, O]): O = ser.serialize(self)
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Node</span><span class="hljs-params">(val value: String)</span></span>
+<span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Node</span> {</span>
+    <span class="hljs-keyword">type</span> Json = String
+    <span class="hljs-keyword">type</span> Length = Int
+    implicit <span class="hljs-keyword">val</span> jsonSer: Serialize[Node, Json] = <span class="hljs-keyword">new</span> Serialize[Node, Json] {
+        <span class="hljs-keyword">def</span> serialize(t: Node): Json = s<span class="hljs-string">"{'value': '${t.value}'}"</span>
+    }
+    implicit <span class="hljs-keyword">val</span> lengthSer: Serialize[Node, Length] = <span class="hljs-keyword">new</span> Serialize[Node, Length] {
+        <span class="hljs-keyword">def</span> serialize(t: Node): Length = t.value.length
+    }
+}
+<span class="hljs-keyword">import</span> Node._
+<span class="hljs-keyword">new</span> Node(<span class="hljs-string">"hi"</span>).serialize[Json] <span class="hljs-comment">// {'value': 'hi'}</span>
+<span class="hljs-keyword">new</span> Node(<span class="hljs-string">"hi"</span>).serialize[Length] <span class="hljs-comment">// 2</span>
+</code></pre>
+
+                
+                </section>
+            
+            </div>
+
+            <div class="page-footer">
+    
+        
+            
+            <a href="./References.html" class="navigation-link next">Next</a>
+            
+        
+    
+</div>
+        </div>
+    </div>
+</div>
+
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/mode-javascript.js"></script>
+        <script src="gitbook/jsrepl/jsrepl.js" id="jsrepl-script"></script>
+        <script src="gitbook/app.js"></script>
+        
+    </body>
+</html>
