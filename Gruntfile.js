@@ -8,8 +8,9 @@ module.exports = function (grunt) {
     grunt.initConfig({
         'gitbook': {
             development: {
-                dest: path.join(__dirname, ".grunt/gitbook"),
+                dest: path.join(__dirname, ".grunt/gitbook/site"),
                 input: "./src",
+                format: "site",
                 title: "Scala Tour",
                 description: "My location for adding scala findings",
                 github: "dcapwell/scala-tour"
