@@ -10,15 +10,18 @@ public interface Comparable<T> {
     public int compareTo(T o);
 }
 ```
+
 Most people will be familiar with `Comparator` and `Comparable` if they have dealt with collection sorting and/or `TreeMap`.  When working with sorting a collection, you tell the sort method how to compare items together and then `sort` will use that to determine order.
 
 ```java
 Collections.sort(myArray, oddNumbersFirst)
 ```
+
 This basic idea gives the developer using these apis flexability with how to reuse them.  In the above example, the array is placing all odd numbers first.
 
 ## The Scala Way
 In scala, there is short hand for this kind of behavior; implicits.  Lets go over the example above in a more scala friendly way.
+
 ```scala
 trait Comparator[T] {
     def compare(t1: T, t2: T): Int
@@ -28,7 +31,9 @@ trait Comparable[T <: Comparable[T]] { self: T =>
     def compareTo(t2: T)(implicit comp: Comparator[T]): Int = comp.compare(self, t2)
 }
 ```
+
 The main change between the `Comparable` here and the java one above is that it relies on `Comparator` implicitly.  How would this look like to the user?
+
 ```scala
 class Age(val age: Int) extends Comparable[Age]
 object Age {
@@ -43,12 +48,16 @@ Age(1) compareTo Age(2) // -1
 Age(1) compareTo Age(1) // 0
 // Age(1) compareTo 1 // won't compile
 ```
+
 As we see, the user no longer needs to care about providing a `Comparator` since the compiler will do that for us.  If we want to override and use a different one, we are still free to (unlike the java one).
+
 ```scala
 Age(1).compareTo(Age(2))(Age.naturalAgeComparator) // -1
 ```
+
 ## Taking It Further
 Now that we see the core idea, can we find more places where they can come in handy?  One easy one is to provide a type safe equals method!
+
 ```scala
 trait Equal[A] {
     def equal(a1: A, a2: A): Boolean
@@ -72,7 +81,9 @@ Foo("hi") === Foo("there") // returns false
 Foo("hi") === Foo("hi") // returns true
 // Foo("hi") === "1" // compiler rejects this
 ```
+
 What about serialization to json, protobuf, etc.?
+
 ```scala
 trait Serialize[T, O] {
     def serialize(t: T): O

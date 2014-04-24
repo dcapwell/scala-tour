@@ -27,7 +27,7 @@ trait Foldable[F[_]] {
 }
 ```
 
-Now lets tie this to lists
+Now lets tie this to `List`
 
 ```scala
 implicit val listFolable: Foldable[List] = new Foldable[List] {
