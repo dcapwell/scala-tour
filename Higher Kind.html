@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
         
         <meta charset="UTF-8">
-        <title>Types | Scala Tour</title>
+        <title>Higher Kind | Scala Tour</title>
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="robots" content="index, follow">
@@ -13,13 +13,13 @@
         <meta name="generator" content="www.gitbook.io">
 
         
-        <link rel="next" href="./Value Classes.html" />
+        <link rel="next" href="./References.html" />
         
         
-        <link rel="prev" href="./Language.html" />
+        <link rel="prev" href="./Type Classes.html" />
         
 
-        <meta property="og:title" content="Types | Scala Tour">
+        <meta property="og:title" content="Higher Kind | Scala Tour">
         <meta property="og:site_name" content="Scala Tour">
         <meta property="og:type" content="book">
         <meta property="og:locale" content="en_US">
@@ -40,7 +40,7 @@
     </head>
     <body>
         
-<div class="book" data-github="dcapwell/scala-tour" data-level="2">
+<div class="book" data-github="dcapwell/scala-tour" data-level="2.3">
     <div class="book-header">
     <!-- Actions Left -->
     <a href="https://github.com/dcapwell/scala-tour" target="_blank" class="btn pull-left"><i class="fa fa-github-alt"></i></a>
@@ -68,7 +68,7 @@
             <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
         </li>
         <li>
-            <a href="https://github.com/dcapwell/scala-tour/edit/master/Types.md" target="blank">Edit and Contribute</a>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/Higher Kind.md" target="blank">Edit and Contribute</a>
         </li>
         <li class="divider"></li>
         <li data-level="0">
@@ -137,7 +137,7 @@
         <div class="page-wrapper">
             <div class="book-progress">
     <div class="bar">
-        <div class="inner" style="width: 33.333333333333336%;min-width: 16.666666666666668%;"></div>
+        <div class="inner" style="width: 83.33333333333333%;min-width: 66.66666666666667%;"></div>
     </div>
     <div class="chapters">
     
@@ -147,11 +147,11 @@
     
         <a href="./Types.html" title="Types" class="chapter done new-chapter" data-progress="2" style="left: 33.333333333333336%;"></a>
     
-        <a href="./Value Classes.html" title="Value Classes" class="chapter  " data-progress="2.1" style="left: 50%;"></a>
+        <a href="./Value Classes.html" title="Value Classes" class="chapter done " data-progress="2.1" style="left: 50%;"></a>
     
-        <a href="./Type Classes.html" title="Type Classes" class="chapter  " data-progress="2.2" style="left: 66.66666666666667%;"></a>
+        <a href="./Type Classes.html" title="Type Classes" class="chapter done " data-progress="2.2" style="left: 66.66666666666667%;"></a>
     
-        <a href="./Higher Kind.html" title="Higher Kind" class="chapter  " data-progress="2.3" style="left: 83.33333333333333%;"></a>
+        <a href="./Higher Kind.html" title="Higher Kind" class="chapter done " data-progress="2.3" style="left: 83.33333333333333%;"></a>
     
         <a href="./References.html" title="References" class="chapter  new-chapter" data-progress="3" style="left: 100%;"></a>
     
@@ -160,10 +160,42 @@
 
             <div class="page-inner">
             
-                <section class="normal" id="section-gitbook_5">
+                <section class="normal" id="section-gitbook_1">
                 
-                    <h1 id="types">Types</h1>
-<p>Scala&#39;s type system is very complex if you are coming from a java background.  The different features will be covered in their own sections.</p>
+                    <h1 id="higher-kind">Higher Kind</h1>
+<p>A higher kind is the type of a type constructor.  So what does that mean?  Lets look at a basic generic trait.</p>
+<pre><code class="lang-scala">scala&gt; <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">MyList</span>[<span class="hljs-title">A</span>] {</span>
+  <span class="hljs-keyword">def</span> head: A
+  <span class="hljs-keyword">def</span> tail: MyList[A]
+}
+
+scala&gt; kind[MyList[String]
+MyList<span class="hljs-string">'s kind is * -&gt; *. This is a type constructor: a 1st-order-kinded type.</span>
+</code></pre>
+<p>The <code>MyList[String]</code> type is a 1st-order kinded type; the type of any <code>MyList</code> is paramaterized by <code>A</code>.  Think of <code>MyList</code> as a function for types as <code>A =&gt; MyList[A]</code> so given a type <code>A</code> we can created a new type <code>MyList[A]</code>.  So if <code>MyList</code> is a 1st-order kinded type, then what is a higher kind?  Well, what is a higher order function?  Its a function that accepts another function.  So what is a higher kinded type?  Its a type that is paramaterized by another type that is paramaterized.  Lets look at a simple example of this.</p>
+<pre><code class="lang-scala">scala&gt; <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Foo</span>[<span class="hljs-title">A</span>[<span class="hljs-title">_</span>]]</span>
+scala&gt; kind[Foo[List]]
+Foo<span class="hljs-string">'s kind is (* -&gt; *) -&gt; *. This is a type constructor that takes type constructor(s): a higher-kinded type.</span>
+</code></pre>
+<p>To make this more clear, lets create a trait <code>Folable</code> that will add the ability to <code>leftFold</code>.</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Foldable</span>[<span class="hljs-title">F</span>[<span class="hljs-title">_</span>]] {</span>
+    <span class="hljs-keyword">def</span> leftFold[A, B](ob: F[A])(zero: B)(fn: (B, A) =&gt; B): B
+}
+</code></pre>
+<p>Now lets tie this to lists</p>
+<pre><code class="lang-scala">implicit <span class="hljs-keyword">val</span> listFolable: Foldable[List] = <span class="hljs-keyword">new</span> Foldable[List] {
+    <span class="hljs-keyword">def</span> leftFold[A, B](ob: List[A])(zero: B)(fn: (B, A) =&gt; B): B =
+        ob.foldLeft(zero)(fn)
+}
+
+<span class="hljs-keyword">import</span> scala.language.implicitConversions
+implicit <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ListFoldableOpt</span>[<span class="hljs-title">A</span>]<span class="hljs-params">(list: List[A])</span><span class="hljs-params">(implicit fold: Foldable[List])</span> {</span>
+    <span class="hljs-keyword">def</span> leftFold[B](zero: B)(fn: (B, A) =&gt; B): B =
+        fold.leftFold(list)(zero)(fn)
+}
+
+List(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>).foldLeft(<span class="hljs-number">0</span>)(_ + _) <span class="hljs-comment">// 6</span>
+</code></pre>
 
                 
                 </section>
@@ -174,7 +206,7 @@
     
         
             
-            <a href="./Value Classes.html" class="navigation-link next">Next</a>
+            <a href="./References.html" class="navigation-link next">Next</a>
             
         
     
