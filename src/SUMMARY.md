@@ -5,5 +5,7 @@
     * [Value Classes](Value Classes.md)
     * [Type Classes](Type Classes.md)
     * [Higher Kind](Higher Kind.md)
+* Scalaz
+    * [Tag Types](Tag Types.md)
 * [References](References.md)
 
