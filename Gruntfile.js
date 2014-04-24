@@ -18,7 +18,7 @@ module.exports = function (grunt) {
         },
         'gh-pages': {
             options: {
-                base: '.grunt/gitbook'
+                base: '.grunt/gitbook/site'
             },
             src: ['**']
         },
