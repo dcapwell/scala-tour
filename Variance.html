@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
         
         <meta charset="UTF-8">
-        <title>Introduction | Scala Tour</title>
+        <title>Variance | Scala Tour</title>
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="robots" content="index, follow">
@@ -13,11 +13,13 @@
         <meta name="generator" content="www.gitbook.io">
 
         
-        <link rel="next" href="./Language.html" />
+        <link rel="next" href="./Value Classes.html" />
         
+        
+        <link rel="prev" href="./Types.html" />
         
 
-        <meta property="og:title" content="Introduction | Scala Tour">
+        <meta property="og:title" content="Variance | Scala Tour">
         <meta property="og:site_name" content="Scala Tour">
         <meta property="og:type" content="book">
         <meta property="og:locale" content="en_US">
@@ -38,7 +40,7 @@
     </head>
     <body>
         
-<div class="book" data-github="dcapwell/scala-tour" data-level="0">
+<div class="book" data-github="dcapwell/scala-tour" data-level="2.1">
     <div class="book-header">
     <!-- Actions Left -->
     <a href="https://github.com/dcapwell/scala-tour" target="_blank" class="btn pull-left"><i class="fa fa-github-alt"></i></a>
@@ -66,7 +68,7 @@
             <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
         </li>
         <li>
-            <a href="https://github.com/dcapwell/scala-tour/edit/master/README.md" target="blank">Edit and Contribute</a>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/Variance.md" target="blank">Edit and Contribute</a>
         </li>
         <li class="divider"></li>
         <li data-level="0">
@@ -209,19 +211,19 @@
         <div class="page-wrapper">
             <div class="book-progress">
     <div class="bar">
-        <div class="inner" style="width: 0%;min-width: 0%;"></div>
+        <div class="inner" style="width: 28.571428571428573%;min-width: 21.428571428571427%;"></div>
     </div>
     <div class="chapters">
     
         <a href="./README.html" title="Introduction" class="chapter done new-chapter" data-progress="0" style="left: 0%;"></a>
     
-        <a href="./Language.html" title="Language" class="chapter  new-chapter" data-progress="1" style="left: 7.142857142857143%;"></a>
+        <a href="./Language.html" title="Language" class="chapter done new-chapter" data-progress="1" style="left: 7.142857142857143%;"></a>
     
-        <a href="./Partial Function.html" title="Partial Function" class="chapter  " data-progress="1.1" style="left: 14.285714285714286%;"></a>
+        <a href="./Partial Function.html" title="Partial Function" class="chapter done " data-progress="1.1" style="left: 14.285714285714286%;"></a>
     
-        <a href="./Types.html" title="Types" class="chapter  new-chapter" data-progress="2" style="left: 21.428571428571427%;"></a>
+        <a href="./Types.html" title="Types" class="chapter done new-chapter" data-progress="2" style="left: 21.428571428571427%;"></a>
     
-        <a href="./Variance.html" title="Variance" class="chapter  " data-progress="2.1" style="left: 28.571428571428573%;"></a>
+        <a href="./Variance.html" title="Variance" class="chapter done " data-progress="2.1" style="left: 28.571428571428573%;"></a>
     
         <a href="./Value Classes.html" title="Value Classes" class="chapter  " data-progress="2.2" style="left: 35.714285714285715%;"></a>
     
@@ -248,10 +250,87 @@
 
             <div class="page-inner">
             
-                <section class="normal" id="section-gitbook_6">
+                <section class="normal" id="section-gitbook_15">
                 
-                    <h1 id="scala-tour">Scala Tour</h1>
-<p>This doc is my list of features and ideas implemented in scala.</p>
+                    <h1 id="variance-and-bounds">Variance and Bounds</h1>
+<h2 id="variance">Variance</h2>
+<p>When you have a type T and a type T&#39; which extends that type, the question to ask is is Container[T&#39;] considered a sublcass of Container[T]?  Variace annotations lets you controll when this is the case or not.</p>
+<p>Scala notation</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Meaning</th>
+<th>Scala notation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>covariant</strong></td>
+<td>C[T’] is a subclass of C[T]</td>
+<td>[+T]</td>
+</tr>
+<tr>
+<td><strong>contravariant</strong></td>
+<td>C[T] is a subclass of C[T’]</td>
+<td>[-T]</td>
+</tr>
+<tr>
+<td><strong>invariant</strong></td>
+<td>C[T] and C[T’] are not related</td>
+<td>[T]</td>
+</tr>
+</tbody>
+</table>
+<p>Lets go into a example</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Covariant</span>[+<span class="hljs-title">A</span>]</span>
+<span class="hljs-keyword">val</span> cv: Covariant[AnyRef] = <span class="hljs-keyword">new</span> Covariant[String]
+<span class="hljs-comment">// val cv: Covariant[String] = new Covariant[AnyRef] // type mismatch</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Contravariant</span>[-<span class="hljs-title">A</span>]</span>
+<span class="hljs-keyword">val</span> cv: Contravariant[String] = <span class="hljs-keyword">new</span> Contravariant[AnyRef]
+<span class="hljs-comment">// val fail: Contravariant[AnyRef] = new Contravariant[String] // type mismatch</span>
+</code></pre>
+<h2 id="bounds">Bounds</h2>
+<p>In java you had the ability to define <code>super</code> and/or <code>extends</code> to try to define what can be accepted.  Scala lets you do the same but with a different syntax:</p>
+<p>Lower bound</p>
+<pre><code class="lang-scala">A &lt;: B
+</code></pre>
+<p>Upper bound</p>
+<pre><code class="lang-scala">A &gt;: B
+</code></pre>
+<p>Lets see an example</p>
+<pre><code class="lang-scala">class Foo
+class Bar extends Foo
+class Baz extends Bar
+
+trait Container[A]
+// put lower bound of Foo
+case class FooContainer[A &lt;: Foo](foo: A) extends Container[A]
+FooContainer(new Foo)
+// FooContainer[Foo]
+FooContainer(new Bar)
+// FooContainer[Bar]
+FooContainer(new Baz)
+// FooContainer[Baz]
+// FooContainer(1)
+// compiler error
+
+case class BarContainer(bar: Bar) extends Container[Bar]
+BarContainer(new Bar)
+// BarContainer
+BarContainer(new Baz)
+// BarContainer
+
+// put a upper bound on Baz
+case class BazContainer[A &gt;: Baz](baz: A) extends Container[A]
+BazContainer(new Baz)
+// BazContainer[Baz]
+BazContainer(new Foo)
+// BazContainer[Foo]
+BazContainer(1)
+// BazContainer[Any]
+</code></pre>
 
                 
                 </section>
@@ -260,7 +339,11 @@
 
             <div class="page-footer">
     
-        <a href="./Language.html" class="navigation-link">Start</a>
+        
+            
+            <a href="./Value Classes.html" class="navigation-link next">Next</a>
+            
+        
     
 </div>
         </div>
