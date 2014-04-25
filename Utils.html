@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
         
         <meta charset="UTF-8">
-        <title>Higher Kind | Scala Tour</title>
+        <title>Utils | Scala Tour</title>
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="robots" content="index, follow">
@@ -13,13 +13,13 @@
         <meta name="generator" content="www.gitbook.io">
 
         
-        <link rel="next" href="./Path Dependent Types.html" />
+        <link rel="next" href="./Tag Types.html" />
         
         
-        <link rel="prev" href="./Type Classes.html" />
+        <link rel="prev" href="./Scalaz.html" />
         
 
-        <meta property="og:title" content="Higher Kind | Scala Tour">
+        <meta property="og:title" content="Utils | Scala Tour">
         <meta property="og:site_name" content="Scala Tour">
         <meta property="og:type" content="book">
         <meta property="og:locale" content="en_US">
@@ -40,7 +40,7 @@
     </head>
     <body>
         
-<div class="book" data-github="dcapwell/scala-tour" data-level="2.3">
+<div class="book" data-github="dcapwell/scala-tour" data-level="4.1">
     <div class="book-header">
     <!-- Actions Left -->
     <a href="https://github.com/dcapwell/scala-tour" target="_blank" class="btn pull-left"><i class="fa fa-github-alt"></i></a>
@@ -68,7 +68,7 @@
             <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
         </li>
         <li>
-            <a href="https://github.com/dcapwell/scala-tour/edit/master/Higher Kind.md" target="blank">Edit and Contribute</a>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/Utils.md" target="blank">Edit and Contribute</a>
         </li>
         <li class="divider"></li>
         <li data-level="0">
@@ -183,7 +183,7 @@
         <div class="page-wrapper">
             <div class="book-progress">
     <div class="bar">
-        <div class="inner" style="width: 45.45454545454545%;min-width: 36.36363636363637%;"></div>
+        <div class="inner" style="width: 81.81818181818181%;min-width: 72.72727272727273%;"></div>
     </div>
     <div class="chapters">
     
@@ -199,13 +199,13 @@
     
         <a href="./Higher Kind.html" title="Higher Kind" class="chapter done " data-progress="2.3" style="left: 45.45454545454545%;"></a>
     
-        <a href="./Path Dependent Types.html" title="Path Dependent Types" class="chapter  " data-progress="2.4" style="left: 54.54545454545455%;"></a>
+        <a href="./Path Dependent Types.html" title="Path Dependent Types" class="chapter done " data-progress="2.4" style="left: 54.54545454545455%;"></a>
     
-        <a href="./Patterns.html" title="Patterns" class="chapter  new-chapter" data-progress="3" style="left: 63.63636363636363%;"></a>
+        <a href="./Patterns.html" title="Patterns" class="chapter done new-chapter" data-progress="3" style="left: 63.63636363636363%;"></a>
     
-        <a href="./Scalaz.html" title="Scalaz" class="chapter  new-chapter" data-progress="4" style="left: 72.72727272727273%;"></a>
+        <a href="./Scalaz.html" title="Scalaz" class="chapter done new-chapter" data-progress="4" style="left: 72.72727272727273%;"></a>
     
-        <a href="./Utils.html" title="Utils" class="chapter  " data-progress="4.1" style="left: 81.81818181818181%;"></a>
+        <a href="./Utils.html" title="Utils" class="chapter done " data-progress="4.1" style="left: 81.81818181818181%;"></a>
     
         <a href="./Tag Types.html" title="Tag Types" class="chapter  " data-progress="4.2" style="left: 90.9090909090909%;"></a>
     
@@ -216,41 +216,85 @@
 
             <div class="page-inner">
             
-                <section class="normal" id="section-gitbook_1">
+                <section class="normal" id="section-gitbook_11">
                 
-                    <h1 id="higher-kind">Higher Kind</h1>
-<p>A higher kind is the type of a type constructor.  So what does that mean?  Lets look at a basic generic trait.</p>
-<pre><code class="lang-scala">scala&gt; <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">MyList</span>[<span class="hljs-title">A</span>] {</span>
-  <span class="hljs-keyword">def</span> head: A
-  <span class="hljs-keyword">def</span> tail: MyList[A]
-}
-
-scala&gt; kind[MyList[String]
-MyList<span class="hljs-string">'s kind is * -&gt; *. This is a type constructor: a 1st-order-kinded type.</span>
+                    <h1 id="utils">Utils</h1>
+<p>This section will go over useful functions of scalaz.  All examples need to import scalaz</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">import</span> scalaz._, Scalaz._
 </code></pre>
-<p>The <code>MyList[String]</code> type is a 1st-order kinded type; the type of any <code>MyList</code> is paramaterized by <code>A</code>.  Think of <code>MyList</code> as a function for types as <code>A =&gt; MyList[A]</code> so given a type <code>A</code> we can created a new type <code>MyList[A]</code>.  So if <code>MyList</code> is a 1st-order kinded type, then what is a higher kind?  Well, what is a higher order function?  Its a function that accepts another function.  So what is a higher kinded type?  Its a type that is paramaterized by another type that is paramaterized.  Lets look at a simple example of this.</p>
-<pre><code class="lang-scala">scala&gt; <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Foo</span>[<span class="hljs-title">A</span>[<span class="hljs-title">_</span>]]</span>
-scala&gt; kind[Foo[List]]
-Foo<span class="hljs-string">'s kind is (* -&gt; *) -&gt; *. This is a type constructor that takes type constructor(s): a higher-kinded type.</span>
+<h2 id="option">Option</h2>
+<p>In normal scala, you could use <code>Some(x)</code> or <code>Option(x)</code> as a way to create a <code>Option</code>, but some times it is cleaner if this could be chained</p>
+<pre><code class="lang-scala"><span class="hljs-comment">// creates Some(1)</span>
+<span class="hljs-number">1.</span>some
+<span class="hljs-comment">// return None</span>
+none
 </code></pre>
-<p>To make this more clear, lets create a trait <code>Folable</code> that will add the ability to <code>leftFold</code>.</p>
-<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Foldable</span>[<span class="hljs-title">F</span>[<span class="hljs-title">_</span>]] {</span>
-    <span class="hljs-keyword">def</span> leftFold[A, B](ob: F[A])(zero: B)(fn: (B, A) =&gt; B): B
-}
+<p>now that we have an <code>Option</code></p>
+<pre><code class="lang-scala"><span class="hljs-comment">// getOrElse</span>
+<span class="hljs-number">1.</span>some | <span class="hljs-number">20</span>
+<span class="hljs-comment">// 1</span>
+none | <span class="hljs-number">20</span>
+<span class="hljs-comment">// 20</span>
+
+<span class="hljs-comment">// getOrElse(Monoid[Int].zero)</span>
+~ <span class="hljs-number">10.</span>some
+<span class="hljs-comment">// 10</span>
+~ none[Int]
+<span class="hljs-comment">// 0</span>
+
+<span class="hljs-number">1.</span>some ? <span class="hljs-string">"found it"</span> | <span class="hljs-string">"nope"</span>
+
+<span class="hljs-number">1.</span>some err <span class="hljs-string">"won't get called"</span>
+<span class="hljs-comment">// 1</span>
+none err <span class="hljs-string">"not defined"</span>
+<span class="hljs-comment">// throws RuntimeException: not defined</span>
 </code></pre>
-<p>Now lets tie this to <code>List</code></p>
-<pre><code class="lang-scala">implicit <span class="hljs-keyword">val</span> listFolable: Foldable[List] = <span class="hljs-keyword">new</span> Foldable[List] {
-    <span class="hljs-keyword">def</span> leftFold[A, B](ob: List[A])(zero: B)(fn: (B, A) =&gt; B): B =
-        ob.foldLeft(zero)(fn)
-}
+<h2 id="booleans">Booleans</h2>
+<p>Scalaz adds a few methods to booleans.</p>
+<p>as <code>Option</code></p>
+<pre><code class="lang-scala">(<span class="hljs-number">1</span> &lt; <span class="hljs-number">10</span>) option <span class="hljs-number">1</span>
+<span class="hljs-comment">// Some(1)</span>
+(<span class="hljs-number">1</span> &gt; <span class="hljs-number">10</span>) option <span class="hljs-number">1</span>
+<span class="hljs-comment">// None</span>
+</code></pre>
+<p>conditional branching</p>
+<pre><code class="lang-scala">(<span class="hljs-number">1</span> &lt; <span class="hljs-number">10</span>) when println(<span class="hljs-string">"1 is less than 10"</span>)
+(<span class="hljs-number">1</span> &gt; <span class="hljs-number">10</span>) unless println(<span class="hljs-string">"1 is less than 10"</span>)
 
-<span class="hljs-keyword">import</span> scala.language.implicitConversions
-implicit <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ListFoldableOpt</span>[<span class="hljs-title">A</span>]<span class="hljs-params">(list: List[A])</span><span class="hljs-params">(implicit fold: Foldable[List])</span> {</span>
-    <span class="hljs-keyword">def</span> leftFold[B](zero: B)(fn: (B, A) =&gt; B): B =
-        fold.leftFold(list)(zero)(fn)
-}
+(<span class="hljs-number">1</span> &lt; <span class="hljs-number">10</span>) ? <span class="hljs-string">"less than 10"</span> | <span class="hljs-string">"greater than 10"</span>
 
-List(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>).foldLeft(<span class="hljs-number">0</span>)(_ + _) <span class="hljs-comment">// 6</span>
+(<span class="hljs-number">1</span> &lt; <span class="hljs-number">10</span>) either <span class="hljs-string">"left"</span> or <span class="hljs-string">"right"</span>
+<span class="hljs-comment">// \/[String,String] = -\/(left)</span>
+
+(<span class="hljs-number">1</span> &lt; <span class="hljs-number">10</span>) ?? <span class="hljs-number">7</span>
+<span class="hljs-comment">// 7</span>
+(<span class="hljs-number">1</span> &gt; <span class="hljs-number">10</span>) ?? <span class="hljs-number">7</span>
+<span class="hljs-comment">// 0</span>
+</code></pre>
+<h2 id="all-objects">All Objects</h2>
+<p>Ever wanted to map over a object even if its not a functor?</p>
+<pre><code class="lang-scala"><span class="hljs-number">20</span> |&gt; {_ =&gt; <span class="hljs-string">"hi"</span>}
+<span class="hljs-comment">// hi</span>
+<span class="hljs-number">1</span> + <span class="hljs-number">2</span> + <span class="hljs-number">3</span> |&gt; {_.point[List]}
+<span class="hljs-comment">// List(6)</span>
+<span class="hljs-number">1</span> + <span class="hljs-number">2</span> + <span class="hljs-number">3</span> |&gt; {_ * <span class="hljs-number">6</span>}
+<span class="hljs-comment">// 36</span>
+
+<span class="hljs-comment">// if the partial function matches the element, then the function is applied</span>
+<span class="hljs-comment">// if not, then Pointed[F].point(_) is used</span>
+<span class="hljs-number">42</span> visit { <span class="hljs-keyword">case</span> x <span class="hljs-keyword">if</span> x % <span class="hljs-number">2</span> == <span class="hljs-number">0</span> =&gt; List(x / <span class="hljs-number">2</span>) }
+<span class="hljs-comment">// List(21)</span>
+<span class="hljs-number">43</span> visit { <span class="hljs-keyword">case</span> x <span class="hljs-keyword">if</span> x % <span class="hljs-number">2</span> == <span class="hljs-number">0</span> =&gt; List(x / <span class="hljs-number">2</span>) }
+<span class="hljs-comment">// List(43)</span>
+
+<span class="hljs-comment">// ranges on Enum type class</span>
+<span class="hljs-number">1</span> |-&gt; <span class="hljs-number">10</span>
+<span class="hljs-comment">// List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)</span>
+</code></pre>
+<h2 id="java-interopt">Java Interopt</h2>
+<p>When working with java libraries, you may sometimes get a null back.  You could always run everything within an if check, or just <code>??</code> it.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> javaVal: String = <span class="hljs-keyword">null</span>
+javaVal ?? <span class="hljs-string">"javaVal is a null!"</span>
 </code></pre>
 
                 
@@ -262,7 +306,7 @@ List(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <sp
     
         
             
-            <a href="./Path Dependent Types.html" class="navigation-link next">Next</a>
+            <a href="./Tag Types.html" class="navigation-link next">Next</a>
             
         
     
