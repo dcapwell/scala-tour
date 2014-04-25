@@ -3,6 +3,8 @@
 ## General
 [Scala School](http://twitter.github.io/scala_school/)
 
+[danielwestheide - Path Dependent Types](http://danielwestheide.com/blog/2013/02/13/the-neophytes-guide-to-scala-part-13-path-dependent-types.html)
+
 ## Functional
 
 [The Typeclass Pattern - An Alternative to Inheritance](https://www.youtube.com/watch?v=yYo0gANYViE&list=PLk1rxAmpqRVLeBfjaQnULpDrN-FI9BOij)
