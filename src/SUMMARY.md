@@ -9,6 +9,7 @@
     * [Higher Kind](Higher Kind.md)
     * [Path Dependent Types](Path Dependent Types.md)
 * [Patterns](Patterns.md)
+    * [Cake](Cake.md)
 * [Scalaz](Scalaz.md)
     * [Utils](Utils.md)
     * [Tag Types](Tag Types.md)
