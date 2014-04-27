@@ -5,6 +5,8 @@
 
 [danielwestheide - Path Dependent Types](http://danielwestheide.com/blog/2013/02/13/the-neophytes-guide-to-scala-part-13-path-dependent-types.html)
 
+[Scala’s Types of Types](http://ktoso.github.io/scala-types-of-types/)
+
 ## Functional
 
 [The Typeclass Pattern - An Alternative to Inheritance](https://www.youtube.com/watch?v=yYo0gANYViE&list=PLk1rxAmpqRVLeBfjaQnULpDrN-FI9BOij)
@@ -12,6 +14,8 @@
 [Brian Beckman: Don't fear the Monad](https://www.youtube.com/watch?v=ZhuHCtR3xq8&list=PLk1rxAmpqRVLeBfjaQnULpDrN-FI9BOij)
 
 [Learn You a Haskell for Great Good!](http://learnyouahaskell.com/introduction)
+
+[Monads, Monoids, and Make Believe.](http://www.youtube.com/watch?v=ww2Z1URx-G0)
 
 ### Scalaz
 [Scalaz - The Good Parts](http://www.youtube.com/watch?v=jPdHQZnF56A)

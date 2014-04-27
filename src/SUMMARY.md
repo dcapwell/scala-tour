@@ -5,6 +5,7 @@
 * [Types](Types.md)
     * [Variance](Variance.md)
     * [Value Classes](Value Classes.md)
+    * [F-Bounded Type](F-Bounded Type.md)
     * [Type Classes](Type Classes.md)
     * [Higher Kind](Higher Kind.md)
     * [Path Dependent Types](Path Dependent Types.md)
