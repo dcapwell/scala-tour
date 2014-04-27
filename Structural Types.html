@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
         
         <meta charset="UTF-8">
-        <title>Introduction | Scala Tour</title>
+        <title>Structural Types | Scala Tour</title>
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="robots" content="index, follow">
@@ -13,11 +13,13 @@
         <meta name="generator" content="www.gitbook.io">
 
         
-        <link rel="next" href="./Language.html" />
+        <link rel="next" href="./Patterns.html" />
         
+        
+        <link rel="prev" href="./Phantom Type.html" />
         
 
-        <meta property="og:title" content="Introduction | Scala Tour">
+        <meta property="og:title" content="Structural Types | Scala Tour">
         <meta property="og:site_name" content="Scala Tour">
         <meta property="og:type" content="book">
         <meta property="og:locale" content="en_US">
@@ -38,7 +40,7 @@
     </head>
     <body>
         
-<div class="book" data-github="dcapwell/scala-tour" data-level="0">
+<div class="book" data-github="dcapwell/scala-tour" data-level="2.8">
     <div class="book-header">
     <!-- Actions Left -->
     <a href="https://github.com/dcapwell/scala-tour" target="_blank" class="btn pull-left"><i class="fa fa-github-alt"></i></a>
@@ -66,7 +68,7 @@
             <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
         </li>
         <li>
-            <a href="https://github.com/dcapwell/scala-tour/edit/master/README.md" target="blank">Edit and Contribute</a>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/Structural Types.md" target="blank">Edit and Contribute</a>
         </li>
         <li class="divider"></li>
         <li data-level="0">
@@ -245,33 +247,33 @@
         <div class="page-wrapper">
             <div class="book-progress">
     <div class="bar">
-        <div class="inner" style="width: 0%;min-width: 0%;"></div>
+        <div class="inner" style="width: 61.111111111111114%;min-width: 55.55555555555556%;"></div>
     </div>
     <div class="chapters">
     
         <a href="./README.html" title="Introduction" class="chapter done new-chapter" data-progress="0" style="left: 0%;"></a>
     
-        <a href="./Language.html" title="Language" class="chapter  new-chapter" data-progress="1" style="left: 5.555555555555555%;"></a>
+        <a href="./Language.html" title="Language" class="chapter done new-chapter" data-progress="1" style="left: 5.555555555555555%;"></a>
     
-        <a href="./Partial Function.html" title="Partial Function" class="chapter  " data-progress="1.1" style="left: 11.11111111111111%;"></a>
+        <a href="./Partial Function.html" title="Partial Function" class="chapter done " data-progress="1.1" style="left: 11.11111111111111%;"></a>
     
-        <a href="./Types.html" title="Types" class="chapter  new-chapter" data-progress="2" style="left: 16.666666666666668%;"></a>
+        <a href="./Types.html" title="Types" class="chapter done new-chapter" data-progress="2" style="left: 16.666666666666668%;"></a>
     
-        <a href="./Variance.html" title="Variance" class="chapter  " data-progress="2.1" style="left: 22.22222222222222%;"></a>
+        <a href="./Variance.html" title="Variance" class="chapter done " data-progress="2.1" style="left: 22.22222222222222%;"></a>
     
-        <a href="./Value Classes.html" title="Value Classes" class="chapter  " data-progress="2.2" style="left: 27.77777777777778%;"></a>
+        <a href="./Value Classes.html" title="Value Classes" class="chapter done " data-progress="2.2" style="left: 27.77777777777778%;"></a>
     
-        <a href="./F-Bounded Type.html" title="F-Bounded Type" class="chapter  " data-progress="2.3" style="left: 33.333333333333336%;"></a>
+        <a href="./F-Bounded Type.html" title="F-Bounded Type" class="chapter done " data-progress="2.3" style="left: 33.333333333333336%;"></a>
     
-        <a href="./Type Classes.html" title="Type Classes" class="chapter  " data-progress="2.4" style="left: 38.888888888888886%;"></a>
+        <a href="./Type Classes.html" title="Type Classes" class="chapter done " data-progress="2.4" style="left: 38.888888888888886%;"></a>
     
-        <a href="./Higher Kind.html" title="Higher Kind" class="chapter  " data-progress="2.5" style="left: 44.44444444444444%;"></a>
+        <a href="./Higher Kind.html" title="Higher Kind" class="chapter done " data-progress="2.5" style="left: 44.44444444444444%;"></a>
     
-        <a href="./Path Dependent Types.html" title="Path Dependent Types" class="chapter  " data-progress="2.6" style="left: 50%;"></a>
+        <a href="./Path Dependent Types.html" title="Path Dependent Types" class="chapter done " data-progress="2.6" style="left: 50%;"></a>
     
-        <a href="./Phantom Type.html" title="Phantom Type" class="chapter  " data-progress="2.7" style="left: 55.55555555555556%;"></a>
+        <a href="./Phantom Type.html" title="Phantom Type" class="chapter done " data-progress="2.7" style="left: 55.55555555555556%;"></a>
     
-        <a href="./Structural Types.html" title="Structural Types" class="chapter  " data-progress="2.8" style="left: 61.111111111111114%;"></a>
+        <a href="./Structural Types.html" title="Structural Types" class="chapter done " data-progress="2.8" style="left: 61.111111111111114%;"></a>
     
         <a href="./Patterns.html" title="Patterns" class="chapter  new-chapter" data-progress="3" style="left: 66.66666666666667%;"></a>
     
@@ -292,10 +294,81 @@
 
             <div class="page-inner">
             
-                <section class="normal" id="section-gitbook_11">
+                <section class="normal" id="section-gitbook_13">
                 
-                    <h1 id="scala-tour">Scala Tour</h1>
-<p>This doc is my list of features and ideas implemented in scala.</p>
+                    <h1 id="structural-types">Structural Types</h1>
+<p>When working in java for a long enough time, you will see that different libraries redefine types for themselves.  If you want to be able to work with the different types that structurally do the same thing then you had to define methods for each case.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> client = HiveMetaStoreClient
+<span class="hljs-keyword">val</span> file = open(<span class="hljs-string">"/tmp/hive-query"</span>)
+...
+close(file)   <span class="hljs-comment">// def close(c: Closeable)</span>
+close(client) <span class="hljs-comment">// def close(client: HiveMetaStoreClient)</span>
+</code></pre>
+<p>But really want you wanted was to say is <a href="http://youtu.be/U4EH0RtVlgE?t=35s" target="_blank">&quot;it looka like a closeable&quot;</a>.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">def</span> close(closeable: { <span class="hljs-keyword">def</span> close: Unit }) = closeable.close
+</code></pre>
+<p>This seems great but could make the types look weird.  Lets define an alias for this</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">type</span> Closeable = {
+    <span class="hljs-keyword">def</span> close: Unit
+}
+<span class="hljs-keyword">def</span> close(closeable: Closeable) = closeable.close
+</code></pre>
+<p>Now are <code>close</code> method is nice and clean, and can handle anything that &quot;looka like a closeable&quot;!</p>
+<p>Lets play with this a bit more: named things.</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span><span class="hljs-params">(name: String)</span></span>
+<span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Bar</span><span class="hljs-params">(name: String)</span></span>
+<span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Baz</span><span class="hljs-params">(noName: String)</span></span>
+
+<span class="hljs-keyword">def</span> name(named: { <span class="hljs-keyword">def</span> name: String }) = named.name
+
+name(Foo(<span class="hljs-string">"foo"</span>))
+<span class="hljs-comment">// foo</span>
+
+name(Bar(<span class="hljs-string">"bar"</span>))
+<span class="hljs-comment">// bar</span>
+
+name(Baz(<span class="hljs-string">"baz"</span>))
+&lt;console&gt;:<span class="hljs-number">37</span>: error: <span class="hljs-keyword">type</span> mismatch;
+ found   : Baz
+ required: AnyRef{<span class="hljs-keyword">def</span> name: String}
+              name(Baz(<span class="hljs-string">"baz"</span>))
+                      ^
+</code></pre>
+<p>Awesome!  The compiler will reject useage of objects that don&#39;t looka like a named thing!  This feels a lot like <a href="http://golang.org/doc/effective_go.html#interfaces_and_types" target="_blank">Go&#39;s interfaces</a> but on the JVM!  So, how does this work?  The JVM doesn&#39;t have support for this outside of using... reflection!  Yep, thats how structural types are implemented at runtime; they use reflection.  Structural types are a very powerful typing system, but since it uses reflection at runtime you will see a performance hit for using them.  As with most things related to performance, if you use this in the 20% that matter, then switching to multiple methods will give you a boost.</p>
+<p>I tend to find that I use structural types in my test code more often than in my main code.  Below is a snippet from one of my test cases that work accross multiple case classes that looka alike, but don&#39;t share a common trait.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">type</span> Idable = {
+    <span class="hljs-keyword">def</span> id: String
+}
+
+<span class="hljs-keyword">def</span> testIdExists(i: =&gt; Idable) = {
+    <span class="hljs-string">"where id should exist"</span> in {
+      i.id should not be(<span class="hljs-keyword">null</span>)
+    }
+}
+
+<span class="hljs-keyword">def</span> testIdsMatch(i1: =&gt; Idable)(i2: =&gt; Idable) = {
+    <span class="hljs-string">"where id is equal"</span> in {
+      i2.id should be (i1.id)
+    }
+}
+
+<span class="hljs-keyword">type</span> Trackable = {
+    <span class="hljs-keyword">def</span> createTS: DateTime
+    <span class="hljs-keyword">def</span> modTS: DateTime
+}
+
+<span class="hljs-keyword">def</span> testTrackableInit(t: =&gt; Trackable) = {
+    <span class="hljs-string">"that have matching timestamps for createTS and modTS"</span> in {
+      t.createTS should be(t.modTS)
+    }
+}
+
+<span class="hljs-keyword">def</span> testTrackableUpdate(t1: =&gt; Trackable)(t2: =&gt; Trackable) = {
+    <span class="hljs-string">"where modify is newer"</span> in {
+      t2.modTS.isAfter(t1.modTS) should be (<span class="hljs-keyword">true</span>)
+    }
+}
+</code></pre>
 
                 
                 </section>
@@ -304,7 +377,11 @@
 
             <div class="page-footer">
     
-        <a href="./Language.html" class="navigation-link">Start</a>
+        
+            
+            <a href="./Patterns.html" class="navigation-link next">Next</a>
+            
+        
     
 </div>
         </div>

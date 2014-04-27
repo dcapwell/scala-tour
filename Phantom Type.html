@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
         
         <meta charset="UTF-8">
-        <title>Introduction | Scala Tour</title>
+        <title>Phantom Type | Scala Tour</title>
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="robots" content="index, follow">
@@ -13,11 +13,13 @@
         <meta name="generator" content="www.gitbook.io">
 
         
-        <link rel="next" href="./Language.html" />
+        <link rel="next" href="./Structural Types.html" />
         
+        
+        <link rel="prev" href="./Path Dependent Types.html" />
         
 
-        <meta property="og:title" content="Introduction | Scala Tour">
+        <meta property="og:title" content="Phantom Type | Scala Tour">
         <meta property="og:site_name" content="Scala Tour">
         <meta property="og:type" content="book">
         <meta property="og:locale" content="en_US">
@@ -38,7 +40,7 @@
     </head>
     <body>
         
-<div class="book" data-github="dcapwell/scala-tour" data-level="0">
+<div class="book" data-github="dcapwell/scala-tour" data-level="2.7">
     <div class="book-header">
     <!-- Actions Left -->
     <a href="https://github.com/dcapwell/scala-tour" target="_blank" class="btn pull-left"><i class="fa fa-github-alt"></i></a>
@@ -66,7 +68,7 @@
             <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
         </li>
         <li>
-            <a href="https://github.com/dcapwell/scala-tour/edit/master/README.md" target="blank">Edit and Contribute</a>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/Phantom Type.md" target="blank">Edit and Contribute</a>
         </li>
         <li class="divider"></li>
         <li data-level="0">
@@ -245,31 +247,31 @@
         <div class="page-wrapper">
             <div class="book-progress">
     <div class="bar">
-        <div class="inner" style="width: 0%;min-width: 0%;"></div>
+        <div class="inner" style="width: 55.55555555555556%;min-width: 50%;"></div>
     </div>
     <div class="chapters">
     
         <a href="./README.html" title="Introduction" class="chapter done new-chapter" data-progress="0" style="left: 0%;"></a>
     
-        <a href="./Language.html" title="Language" class="chapter  new-chapter" data-progress="1" style="left: 5.555555555555555%;"></a>
+        <a href="./Language.html" title="Language" class="chapter done new-chapter" data-progress="1" style="left: 5.555555555555555%;"></a>
     
-        <a href="./Partial Function.html" title="Partial Function" class="chapter  " data-progress="1.1" style="left: 11.11111111111111%;"></a>
+        <a href="./Partial Function.html" title="Partial Function" class="chapter done " data-progress="1.1" style="left: 11.11111111111111%;"></a>
     
-        <a href="./Types.html" title="Types" class="chapter  new-chapter" data-progress="2" style="left: 16.666666666666668%;"></a>
+        <a href="./Types.html" title="Types" class="chapter done new-chapter" data-progress="2" style="left: 16.666666666666668%;"></a>
     
-        <a href="./Variance.html" title="Variance" class="chapter  " data-progress="2.1" style="left: 22.22222222222222%;"></a>
+        <a href="./Variance.html" title="Variance" class="chapter done " data-progress="2.1" style="left: 22.22222222222222%;"></a>
     
-        <a href="./Value Classes.html" title="Value Classes" class="chapter  " data-progress="2.2" style="left: 27.77777777777778%;"></a>
+        <a href="./Value Classes.html" title="Value Classes" class="chapter done " data-progress="2.2" style="left: 27.77777777777778%;"></a>
     
-        <a href="./F-Bounded Type.html" title="F-Bounded Type" class="chapter  " data-progress="2.3" style="left: 33.333333333333336%;"></a>
+        <a href="./F-Bounded Type.html" title="F-Bounded Type" class="chapter done " data-progress="2.3" style="left: 33.333333333333336%;"></a>
     
-        <a href="./Type Classes.html" title="Type Classes" class="chapter  " data-progress="2.4" style="left: 38.888888888888886%;"></a>
+        <a href="./Type Classes.html" title="Type Classes" class="chapter done " data-progress="2.4" style="left: 38.888888888888886%;"></a>
     
-        <a href="./Higher Kind.html" title="Higher Kind" class="chapter  " data-progress="2.5" style="left: 44.44444444444444%;"></a>
+        <a href="./Higher Kind.html" title="Higher Kind" class="chapter done " data-progress="2.5" style="left: 44.44444444444444%;"></a>
     
-        <a href="./Path Dependent Types.html" title="Path Dependent Types" class="chapter  " data-progress="2.6" style="left: 50%;"></a>
+        <a href="./Path Dependent Types.html" title="Path Dependent Types" class="chapter done " data-progress="2.6" style="left: 50%;"></a>
     
-        <a href="./Phantom Type.html" title="Phantom Type" class="chapter  " data-progress="2.7" style="left: 55.55555555555556%;"></a>
+        <a href="./Phantom Type.html" title="Phantom Type" class="chapter done " data-progress="2.7" style="left: 55.55555555555556%;"></a>
     
         <a href="./Structural Types.html" title="Structural Types" class="chapter  " data-progress="2.8" style="left: 61.111111111111114%;"></a>
     
@@ -292,10 +294,55 @@
 
             <div class="page-inner">
             
-                <section class="normal" id="section-gitbook_11">
+                <section class="normal" id="section-gitbook_9">
                 
-                    <h1 id="scala-tour">Scala Tour</h1>
-<p>This doc is my list of features and ideas implemented in scala.</p>
+                    <h1 id="phantom-type">Phantom Type</h1>
+<p>Have you ever worked with objects that could be in different states: open/closed, started/stopped, etc?  How many times have you forgot to check what state the object was in before working with it (I have tried to write to sockets that where closed way too many times)?  Ever wondered if you could move these checks into something that gets enforced other than wrapping it around a monad?  Thats where phantom types come in.</p>
+<p>A phantom type is a type that is not instantiate ever.  Instead of an object using the type directly, the type is used to enforce some logic.  Lets look at file handles to help explain this.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> fh = open(<span class="hljs-string">"/tmp/foo.txt"</span>)
+...
+fh.close
+...
+fh.write(<span class="hljs-string">"please be open"</span>) <span class="hljs-comment">// may fail some times cause fh has been closed.</span>
+</code></pre>
+<p>Lets make writing to files type safe in regards to closed state.</p>
+<pre><code class="lang-scala">sealed trait FileState
+final class Opened extends FileState
+final class Closed extends FileState
+
+trait FileHandle[State &lt;: FileState] {
+    def write[T &gt;: State &lt;: Opened](line: String): Unit
+    def close: FileHandle[Closed]
+}
+</code></pre>
+<p>Here we define a <code>FileState</code> that can be either <code>Opened</code> or <code>Closed</code>.  We have marked each method with the type that it can work with: <code>write</code> only works if the <code>FileHandle</code> is opened, <code>close</code> will mark the <code>FileHandle</code> as <code>Closed</code>.</p>
+<p>Lets see what happens when we try to <code>write</code> to a <code>Closed</code> file.</p>
+<pre><code class="lang-scala">// open a filehandle
+def open(path: String): FileHandle[Opened] = new FileHandle[Opened] {
+    def write[Opened](line: String): Unit = println(line)
+    def close: FileHandle[Closed] = this.asInstanceOf[FileHandle[Closed]]
+}
+
+val fh = open("/tmp/foo.txt")
+fh.write("bar")
+
+val fh2 = fh.close
+fh2.write("rejected son!")
+&lt;console&gt;:41: error: inferred type arguments [Closed] do not conform to method write's type parameter bounds [T &gt;: Closed &lt;: Opened]
+              fh2.write("rejected son!")
+                  ^
+</code></pre>
+<p>As we see here, the compiler will reject writing to files that are already closed!  But could the user try to break this?</p>
+<pre><code class="lang-scala">scala&gt; <span class="hljs-keyword">val</span> fh3: FileHandle[FileState] = fh.close
+&lt;console&gt;:<span class="hljs-number">39</span>: error: <span class="hljs-keyword">type</span> mismatch;
+ found   : FileHandle[Closed]
+ required: FileHandle[FileState]
+Note: Closed &lt;: FileState, but <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">FileHandle</span> <span class="hljs-title">is</span> <span class="hljs-title">invariant</span> <span class="hljs-title">in</span> <span class="hljs-title">type</span> <span class="hljs-title">State</span>.</span>
+You may wish to define State as +State instead. (SLS <span class="hljs-number">4.5</span>)
+       <span class="hljs-keyword">val</span> fh3: FileHandle[FileState] = fh.close
+                                           ^
+</code></pre>
+<p>Even if we could get from <code>Closed</code> to <code>FileState</code> we wouldn&#39;t be able to get to <code>Openeded</code>, so writing will still not be possible.</p>
 
                 
                 </section>
@@ -304,7 +351,11 @@
 
             <div class="page-footer">
     
-        <a href="./Language.html" class="navigation-link">Start</a>
+        
+            
+            <a href="./Structural Types.html" class="navigation-link next">Next</a>
+            
+        
     
 </div>
         </div>

@@ -9,6 +9,8 @@
     * [Type Classes](Type Classes.md)
     * [Higher Kind](Higher Kind.md)
     * [Path Dependent Types](Path Dependent Types.md)
+    * [Phantom Type](Phantom Type.md)
+    * [Structural Types](Structural Types.md)
 * [Patterns](Patterns.md)
     * [Cake](Cake.md)
 * [Scalaz](Scalaz.md)
