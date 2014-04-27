@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
         
         <meta charset="UTF-8">
-        <title>Value Classes | Scala Tour</title>
+        <title>F-Bounded Type | Scala Tour</title>
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="robots" content="index, follow">
@@ -13,13 +13,13 @@
         <meta name="generator" content="www.gitbook.io">
 
         
-        <link rel="next" href="./F-Bounded Type.html" />
+        <link rel="next" href="./Type Classes.html" />
         
         
-        <link rel="prev" href="./Variance.html" />
+        <link rel="prev" href="./Value Classes.html" />
         
 
-        <meta property="og:title" content="Value Classes | Scala Tour">
+        <meta property="og:title" content="F-Bounded Type | Scala Tour">
         <meta property="og:site_name" content="Scala Tour">
         <meta property="og:type" content="book">
         <meta property="og:locale" content="en_US">
@@ -40,7 +40,7 @@
     </head>
     <body>
         
-<div class="book" data-github="dcapwell/scala-tour" data-level="2.2">
+<div class="book" data-github="dcapwell/scala-tour" data-level="2.3">
     <div class="book-header">
     <!-- Actions Left -->
     <a href="https://github.com/dcapwell/scala-tour" target="_blank" class="btn pull-left"><i class="fa fa-github-alt"></i></a>
@@ -68,7 +68,7 @@
             <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
         </li>
         <li>
-            <a href="https://github.com/dcapwell/scala-tour/edit/master/Value Classes.md" target="blank">Edit and Contribute</a>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/F-Bounded Type.md" target="blank">Edit and Contribute</a>
         </li>
         <li class="divider"></li>
         <li data-level="0">
@@ -231,7 +231,7 @@
         <div class="page-wrapper">
             <div class="book-progress">
     <div class="bar">
-        <div class="inner" style="width: 31.25%;min-width: 25%;"></div>
+        <div class="inner" style="width: 37.5%;min-width: 31.25%;"></div>
     </div>
     <div class="chapters">
     
@@ -247,7 +247,7 @@
     
         <a href="./Value Classes.html" title="Value Classes" class="chapter done " data-progress="2.2" style="left: 31.25%;"></a>
     
-        <a href="./F-Bounded Type.html" title="F-Bounded Type" class="chapter  " data-progress="2.3" style="left: 37.5%;"></a>
+        <a href="./F-Bounded Type.html" title="F-Bounded Type" class="chapter done " data-progress="2.3" style="left: 37.5%;"></a>
     
         <a href="./Type Classes.html" title="Type Classes" class="chapter  " data-progress="2.4" style="left: 43.75%;"></a>
     
@@ -274,71 +274,41 @@
 
             <div class="page-inner">
             
-                <section class="normal" id="section-gitbook_16">
+                <section class="normal" id="section-gitbook_10">
                 
-                    <h1 id="value-classes">Value Classes</h1>
-<p>In java you had primative types (<code>int</code>, <code>long</code>, <code>double</code>, <code>float</code>, etc.) and their wrapper objects (<code>Integer</code>, <code>Long</code>, <code>Double</code>, <code>Float</code>, etc.).  &quot;Autoboxing&quot; was the process of the java compiler to switch back and forth between a object and a primative depending on the context.  You had no way of taking advantage of this autoboxing in your own types.  Thats where value classes comes in!</p>
-<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span><span class="hljs-params">(val name: String)</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AnyVal</span> {</span>
-  <span class="hljs-keyword">def</span> print = println(name)
+                    <h1 id="f-bounded-type">F-Bounded Type</h1>
+<p>F-Bounded types are types that point to the objects type.  What does this mean really?</p>
+<pre><code class="lang-scala">trait Foo[T &lt;: Foo[T]] {
+    def self: T
 }
 </code></pre>
-<p>The above is simple, but very powerful.  Lets go over it more in detail</p>
-<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span><span class="hljs-params">(val name: String)</span></span>
-</code></pre>
-<p>The first part of this statement is like any normal class.  There are a few things to call out that make this class different from others: name is <code>val</code> and class takes exactly one paramater, and no case statement in front of class.</p>
-<p>The next part</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">extends</span> AnyVal
-</code></pre>
-<p>is how we let scala know that we are creating a value class.</p>
-<p>The rest of the statement looks like any other class</p>
-<pre><code class="lang-scala">{
-  <span class="hljs-keyword">def</span> print = println(name)
+<p>This weird syntax <code>T &lt;: Foo[T]</code> is saying that the type of <code>Foo[T]</code> must be something that is itself a <code>Foo[T]</code>.</p>
+<pre><code class="lang-scala">scala&gt; <span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Bar</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Foo</span>[<span class="hljs-title">Bar</span>] {</span>
+    <span class="hljs-keyword">def</span> self = <span class="hljs-keyword">this</span>
 }
-</code></pre>
-<p>we define a method print that will take the value of name and pass it to println.</p>
-<p>So whats so special here?  What scala will do for us is replace code that talks to <code>Foo</code> directly and replace them with function calls.  Lets try looking at javap to see if this gets more clear.</p>
-<pre><code class="lang-scala">:javap Foo
-public <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">java</span>.<span class="hljs-title">lang</span>.<span class="hljs-title">Object</span>{</span>
-    public java.lang.String name();
-    public void print();
-    public int hashCode();
-    public boolean equals(java.lang.Object);
-    public Foo(java.lang.String);
-}
-</code></pre>
-<p>There is nothing special here, this looks like very other reference type.  So how does scala remove the reference to Foo for the callers?  By sending them to the companion object.</p>
-<pre><code class="lang-scala">:javap Foo$
-public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span>$ <span class="hljs-keyword">extends</span> <span class="hljs-title">java</span>.<span class="hljs-title">lang</span>.<span class="hljs-title">Object</span>{</span>
-    public static <span class="hljs-keyword">final</span> Foo$ MODULE$;
-    public static {};
-    public <span class="hljs-keyword">final</span> void print$extension(java.lang.String);
-    public <span class="hljs-keyword">final</span> int hashCode$extension(java.lang.String);
-    public <span class="hljs-keyword">final</span> boolean equals$extension(java.lang.String, java.lang.Object);
-    public Foo$();
-}
-</code></pre>
-<p>See the <code>void print$extension(java.lang.String)</code> function there?  That function is what scala will select for the caller to try to avoid the object creation overhead.  The <code>$extension</code> postfix is given to all methods from the Foo class and has the same logic that the method has, but acts on a argument rather than field/method lookup.</p>
-<p>So, why should I care?  This seems more of a microlevel optomisation, so why would I need this?  Well, one nice place to put this is in implicit classes.</p>
-<pre><code class="lang-scala">scala&gt; implicit <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BetterIntOpt</span><span class="hljs-params">(val value: Int)</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AnyVal</span> {</span>
-     | <span class="hljs-keyword">def</span> makeBetter = <span class="hljs-number">42</span> + value
-     | }
-defined <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BetterIntOpt</span></span>
+defined <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bar</span></span>
 
-scala&gt; <span class="hljs-number">1</span> makeBetter
-res0: Int = <span class="hljs-number">43</span>
+scala&gt; <span class="hljs-keyword">val</span> b1 = Bar()
+b1: Bar = Bar()
 
-scala&gt; :javap BetterIntOpt$
-Compiled from <span class="hljs-string">"&lt;console&gt;"</span>
-public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BetterIntOpt</span>$ <span class="hljs-keyword">extends</span> <span class="hljs-title">java</span>.<span class="hljs-title">lang</span>.<span class="hljs-title">Object</span>{</span>
-    public static <span class="hljs-keyword">final</span> BetterIntOpt$ MODULE$;
-    public static {};
-    public <span class="hljs-keyword">final</span> int makeBetter$extension(int);
-    public <span class="hljs-keyword">final</span> int hashCode$extension(int);
-    public <span class="hljs-keyword">final</span> boolean equals$extension(int, java.lang.Object);
-    public BetterIntOpt$();
+scala&gt; <span class="hljs-keyword">val</span> b2 = b1.self
+b2: Bar = Bar()
+</code></pre>
+<p>Why would we care about this?  Turns out that this type is nice when extending traits and working with methods that return the type of the object implementing them and not a base type defined lower down in the type hierarchy.  Lets look at a collection example.</p>
+<pre><code class="lang-scala">trait Iterable[T &lt;: Iterable[T]] {
+    def map(f: Int =&gt; Int): T
+}
+
+trait List extends Iterable[List] {
+    def map(f: Int =&gt; Int): List
+}
+
+trait Vector extends Iterable[Vector] {
+    def map(f: Int =&gt; Int): Vector
 }
 </code></pre>
-<p>When the compile see <code>1 makeBetter</code> it will rewrite it out as <code>BetterIntOpt$.makeBetter$extension(1)</code> and skip the object creation.</p>
+<p>In this case both <code>List</code> and <code>Vector</code> are <code>Iterable</code>, but when you work with methods from the <code>Iterable</code> trait, you always get back the type that you were working with: <code>List</code> returns <code>List</code>, <code>Vector</code> returns <code>Vector</code>.</p>
+<p>F-Bounded types are nice since they let you define the type at the implementation level and not at the base trait level.  That way all implementations of a trait only have to care about objects of their own type.  A better example can be found in the chapter on <a href="Type Classes.html">Type Classes</a>: type safe comparable.</p>
 
                 
                 </section>
@@ -349,7 +319,7 @@ public <span class="hljs-class"><span class="hljs-keyword">class</span> <span cl
     
         
             
-            <a href="./F-Bounded Type.html" class="navigation-link next">Next</a>
+            <a href="./Type Classes.html" class="navigation-link next">Next</a>
             
         
     
