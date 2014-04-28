@@ -440,7 +440,50 @@ world
 (<span class="hljs-keyword">new</span> Two <span class="hljs-keyword">with</span> One <span class="hljs-keyword">with</span> Three).echo
 <span class="hljs-comment">// three</span>
 </code></pre>
-<p>Here we use the <code>override</code> keyword to say we don&#39;t care about any other implementation, use mine.</p>
+<p>Here we use the <code>override</code> keyword to say we don&#39;t care about any other implementation, use mine.  If the <code>override</code> keyword is omitted then the behavior is just like java&#39;s.</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Printable</span> {</span>
+    <span class="hljs-keyword">def</span> print: Unit
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">P1</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Printable</span> {</span>
+    <span class="hljs-keyword">def</span> print = println(<span class="hljs-string">"one"</span>)
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">P2</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Printable</span> {</span>
+    <span class="hljs-keyword">def</span> print = println(<span class="hljs-string">"two"</span>)
+}
+
+(<span class="hljs-keyword">new</span> P1 <span class="hljs-keyword">with</span> P2).print
+&lt;console&gt;:<span class="hljs-number">11</span>: error: &lt;$anon: P1 <span class="hljs-keyword">with</span> P2&gt; inherits conflicting members:
+  method print in <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">P1</span> <span class="hljs-title">of</span> <span class="hljs-title">type</span> =&gt; <span class="hljs-title">Unit</span>  <span class="hljs-title">and</span></span>
+  method print in <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">P2</span> <span class="hljs-title">of</span> <span class="hljs-title">type</span> =&gt; <span class="hljs-title">Unit</span></span>
+(Note: <span class="hljs-keyword">this</span> can be resolved by declaring an <span class="hljs-keyword">override</span> in &lt;$anon: P1 <span class="hljs-keyword">with</span> P2&gt;.)
+              (<span class="hljs-keyword">new</span> P1 <span class="hljs-keyword">with</span> P2).print
+                   ^
+</code></pre>
+<p>So what was that <code>abstract override</code> we saw before?  Its a way to say that different traits can both define the behavior.  The right most trait runs first, then left, then left, etc.  Lets go over a example bad word filtering.</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Speaker</span> {</span>
+    <span class="hljs-keyword">def</span> say(word: String) = println(word)
+}
+
+<span class="hljs-keyword">new</span> Speaker(){}.say(<span class="hljs-string">"Are you a java developer!?!"</span>)
+Are you a java developer!?!
+</code></pre>
+<p>In this case we are going to say that &quot;java&quot; is a bad word.  So lets filter it out and convert it to <code>j***</code>.</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">JavaFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Speaker</span> {</span>
+    <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">override</span> <span class="hljs-keyword">def</span> say(word: String) = <span class="hljs-keyword">super</span>.say(word.replace(<span class="hljs-string">"java"</span>, <span class="hljs-string">"j***"</span>))
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Teacher</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Speaker</span> <span class="hljs-keyword">with</span> <span class="hljs-title">JavaFilter</span></span>
+
+<span class="hljs-keyword">val</span> speaker = <span class="hljs-keyword">new</span> Teacher()
+speaker.say(<span class="hljs-string">"Are you a java developer!?!"</span>)
+<span class="hljs-comment">// Are you a j*** developer!?!</span>
+
+speaker.say(<span class="hljs-string">"Are you a JAVA developer!?!"</span>)
+<span class="hljs-comment">// Are you a JAVA developer!?!</span>
+</code></pre>
+<p>With mixins we are able to do the decorator pattern that we did in java, but at the interface level.</p>
 
                 
                 </section>
