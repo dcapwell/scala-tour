@@ -347,7 +347,23 @@ public interface Foo{
     }
 }
 </code></pre>
-<p>This looks very similar, but there is one big difference between the two: java&#39;s block goes away if overriden, so code reuse is not possible, scala&#39;s implementation of this is as a companion object that lets you reuse if you want.  Lets show this example.</p>
+<p>This looks very similar, but there is one big difference between the two: java&#39;s block goes away if overriden, so code reuse is not possible, scala&#39;s implementation of this is as a companion object that lets you reuse if you want.  Lets take a look at the generated code from scala.</p>
+<pre><code class="lang-scala">scala&gt; :javap -p Bar
+Compiled from <span class="hljs-string">"&lt;console&gt;"</span>
+public interface Bar{
+    public <span class="hljs-keyword">abstract</span> java.lang.String bar();
+    public <span class="hljs-keyword">abstract</span> void echo();
+}
+</code></pre>
+<p>Bar looks the same as before, but now there is a new object generated.</p>
+<pre><code class="lang-scala">scala&gt; :javap -p Bar$<span class="hljs-keyword">class</span>
+Compiled from <span class="hljs-string">"&lt;console&gt;"</span>
+public <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bar</span>$<span class="hljs-title">class</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">java</span>.<span class="hljs-title">lang</span>.<span class="hljs-title">Object</span>{</span>
+    public static void echo(Bar);
+    public static void $init$(Bar);
+}
+</code></pre>
+<p>The <code>Bar$class</code> generated is a class with only static methods defined from the trait.  If a class extends the trait, it would look like the following.</p>
 <pre><code class="lang-java"><span class="hljs-comment">// couldn't find a way to do this in scala (scala cant find the type), so doing it in java</span>
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyBar</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Bar</span> {</span>
     <span class="hljs-keyword">public</span> String <span class="hljs-title">bar</span>() {
