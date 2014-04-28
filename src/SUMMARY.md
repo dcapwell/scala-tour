@@ -1,6 +1,7 @@
 # Summary
 
 * [Language](Language.md)
+    * [Traits](Traits.md)
     * [Partial Function](Partial Function.md)
 * [Types](Types.md)
     * [Variance](Variance.md)

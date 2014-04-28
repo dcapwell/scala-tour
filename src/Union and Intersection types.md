@@ -40,7 +40,7 @@ scala> size(10.0)
                   ^
 ```
 
-Great, it does what we expect!  It will only let us consume `Int` and `String` types, but nothing else.
+Great, it does what we expect (but error is hard to understand);  it will only let us consume `Int` and `String` types, but nothing else.
 
 When I was just a java programmer I thought that one of the key features of ceylon was [union and intersection types](http://ceylon-lang.org/documentation/current/introduction/#principal_typing_union_types_and_intersection_types).  Now I see that I can do the same with scala.
 
