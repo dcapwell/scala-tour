@@ -11,6 +11,7 @@
     * [Path Dependent Types](Path Dependent Types.md)
     * [Phantom Type](Phantom Type.md)
     * [Structural Types](Structural Types.md)
+    * [Union and Intersection types](Union and Intersection types.md)
 * [Patterns](Patterns.md)
     * [Cake](Cake.md)
 * [Scalaz](Scalaz.md)

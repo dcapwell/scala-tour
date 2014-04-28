@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
         
         <meta charset="UTF-8">
-        <title>Types | Scala Tour</title>
+        <title>Union and Intersection types | Scala Tour</title>
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="robots" content="index, follow">
@@ -13,13 +13,13 @@
         <meta name="generator" content="www.gitbook.io">
 
         
-        <link rel="next" href="./Variance.html" />
+        <link rel="next" href="./Patterns.html" />
         
         
-        <link rel="prev" href="./Partial Function.html" />
+        <link rel="prev" href="./Structural Types.html" />
         
 
-        <meta property="og:title" content="Types | Scala Tour">
+        <meta property="og:title" content="Union and Intersection types | Scala Tour">
         <meta property="og:site_name" content="Scala Tour">
         <meta property="og:type" content="book">
         <meta property="og:locale" content="en_US">
@@ -40,7 +40,7 @@
     </head>
     <body>
         
-<div class="book" data-github="dcapwell/scala-tour" data-level="2">
+<div class="book" data-github="dcapwell/scala-tour" data-level="2.9">
     <div class="book-header">
     <!-- Actions Left -->
     <a href="https://github.com/dcapwell/scala-tour" target="_blank" class="btn pull-left"><i class="fa fa-github-alt"></i></a>
@@ -68,7 +68,7 @@
             <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
         </li>
         <li>
-            <a href="https://github.com/dcapwell/scala-tour/edit/master/Types.md" target="blank">Edit and Contribute</a>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/Union and Intersection types.md" target="blank">Edit and Contribute</a>
         </li>
         <li class="divider"></li>
         <li data-level="0">
@@ -255,7 +255,7 @@
         <div class="page-wrapper">
             <div class="book-progress">
     <div class="bar">
-        <div class="inner" style="width: 15.789473684210526%;min-width: 10.526315789473685%;"></div>
+        <div class="inner" style="width: 63.1578947368421%;min-width: 57.89473684210526%;"></div>
     </div>
     <div class="chapters">
     
@@ -267,23 +267,23 @@
     
         <a href="./Types.html" title="Types" class="chapter done new-chapter" data-progress="2" style="left: 15.789473684210526%;"></a>
     
-        <a href="./Variance.html" title="Variance" class="chapter  " data-progress="2.1" style="left: 21.05263157894737%;"></a>
+        <a href="./Variance.html" title="Variance" class="chapter done " data-progress="2.1" style="left: 21.05263157894737%;"></a>
     
-        <a href="./Value Classes.html" title="Value Classes" class="chapter  " data-progress="2.2" style="left: 26.31578947368421%;"></a>
+        <a href="./Value Classes.html" title="Value Classes" class="chapter done " data-progress="2.2" style="left: 26.31578947368421%;"></a>
     
-        <a href="./F-Bounded Type.html" title="F-Bounded Type" class="chapter  " data-progress="2.3" style="left: 31.57894736842105%;"></a>
+        <a href="./F-Bounded Type.html" title="F-Bounded Type" class="chapter done " data-progress="2.3" style="left: 31.57894736842105%;"></a>
     
-        <a href="./Type Classes.html" title="Type Classes" class="chapter  " data-progress="2.4" style="left: 36.8421052631579%;"></a>
+        <a href="./Type Classes.html" title="Type Classes" class="chapter done " data-progress="2.4" style="left: 36.8421052631579%;"></a>
     
-        <a href="./Higher Kind.html" title="Higher Kind" class="chapter  " data-progress="2.5" style="left: 42.10526315789474%;"></a>
+        <a href="./Higher Kind.html" title="Higher Kind" class="chapter done " data-progress="2.5" style="left: 42.10526315789474%;"></a>
     
-        <a href="./Path Dependent Types.html" title="Path Dependent Types" class="chapter  " data-progress="2.6" style="left: 47.36842105263158%;"></a>
+        <a href="./Path Dependent Types.html" title="Path Dependent Types" class="chapter done " data-progress="2.6" style="left: 47.36842105263158%;"></a>
     
-        <a href="./Phantom Type.html" title="Phantom Type" class="chapter  " data-progress="2.7" style="left: 52.63157894736842%;"></a>
+        <a href="./Phantom Type.html" title="Phantom Type" class="chapter done " data-progress="2.7" style="left: 52.63157894736842%;"></a>
     
-        <a href="./Structural Types.html" title="Structural Types" class="chapter  " data-progress="2.8" style="left: 57.89473684210526%;"></a>
+        <a href="./Structural Types.html" title="Structural Types" class="chapter done " data-progress="2.8" style="left: 57.89473684210526%;"></a>
     
-        <a href="./Union and Intersection types.html" title="Union and Intersection types" class="chapter  " data-progress="2.9" style="left: 63.1578947368421%;"></a>
+        <a href="./Union and Intersection types.html" title="Union and Intersection types" class="chapter done " data-progress="2.9" style="left: 63.1578947368421%;"></a>
     
         <a href="./Patterns.html" title="Patterns" class="chapter  new-chapter" data-progress="3" style="left: 68.42105263157895%;"></a>
     
@@ -304,10 +304,72 @@
 
             <div class="page-inner">
             
-                <section class="normal" id="section-gitbook_16">
+                <section class="normal" id="section-gitbook_17">
                 
-                    <h1 id="types">Types</h1>
-<p>Scala&#39;s type system is very complex if you are coming from a java background.  The different features will be covered in their own sections.</p>
+                    <h1 id="union-and-intersection-types">Union and Intersection types</h1>
+<p>In scala you can define type intersection (and) in a very simple way</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">type</span> Both = String <span class="hljs-keyword">with</span> Int
+</code></pre>
+<p>but there is no built in union (or).</p>
+<p>If you read <a href="http://www.chuusai.com/2011/06/09/scala-union-types-curry-howard/" target="_blank">Unboxed union types in Scala via the Curry-Howard isomorphism</a> the author shows a way to get union within scala!</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">type</span> ¬[A] = A =&gt; Nothing
+<span class="hljs-keyword">type</span> ¬¬[A] = ¬[¬[A]]
+<span class="hljs-keyword">type</span> ∨[T, U] = ¬[¬[T] <span class="hljs-keyword">with</span> ¬[U]]
+<span class="hljs-keyword">type</span> |∨|[T, U] = { <span class="hljs-keyword">type</span> λ[X] = ¬¬[X] &lt;:&lt; (T ∨ U) }
+</code></pre>
+<p>Now lets see how to use this.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">def</span> size[T : (Int |∨| String)#λ](t : T) = t <span class="hljs-keyword">match</span> {
+    <span class="hljs-keyword">case</span> i : Int =&gt; i
+    <span class="hljs-keyword">case</span> s : String =&gt; s.length
+}
+</code></pre>
+<p>Not too bad, now lets see what happens when we use this.</p>
+<pre><code class="lang-scala">scala&gt; size(<span class="hljs-number">10</span>)
+res0: Int = <span class="hljs-number">10</span>
+
+scala&gt; size(<span class="hljs-string">"eggs"</span>)
+res1: Int = <span class="hljs-number">4</span>
+
+scala&gt; size(<span class="hljs-number">10.0</span>)
+&lt;console&gt;:<span class="hljs-number">39</span>: error: Cannot prove that (Double =&gt; Nothing) =&gt; Nothing &lt;:&lt; Int =&gt; Nothing <span class="hljs-keyword">with</span> String =&gt; Nothing =&gt; Nothing.
+              size(<span class="hljs-number">10.0</span>)
+                  ^
+</code></pre>
+<p>Great, it does what we expect!  It will only let us consume <code>Int</code> and <code>String</code> types, but nothing else.</p>
+<p>When I was just a java programmer I thought that one of the key features of ceylon was <a href="http://ceylon-lang.org/documentation/current/introduction/#principal_typing_union_types_and_intersection_types" target="_blank">union and intersection types</a>.  Now I see that I can do the same with scala.</p>
+<h2 id="scalaz">Scalaz</h2>
+<p>The authors of scalaz saw this same blog post and have added union types into scalaz so you don&#39;t have to add the above types first.  Lets reimplment the size function using scalaz&#39;s union type.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">import</span> scalaz._, Scalaz._
+<span class="hljs-keyword">import</span> UnionTypes._
+
+<span class="hljs-keyword">type</span> StringOrInt = t[String]#t[Int]
+<span class="hljs-keyword">def</span> size[A](a: A)(implicit ev: A ∈ StringOrInt): Int = a <span class="hljs-keyword">match</span> {
+    <span class="hljs-keyword">case</span> i: Int    =&gt; i
+    <span class="hljs-keyword">case</span> s: String =&gt; s.length
+}
+
+<span class="hljs-comment">// or</span>
+<span class="hljs-keyword">def</span> size[A](a: A)(implicit ev: A ∈ t[String]#t[Int]): Int = a <span class="hljs-keyword">match</span> {
+    <span class="hljs-keyword">case</span> i: Int    =&gt; i
+    <span class="hljs-keyword">case</span> s: String =&gt; s.length
+}
+
+<span class="hljs-comment">// or</span>
+<span class="hljs-comment">// I really like the |v| syntax</span>
+<span class="hljs-keyword">type</span> |∨|[T, U] = { <span class="hljs-keyword">type</span> λ[X] = X ∈ t[T]#t[U] }
+<span class="hljs-keyword">def</span> size[T : (Int |∨| String)#λ](t : T) = t <span class="hljs-keyword">match</span> {
+    <span class="hljs-keyword">case</span> i : Int =&gt; i
+    <span class="hljs-keyword">case</span> s : String =&gt; s.length
+}
+
+<span class="hljs-comment">// or</span>
+<span class="hljs-comment">// the same as |v| but with the scalaz syntax</span>
+<span class="hljs-keyword">type</span> |∈|[T, U] = { <span class="hljs-keyword">type</span> λ[X] = X ∈ t[T]#t[U] }
+<span class="hljs-keyword">def</span> size[T : (Int |∈| String)#λ](t : T) = t <span class="hljs-keyword">match</span> {
+    <span class="hljs-keyword">case</span> i : Int =&gt; i
+    <span class="hljs-keyword">case</span> s : String =&gt; s.length
+}
+</code></pre>
 
                 
                 </section>
@@ -318,7 +380,7 @@
     
         
             
-            <a href="./Variance.html" class="navigation-link next">Next</a>
+            <a href="./Patterns.html" class="navigation-link next">Next</a>
             
         
     
