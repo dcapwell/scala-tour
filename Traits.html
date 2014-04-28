@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
         
         <meta charset="UTF-8">
-        <title>Path Dependent Types | Scala Tour</title>
+        <title>Traits | Scala Tour</title>
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="robots" content="index, follow">
@@ -13,13 +13,13 @@
         <meta name="generator" content="www.gitbook.io">
 
         
-        <link rel="next" href="./Phantom Type.html" />
+        <link rel="next" href="./Partial Function.html" />
         
         
-        <link rel="prev" href="./Higher Kind.html" />
+        <link rel="prev" href="./Language.html" />
         
 
-        <meta property="og:title" content="Path Dependent Types | Scala Tour">
+        <meta property="og:title" content="Traits | Scala Tour">
         <meta property="og:site_name" content="Scala Tour">
         <meta property="og:type" content="book">
         <meta property="og:locale" content="en_US">
@@ -40,7 +40,7 @@
     </head>
     <body>
         
-<div class="book" data-github="dcapwell/scala-tour" data-level="2.6">
+<div class="book" data-github="dcapwell/scala-tour" data-level="1.1">
     <div class="book-header">
     <!-- Actions Left -->
     <a href="https://github.com/dcapwell/scala-tour" target="_blank" class="btn pull-left"><i class="fa fa-github-alt"></i></a>
@@ -68,7 +68,7 @@
             <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
         </li>
         <li>
-            <a href="https://github.com/dcapwell/scala-tour/edit/master/Path Dependent Types.md" target="blank">Edit and Contribute</a>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/Traits.md" target="blank">Edit and Contribute</a>
         </li>
         <li class="divider"></li>
         <li data-level="0">
@@ -263,7 +263,7 @@
         <div class="page-wrapper">
             <div class="book-progress">
     <div class="bar">
-        <div class="inner" style="width: 50%;min-width: 45%;"></div>
+        <div class="inner" style="width: 10%;min-width: 5%;"></div>
     </div>
     <div class="chapters">
     
@@ -273,21 +273,21 @@
     
         <a href="./Traits.html" title="Traits" class="chapter done " data-progress="1.1" style="left: 10%;"></a>
     
-        <a href="./Partial Function.html" title="Partial Function" class="chapter done " data-progress="1.2" style="left: 15%;"></a>
+        <a href="./Partial Function.html" title="Partial Function" class="chapter  " data-progress="1.2" style="left: 15%;"></a>
     
-        <a href="./Types.html" title="Types" class="chapter done new-chapter" data-progress="2" style="left: 20%;"></a>
+        <a href="./Types.html" title="Types" class="chapter  new-chapter" data-progress="2" style="left: 20%;"></a>
     
-        <a href="./Variance.html" title="Variance" class="chapter done " data-progress="2.1" style="left: 25%;"></a>
+        <a href="./Variance.html" title="Variance" class="chapter  " data-progress="2.1" style="left: 25%;"></a>
     
-        <a href="./Value Classes.html" title="Value Classes" class="chapter done " data-progress="2.2" style="left: 30%;"></a>
+        <a href="./Value Classes.html" title="Value Classes" class="chapter  " data-progress="2.2" style="left: 30%;"></a>
     
-        <a href="./F-Bounded Type.html" title="F-Bounded Type" class="chapter done " data-progress="2.3" style="left: 35%;"></a>
+        <a href="./F-Bounded Type.html" title="F-Bounded Type" class="chapter  " data-progress="2.3" style="left: 35%;"></a>
     
-        <a href="./Type Classes.html" title="Type Classes" class="chapter done " data-progress="2.4" style="left: 40%;"></a>
+        <a href="./Type Classes.html" title="Type Classes" class="chapter  " data-progress="2.4" style="left: 40%;"></a>
     
-        <a href="./Higher Kind.html" title="Higher Kind" class="chapter done " data-progress="2.5" style="left: 45%;"></a>
+        <a href="./Higher Kind.html" title="Higher Kind" class="chapter  " data-progress="2.5" style="left: 45%;"></a>
     
-        <a href="./Path Dependent Types.html" title="Path Dependent Types" class="chapter done " data-progress="2.6" style="left: 50%;"></a>
+        <a href="./Path Dependent Types.html" title="Path Dependent Types" class="chapter  " data-progress="2.6" style="left: 50%;"></a>
     
         <a href="./Phantom Type.html" title="Phantom Type" class="chapter  " data-progress="2.7" style="left: 55%;"></a>
     
@@ -314,135 +314,133 @@
 
             <div class="page-inner">
             
-                <section class="normal" id="section-gitbook_6">
+                <section class="normal" id="section-gitbook_15">
                 
-                    <h1 id="path-dependent-types">Path Dependent Types</h1>
-<p>Path dependent types and dependent method types are a way to define relationships between types.  Lets go to an example.</p>
-<h2 id="fan-fiction">Fan fiction</h2>
-<p>In fan fiction, writers some times add characters from different franchises into the story.</p>
-<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Franchise</span> {</span>
-    <span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Character</span><span class="hljs-params">(name: String)</span></span>
+                    <h1 id="traits">Traits</h1>
+<p>To the average java programmer, traits are fancy interfaces with defaults (java 8!).  But in scala traits are far more powerful than java 8&#39;s interface with default.  Lets start exploring the power of traits.</p>
+<p>Simple trait; same as interface</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Foo</span> {</span>
+    <span class="hljs-keyword">def</span> foo: String
 }
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Franchise</span><span class="hljs-params">(name: String)</span> {</span>
-    <span class="hljs-keyword">import</span> Franchise.Character
-
-    <span class="hljs-keyword">def</span> createFanFiction(a: Character, b: Character) = (a, b)
-}
-
-<span class="hljs-keyword">val</span> starTrek = <span class="hljs-keyword">new</span> Franchise(<span class="hljs-string">"Star Trek"</span>)
-<span class="hljs-keyword">val</span> starWars = <span class="hljs-keyword">new</span> Franchise(<span class="hljs-string">"Star Wars"</span>)
-
-<span class="hljs-keyword">val</span> quark = Franchise.Character(<span class="hljs-string">"Quark"</span>)
-<span class="hljs-keyword">val</span> jadzia = Franchise.Character(<span class="hljs-string">"Jadzia Dax"</span>)
-
-<span class="hljs-keyword">val</span> luke = Franchise.Character(<span class="hljs-string">"Luke Skywalker"</span>)
-<span class="hljs-keyword">val</span> yoda = Franchise.Character(<span class="hljs-string">"Yoda"</span>)
-
-starTrek.createFanFiction(jadzia, luke)
 </code></pre>
-<p>This is wrong on so many levels, so lets see how we can block this!</p>
-<h3 id="take-1">Take 1</h3>
-<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Franchise</span> {</span>
-    <span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Character</span><span class="hljs-params">(name: String, franchise: Franchise)</span></span>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Foo</span> {</span>
+    <span class="hljs-keyword">public</span> String <span class="hljs-title">foo</span>();
 }
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Franchise</span><span class="hljs-params">(name: String)</span> {</span>
-    <span class="hljs-keyword">import</span> Franchise.Character
-
-    <span class="hljs-keyword">def</span> createFanFiction(a: Character, b: Character) = {
-        require(a.franchise == b.franchise)
-        (a, b)
+</code></pre>
+<p>Nothing fancy here.  They both seem to be the same thing, and thats because they are.  Lets look at javap for the scala output.</p>
+<pre><code class="lang-scala">scala&gt; :javap Foo
+Compiled from <span class="hljs-string">"&lt;console&gt;"</span>
+public interface Foo{
+    public <span class="hljs-keyword">abstract</span> java.lang.String foo();
+}
+</code></pre>
+<p>So whats the big deal?  Traits start to differ from interfaces with defaults when you start defining implementations and mixing in.  Lets look at defining behavior.</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Bar</span> {</span>
+    <span class="hljs-keyword">def</span> bar: String
+    <span class="hljs-keyword">def</span> echo = println(bar)
+}
+</code></pre>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Bar</span> {</span>
+    <span class="hljs-keyword">public</span> String <span class="hljs-title">bar</span>();
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">void</span> <span class="hljs-title">echo</span>()  {
+        System.out.println(<span class="hljs-keyword">this</span>.bar())
     }
 }
-
-<span class="hljs-keyword">val</span> starTrek = <span class="hljs-keyword">new</span> Franchise(<span class="hljs-string">"Star Trek"</span>)
-<span class="hljs-keyword">val</span> starWars = <span class="hljs-keyword">new</span> Franchise(<span class="hljs-string">"Star Wars"</span>)
-
-<span class="hljs-keyword">val</span> quark = Franchise.Character(<span class="hljs-string">"Quark"</span>, starTrek)
-<span class="hljs-keyword">val</span> jadzia = Franchise.Character(<span class="hljs-string">"Jadzia Dax"</span>, starTrek)
-
-<span class="hljs-keyword">val</span> luke = Franchise.Character(<span class="hljs-string">"Luke Skywalker"</span>, starWars)
-<span class="hljs-keyword">val</span> yoda = Franchise.Character(<span class="hljs-string">"Yoda"</span>, starWars)
-
-<span class="hljs-comment">// starTrek.createFanFiction(jadzia, luke) // throws runtime exception</span>
 </code></pre>
-<p>Great!  We are now able to stop the madness!  We fail fast when the user tries to create the fan fiction, but could we do better?  Could we fail at compile time?</p>
-<h3 id="take-2">Take 2</h3>
-<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Franchise</span><span class="hljs-params">(name: String)</span> {</span>
-    <span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Character</span><span class="hljs-params">(name: String)</span></span>
-
-    <span class="hljs-keyword">def</span> createFanFiction(a: Character, b: Character) = (a, b)
-}
-
-<span class="hljs-keyword">val</span> starTrek = <span class="hljs-keyword">new</span> Franchise(<span class="hljs-string">"Star Trek"</span>)
-<span class="hljs-keyword">val</span> starWars = <span class="hljs-keyword">new</span> Franchise(<span class="hljs-string">"Star Wars"</span>)
-
-<span class="hljs-keyword">val</span> quark = starTrek.Character(<span class="hljs-string">"Quark"</span>)
-<span class="hljs-keyword">val</span> jadzia = starTrek.Character(<span class="hljs-string">"Jadzia Dax"</span>)
-
-<span class="hljs-keyword">val</span> luke = starWars.Character(<span class="hljs-string">"Luke Skywalker"</span>)
-<span class="hljs-keyword">val</span> yoda = starWars.Character(<span class="hljs-string">"Yoda"</span>)
-
-<span class="hljs-comment">// starTrek.createFanFiction(quark, luke)</span>
-<span class="hljs-comment">// error: type mismatch;</span>
-<span class="hljs-comment">//  found   : starWars.Character</span>
-<span class="hljs-comment">//  required: starTrek.Character</span>
-<span class="hljs-comment">//               starTrek.createFanFiction(quark, luke)</span>
-<span class="hljs-comment">//                                                ^</span>
-</code></pre>
-<p>This is great!  Now we can block these ungodly sins while still allowing the fans to create fiction within a single franchise.</p>
-<pre><code class="lang-scala">starTrek.createFanFiction(quark, jadzia)
-</code></pre>
-<p>Lets explore that exception a bit more.</p>
-<pre><code class="lang-scala">starTrek.createFanFiction(quark, luke)
-error: <span class="hljs-keyword">type</span> mismatch;
- found   : starWars.Character
- required: starTrek.Character
-              starTrek.createFanFiction(quark, luke)
-</code></pre>
-<p>As we see from the type mismatch statement, we found type <code>starWars.Character</code> but we required <code>starTrek.Character</code>.  The type of each <code>Character</code> is dependent on the path that it was created from, in this case the <code>starWars</code> and <code>starTrek</code> objects.</p>
-<p>Can we take this idea further?</p>
-<h2 id="dependent-method-types">Dependent Method Types</h2>
-<p>Lets say that the <code>createFanFiction</code> function is not a method on a <code>Franchise</code> instance, then how can we do the above example?</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">def</span> createFanFiction(f: Franchise)(a: f.Character, b: f.Character) = (a, b)
-
-createFanFiction(starTrek)(jadzia, quark)
-<span class="hljs-comment">// createFanFiction(starTrek)(jadzia, luke) // won't compile, type mismatch</span>
-</code></pre>
-<h2 id="pulling-it-together">Pulling it together</h2>
-<p>Fan fiction is great and all (as long as they don&#39;t cross the streams), but lets use a more relistic example: <code>KeyValue</code> databases.</p>
-<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">KeyValue</span> {</span>
-    <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Key</span><span class="hljs-params">(name: String)</span> {</span>
-        <span class="hljs-keyword">type</span> Value
+<p>This looks very similar, but there is one big difference between the two: java&#39;s block goes away if overriden, so code reuse is not possible, scala&#39;s implementation of this is as a companion object that lets you reuse if you want.  Lets show this example.</p>
+<pre><code class="lang-java"><span class="hljs-comment">// couldn't find a way to do this in scala (scala cant find the type), so doing it in java</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyBar</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Bar</span> {</span>
+    <span class="hljs-keyword">public</span> String <span class="hljs-title">bar</span>() {
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"bar"</span>
     }
-    <span class="hljs-keyword">var</span> db = collection.mutable.Map.empty[Key, Any]
-
-    <span class="hljs-keyword">def</span> get(key: Key): Option[key.Value] = db.get(key).asInstanceOf[Option[key.Value]]
-    <span class="hljs-keyword">def</span> set(key: Key)(value: key.Value): Unit = db.update(key, value)
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">echo</span>()  {
+        Bar$class.echo(<span class="hljs-keyword">this</span>);
+    }
 }
-
-<span class="hljs-keyword">import</span> KeyValue._
-
-<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">IntValued</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Key</span> {</span>
-    <span class="hljs-keyword">type</span> Value = Int
-}
-
-<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">StringValued</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Key</span> {</span>
-    <span class="hljs-keyword">type</span> Value = String
-}
-
-<span class="hljs-keyword">val</span> foo = <span class="hljs-keyword">new</span> Key(<span class="hljs-string">"foo"</span>) <span class="hljs-keyword">with</span> IntValued
-<span class="hljs-keyword">val</span> bar = <span class="hljs-keyword">new</span> Key(<span class="hljs-string">"bar"</span>) <span class="hljs-keyword">with</span> StringValued
-
-KeyValue.set(foo)(<span class="hljs-number">1</span>)
-KeyValue.get(foo).get
-
-<span class="hljs-comment">// KeyValue.set(bar)(1)</span>
-<span class="hljs-comment">// error: type mismatch;</span>
-<span class="hljs-comment">//  found   : Int(1)</span>
-<span class="hljs-comment">//  required: bar.Value</span>
-<span class="hljs-comment">//     (which expands to)  String</span>
-<span class="hljs-comment">//               KeyValue.set(bar)(1)</span>
 </code></pre>
+<p>Because code reuse of defaults is something that is wanted, java 8 offers a solution to this by telling people to use static methods in default blocks.</p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bars</span> {</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-title">Bar</span>() {}
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">echo</span>(Bar bar) {
+        System.out.println(bar);
+    }
+}
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Bar</span> {</span>
+    <span class="hljs-keyword">public</span> String <span class="hljs-title">bar</span>();
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">void</span> <span class="hljs-title">echo</span>()  {
+        Bars.echo(<span class="hljs-keyword">this</span>);
+    }
+}
+</code></pre>
+<p>By doing the above, you get the same generated code that scala has (s/s/$class/g).  So great, we have the same thing right?  Lets try mixing in behaviors.</p>
+<h2 id="mixins">Mixins</h2>
+<p>In the java 8 based world, if you have the interface <code>Bar</code> and you want to add in new functionality, its up to you to define how thats done.  Lets try making echo use default echo and a logger echo.</p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyBar</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Bar</span> {</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">echo</span>() {
+        Bars.echo(<span class="hljs-keyword">this</span>);
+        Bars.log(<span class="hljs-keyword">this</span>);
+    }
+}
+</code></pre>
+<p>This seems ok, but to the consumer of <code>MyBar</code>, they won&#39;t know what is happening or that I have done this.  Scala view to how to do this is with types and mixing behaviors together (this is a common idea in functional programming; types should say whats going on).</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">BarLogger</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Bar</span> {</span>
+    <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">override</span> <span class="hljs-keyword">def</span> echo = {
+        <span class="hljs-keyword">super</span>.echo
+        println(s<span class="hljs-string">"[LOGGER]: $bar"</span>)
+    }
+}
+</code></pre>
+<p>Now lets mix these two together.</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">BarWorld</span><span class="hljs-params">(bar: String)</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Bar</span> <span class="hljs-keyword">with</span> <span class="hljs-title">BarLogger</span></span>
+BarWorld(<span class="hljs-string">"world"</span>).echo
+world
+[LOGGER]: world
+</code></pre>
+<p>With this, we are saying that <code>BarWorld</code> has type <code>Bar with BarLogger</code>.  We are using the type system to explain what the behavior of <code>BarWorld</code> will be.</p>
+<p>In java 8, default interfaces are just interfaces, so couldn&#39;t I do the same?</p>
+<pre><code class="lang-java">class BarWorld implements Bar, BarLogger {
+    <span class="hljs-keyword">public</span> String <span class="hljs-title">bar</span>() { <span class="hljs-keyword">return</span> <span class="hljs-string">"bar"</span>; }
+}
+</code></pre>
+<p>The code above won&#39;t compile.</p>
+<pre><code class="lang-java">java: class BarWorld inherits unrelated defaults <span class="hljs-keyword">for</span> echo() from types Bar and BarLogger
+</code></pre>
+<p>Java&#39;s view of mixins are over distjoin behaviors and not over similar behaviors.  In cases like this, its up to the developer to solve what the behavior should be.</p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyBar</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Bar</span>, <span class="hljs-title">BarLogger</span> {</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">echo</span>() {
+        Bars.echo(<span class="hljs-keyword">this</span>);
+        Bars.log(<span class="hljs-keyword">this</span>);
+    }
+}
+</code></pre>
+<p>Scala defines a simple rule for how to know what the behavior should be (and if it gets it wrong, just override it): apply from right to left.  Lets show a few examples.</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Echoable</span> {</span>
+    <span class="hljs-keyword">def</span> echo: Unit
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">One</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Echoable</span> {</span>
+    <span class="hljs-keyword">override</span> <span class="hljs-keyword">def</span> echo = println(<span class="hljs-string">"one"</span>)
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Two</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Echoable</span> {</span>
+    <span class="hljs-keyword">override</span> <span class="hljs-keyword">def</span> echo = println(<span class="hljs-string">"two"</span>)
+}
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Three</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Echoable</span> {</span>
+    <span class="hljs-keyword">override</span> <span class="hljs-keyword">def</span> echo = println(<span class="hljs-string">"three"</span>)
+}
+
+(<span class="hljs-keyword">new</span> Three <span class="hljs-keyword">with</span> Two <span class="hljs-keyword">with</span> One).echo
+<span class="hljs-comment">// one</span>
+
+(<span class="hljs-keyword">new</span> One <span class="hljs-keyword">with</span> Three <span class="hljs-keyword">with</span> Two).echo
+<span class="hljs-comment">// two</span>
+
+(<span class="hljs-keyword">new</span> Two <span class="hljs-keyword">with</span> One <span class="hljs-keyword">with</span> Three).echo
+<span class="hljs-comment">// three</span>
+</code></pre>
+<p>Here we use the <code>override</code> keyword to say we don&#39;t care about any other implementation, use mine.</p>
 
                 
                 </section>
@@ -453,7 +451,7 @@ KeyValue.get(foo).get
     
         
             
-            <a href="./Phantom Type.html" class="navigation-link next">Next</a>
+            <a href="./Partial Function.html" class="navigation-link next">Next</a>
             
         
     
