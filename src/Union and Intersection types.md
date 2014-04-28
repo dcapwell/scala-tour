@@ -79,3 +79,6 @@ def size[T : (Int |∈| String)#λ](t : T) = t match {
     case s : String => s.length
 }
 ```
+
+## SIP
+Found this scala suggestion [bug](https://issues.scala-lang.org/browse/SUGGEST-22) when looking for union types.  Doesn't look like its getting too much traction and didn't see a SIP for it yet.
