@@ -165,4 +165,56 @@ trait Three extends Echoable {
 // three
 ```
 
-Here we use the `override` keyword to say we don't care about any other implementation, use mine.
+Here we use the `override` keyword to say we don't care about any other implementation, use mine.  If the `override` keyword is omitted then the behavior is just like java's.
+
+```scala
+trait Printable {
+    def print: Unit
+}
+
+trait P1 extends Printable {
+    def print = println("one")
+}
+
+trait P2 extends Printable {
+    def print = println("two")
+}
+
+(new P1 with P2).print
+<console>:11: error: <$anon: P1 with P2> inherits conflicting members:
+  method print in trait P1 of type => Unit  and
+  method print in trait P2 of type => Unit
+(Note: this can be resolved by declaring an override in <$anon: P1 with P2>.)
+              (new P1 with P2).print
+                   ^
+```
+
+So what was that `abstract override` we saw before?  Its a way to say that different traits can both define the behavior.  The right most trait runs first, then left, then left, etc.  Lets go over a example bad word filtering.
+
+```scala
+trait Speaker {
+    def say(word: String) = println(word)
+}
+
+new Speaker(){}.say("Are you a java developer!?!")
+Are you a java developer!?!
+```
+
+In this case we are going to say that "java" is a bad word.  So lets filter it out and convert it to `j***`.
+
+```scala
+trait JavaFilter extends Speaker {
+    abstract override def say(word: String) = super.say(word.replace("java", "j***"))
+}
+
+class Teacher extends Speaker with JavaFilter
+
+val speaker = new Teacher()
+speaker.say("Are you a java developer!?!")
+// Are you a j*** developer!?!
+
+speaker.say("Are you a JAVA developer!?!")
+// Are you a JAVA developer!?!
+```
+
+With mixins we are able to do the decorator pattern that we did in java, but at the interface level.
