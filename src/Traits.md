@@ -43,7 +43,29 @@ public interface Bar {
 }
 ```
 
-This looks very similar, but there is one big difference between the two: java's block goes away if overriden, so code reuse is not possible, scala's implementation of this is as a companion object that lets you reuse if you want.  Lets show this example.
+This looks very similar, but there is one big difference between the two: java's block goes away if overriden, so code reuse is not possible, scala's implementation of this is as a companion object that lets you reuse if you want.  Lets take a look at the generated code from scala.
+
+```scala
+scala> :javap -p Bar
+Compiled from "<console>"
+public interface Bar{
+    public abstract java.lang.String bar();
+    public abstract void echo();
+}
+```
+
+Bar looks the same as before, but now there is a new object generated.
+
+```scala
+scala> :javap -p Bar$class
+Compiled from "<console>"
+public abstract class Bar$class extends java.lang.Object{
+    public static void echo(Bar);
+    public static void $init$(Bar);
+}
+```
+
+The `Bar$class` generated is a class with only static methods defined from the trait.  If a class extends the trait, it would look like the following.
 
 ```java
 // couldn't find a way to do this in scala (scala cant find the type), so doing it in java
