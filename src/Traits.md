@@ -43,7 +43,7 @@ public interface Bar {
 }
 ```
 
-This looks very similar, but there is one big difference between the two: java's block goes away if overriden, so code reuse is not possible, scala's implementation of this is as a companion object that lets you reuse if you want.  Lets take a look at the generated code from scala.
+This looks very similar, but there is one big difference between the two: java's block goes away if overriden, so code reuse is not possible, scala's implementation of this uses a utility class to store the implementation.  This utility class can be reused and mixed into your code however you wish.  Lets take a look at the generated code from scala.
 
 ```scala
 scala> :javap -p Bar
@@ -54,7 +54,7 @@ public interface Bar{
 }
 ```
 
-Bar looks the same as before, but now there is a new object generated.
+Bar looks the same as before, but now there is a new utility class generated: `Bar$class`.
 
 ```scala
 scala> :javap -p Bar$class
@@ -79,7 +79,7 @@ public class MyBar implements Bar {
 }
 ```
 
-Because code reuse of defaults is something that is wanted, java 8 offers a solution to this by telling people to use static methods in default blocks.
+Because code reuse of defaults is something that is desired, java 8 offers a solution to this by telling people to use static methods in default blocks.
 
 ```java
 public static class Bars {
@@ -97,7 +97,7 @@ public interface Bar {
 }
 ```
 
-By doing the above, you get the same generated code that scala has (s/s/$class/g).  So great, we have the same thing right?  Lets try mixing in behaviors.
+By doing the above, you get the same generated code that scala has (s/s/$class/).  So great, we have the same thing right?  Lets try mixing in behaviors.
 
 ## Mixins
 In the java 8 based world, if you have the interface `Bar` and you want to add in new functionality, its up to you to define how thats done.  Lets try making echo use default echo and a logger echo.
@@ -111,7 +111,7 @@ public class MyBar implements Bar {
 }
 ```
 
-This seems ok, but to the consumer of `MyBar`, they won't know what is happening or that I have done this.  Scala view to how to do this is with types and mixing behaviors together (this is a common idea in functional programming; types should say whats going on).
+This seems ok, but to the consumer of `MyBar`, they won't know what is happening or that I have done this.  Scala view to how to do this is with types and mixing behaviors together (this is a common idea in functional programming; types should describe whats going on).
 
 ```scala
 trait BarLogger extends Bar {
@@ -131,7 +131,7 @@ world
 [LOGGER]: world
 ```
 
-With this, we are saying that `BarWorld` has type `Bar with BarLogger`.  We are using the type system to explain what the behavior of `BarWorld` will be.
+With this, we are saying that `BarWorld` has type `Bar with BarLogger`.  We are using the type system to explain what the behavior of `BarWorld` will be.  In this example `BarLogger` is decorating the `Bar` with new behavior.
 
 In java 8, default interfaces are just interfaces, so couldn't I do the same?
 
@@ -176,7 +176,11 @@ trait Two extends Echoable {
 trait Three extends Echoable {
     override def echo = println("three")
 }
+```
 
+Here we define three top level traits `One`, `Two`, and `Three` that all extend from `Echoable`.  Each one `override`s the `echo` method to be a different behavior.  Lets see how scala's right to left rule picks the behavior we want.
+
+```scala
 (new Three with Two with One).echo
 // one
 
@@ -187,7 +191,7 @@ trait Three extends Echoable {
 // three
 ```
 
-Here we use the `override` keyword to say we don't care about any other implementation, use mine.  If the `override` keyword is omitted then the behavior is just like java's.
+As we see here, the trait defined right most is the one that wins.  In traits, the `override` keyword anotations that this trait defines a fully implementation of a method, and to use it rather than using `super.echo`.  So what if we didn't define `override`?
 
 ```scala
 trait Printable {
@@ -211,7 +215,9 @@ trait P2 extends Printable {
                    ^
 ```
 
-So what was that `abstract override` we saw before?  Its a way to say that different traits can both define the behavior.  The right most trait runs first, then left, then left, etc.  Lets go over a example bad word filtering.
+As we see above, the behavior is the same as java's (but with a weirder error message).  If the user adds traits that conflict with an implementation and don't annotate how to resolve conflicts, then scala will expect the user to resolve the conflict.
+
+So what was that `abstract override` we saw before?  Lets go over an example to explain it; filtering out the bad word "java".
 
 ```scala
 trait Speaker {
@@ -239,4 +245,101 @@ speaker.say("Are you a JAVA developer!?!")
 // Are you a JAVA developer!?!
 ```
 
-With mixins we are able to do the decorator pattern that we did in java, but at the interface level.
+The `abstract override` annotation says that this implementation relies on other implementations in the trait heirarchy.  The trait now has access to `super` (you won't have acccess to super without it) and lets you control how to decorate the method.  Thats really want `abstract override` tries to do, let traits decorate other traits.  In a java based world, the decorator pattern is normally implemented by a wrapper object that will do some logic than delegate to the wrapped object but in scala the same thing can be done at the trait level and normally is (types defining behavior).
+
+## Self =>
+Now that we see that traits can be mixed into other traits to create new behaviors, is there any way to say that a trait depends on another trait without extending it (abstract override does depend on a bottom trait implementing the base case)?  What about controlling the type of `this`?  This is where `self =>` comes in; self is the object impelementing the trait, and as with other objects we can say what the type is.
+
+Simple case, just defining self reference
+
+```scala
+trait Foo { self =>
+    def doWork: Unit
+}
+```
+
+Defining self's type
+
+```scala
+trait Bar { self: Foo =>
+    def doMoreWork: Unit = self.doWork
+}
+// don't have to use self within the code
+trait Bar2 { self: Foo =>
+    def doMoreWork: Unit = doWork
+}
+```
+
+Here we define that the object implementing `Bar` must have also added the type `Foo` to itself.  If that has been done, then we can use self to access the methods defined in other traits.
+
+```scala
+object Baz extends Foo with Bar {
+    def doWork = println("baz")
+}
+Baz.doMoreWork
+```
+
+If the user doesn't mixin `Foo`
+
+```scala
+object Baz2 extends Bar {
+    def doWork = println("baz")
+}
+<console>:62: error: illegal inheritance;
+ self-type Baz2.type does not conform to Bar's selftype Bar with Foo
+       object Baz2 extends Bar {
+                           ^
+```
+
+Defining intersection types.
+
+```scala
+trait Biz { self: Bar with Foo =>
+    def doEvenMoreWork = {
+        self.doWork
+        self.doMoreWork
+    }
+}
+```
+
+The question you might be wondering at this point is "how is this different than just extending?"  Right now we have shown that there really isn't any difference, but what each implies is infact different.  In the above case of `Bar`, we are really saying that `Bar` "requires" `Foo` and adds a method `doMoreWork` but does not define method `doWork`.  If `Bar` extended `Foo`, then it would be saying that `Bar` adds methods `doWork` and `doMoreWork`.  Self really lets you define a traits dependencies.  Lets try to explore this abit more.
+
+### Mixin to predefined classes
+Trait extends follows very similar rules to java's interface extends, namely interfaces can extend other interfaces but not classes.
+
+```scala
+trait FooInt extends Int
+<console>:58: error: illegal inheritance from final class Int
+       trait FooInt extends Int
+                            ^
+```
+
+This makes sense, the JVM won't let interfaces extend a class, but what if I do want to define an interface that adds functionality to a class?
+
+```scala
+import java.util.Properties
+trait ScalaProperty { self: Properties =>
+    def apply(key: String): Option[String] = Option(self.getProperty(key))
+}
+```
+
+Now we can mix this behavior into the properties object when we create it.
+
+```scala
+val prop = new Properties with ScalaProperty
+prop("missing")
+// None
+```
+
+Self is much more flexible than extends, namely because self is defining what dependencies the trait has.
+
+So would we ever want to use extends?  YES!  Look at collections apis for a great example of when to use extends; `List` is `Iterable` and `TraversableOnce`.  If the user had to always create a new list and mix in these traits, the api would be hard to use.  Second off, it would require that the user calls new since you can only mixin at object creation time, aka new.
+
+```scala
+List(1, 2, 3) with Foo
+<console>:1: error: ';' expected but 'with' found.
+       List(1, 2, 3) with Foo
+                     ^
+```
+
+So when picking self vs extends, ask yourself is the functionality being added needed for almost all instances?  Do you own the implementation?  Are there conflicting functionalities that you want to define?
