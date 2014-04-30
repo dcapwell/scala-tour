@@ -317,33 +317,56 @@
                 <section class="normal" id="section-gitbook_5">
                 
                     <h1 id="partial-function">Partial Function</h1>
-<p>A function takes a <code>A</code> and returns a <code>B</code>; a proper function must handle all cases of <code>A</code>.  What about the cases where we can&#39;t handle all cases of <code>A</code>?  This is where partial functions come in.</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">val</span> one: PartialFunction[Int, String] = { <span class="hljs-keyword">case</span> <span class="hljs-number">1</span> =&gt; <span class="hljs-string">"one"</span> }
-
-one.isDefinedAt(<span class="hljs-number">1</span>)
+<p>A function takes an <code>A</code> and returns a <code>B</code> for all <code>A</code>s.  But what if we are not able to handle all <code>A</code>s?  What if we want to build up to a proper function but in smaller building blocks?  This is where <code>PartialFunction</code> comes in, lets take a look.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> even: PartialFunction[Int, String] = { <span class="hljs-keyword">case</span> e: Int <span class="hljs-keyword">if</span> e % <span class="hljs-number">2</span> == <span class="hljs-number">0</span> =&gt; <span class="hljs-string">"even"</span> }
+</code></pre>
+<p>Here we define a <code>PartialFunction</code> <code>even</code> that only works for ints that are even.  How would you use this?</p>
+<pre><code class="lang-scala">even(<span class="hljs-number">2</span>)
+<span class="hljs-comment">// even</span>
+even(<span class="hljs-number">1</span>)
+<span class="hljs-comment">// scala.MatchError: 1 (of class java.lang.Integer)</span>
+</code></pre>
+<p>Thats not nice!  <code>even(1)</code> throws an exception, thats so not scala style!  This is because <code>even</code> isn&#39;t a proper function, it only works with evens.  So lets check to see if our input is proper for this partial function.</p>
+<pre><code class="lang-scala">even.isDefinedAt(<span class="hljs-number">2</span>)
 <span class="hljs-comment">// true</span>
-one.isDefinedAt(<span class="hljs-number">10</span>)
+even.isDefinedAt(<span class="hljs-number">1</span>)
 <span class="hljs-comment">// false</span>
-
-one(<span class="hljs-number">1</span>)
-<span class="hljs-comment">// one</span>
-one(<span class="hljs-number">10</span>)
-<span class="hljs-comment">// MatchError: 10 (of class java.lang.Integer)</span>
 </code></pre>
-<p>Partial functions can be composed together in a similar way to how functions compose.</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">val</span> one: PartialFunction[Int, String] = { <span class="hljs-keyword">case</span> <span class="hljs-number">1</span> =&gt; <span class="hljs-string">"one"</span> }
-<span class="hljs-keyword">val</span> two: PartialFunction[Int, String] = { <span class="hljs-keyword">case</span> <span class="hljs-number">2</span> =&gt; <span class="hljs-string">"two"</span> }
-<span class="hljs-keyword">val</span> three: PartialFunction[Int, String] = { <span class="hljs-keyword">case</span> <span class="hljs-number">3</span> =&gt; <span class="hljs-string">"three"</span> }
-<span class="hljs-keyword">val</span> wildcard: PartialFunction[Int, String] = { <span class="hljs-keyword">case</span> _ =&gt; <span class="hljs-string">"something else"</span> }
+<p>When building apis that are given <code>PartialFunction</code>s, its your responsibility to make sure the given input is proper for the function.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">def</span> doWork[A, B](f: PartialFunction[A, B])(work: A): Option[B] =
+        <span class="hljs-keyword">if</span>(f.isDefinedAt(work)) Option(f(work)) <span class="hljs-keyword">else</span> None
 
-<span class="hljs-keyword">val</span> allCases = one orElse two orElse three orElse wildcard
+doWork(even)(<span class="hljs-number">1</span>)
+<span class="hljs-comment">// None</span>
 
-allCases(<span class="hljs-number">100</span>)
-<span class="hljs-comment">// something else</span>
-allCases(<span class="hljs-number">3</span>)
-<span class="hljs-comment">// three</span>
+doWork(even)(<span class="hljs-number">2</span>)
+<span class="hljs-comment">// Some(even)</span>
 </code></pre>
-<p>When would this be useful?  If you look at several REST frameworks, they work off this idea; <code>PartialFunction[Request, Response]</code></p>
+<p>It was implied earlier that <code>PartialFunction</code>s are composable, lets show that.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> odd: PartialFunction[Int, String] = { <span class="hljs-keyword">case</span> e: Int <span class="hljs-keyword">if</span> e % <span class="hljs-number">2</span> == <span class="hljs-number">1</span> =&gt; <span class="hljs-string">"odd"</span> }
+
+<span class="hljs-keyword">val</span> evenOrOdd = even orElse odd
+</code></pre>
+<p>if you have two <code>PartialFunction</code>s <code>A =&gt; B</code> and <code>B =&gt; C</code>, you can create a new one from <code>A =&gt; C</code>.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> length: PartialFunction[String, Int] = { <span class="hljs-keyword">case</span> e: String =&gt; e.length }
+
+<span class="hljs-keyword">val</span> evensLength = even andThen length
+
+evensLength(<span class="hljs-number">2</span>)
+<span class="hljs-comment">// 4</span>
+</code></pre>
+<p>Where is this really used?  <code>PartialFunction</code>s are very common in collections apis and in dealing with events.</p>
+<p>Collections example:</p>
+<pre><code class="lang-scala"><span class="hljs-comment">// think conditional map</span>
+List(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>) collect even
+<span class="hljs-comment">// List(even, even)</span>
+</code></pre>
+<p>Events example:</p>
+<pre><code class="lang-scala"><span class="hljs-comment">// HTTP api that only works with GET requests at /hello.  Other cases will get a 404</span>
+<span class="hljs-keyword">val</span> service: HttpService = {
+  <span class="hljs-keyword">case</span> Get -&gt; Root / <span class="hljs-string">"hello"</span> =&gt; Ok(<span class="hljs-string">"Hello World!"</span>)
+}
+</code></pre>
 
                 
                 </section>
