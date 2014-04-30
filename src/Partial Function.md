@@ -1,34 +1,75 @@
 # Partial Function
-A function takes a `A` and returns a `B`; a proper function must handle all cases of `A`.  What about the cases where we can't handle all cases of `A`?  This is where partial functions come in.
+A function takes an `A` and returns a `B` for all `A`s.  But what if we are not able to handle all `A`s?  What if we want to build up to a proper function but in smaller building blocks?  This is where `PartialFunction` comes in, lets take a look.
 
 ```scala
-val one: PartialFunction[Int, String] = { case 1 => "one" }
+val even: PartialFunction[Int, String] = { case e: Int if e % 2 == 0 => "even" }
+```
 
-one.isDefinedAt(1)
+Here we define a `PartialFunction` `even` that only works for ints that are even.  How would you use this?
+
+```scala
+even(2)
+// even
+even(1)
+// scala.MatchError: 1 (of class java.lang.Integer)
+```
+
+Thats not nice!  `even(1)` throws an exception, thats so not scala style!  This is because `even` isn't a proper function, it only works with evens.  So lets check to see if our input is proper for this partial function.
+
+```scala
+even.isDefinedAt(2)
 // true
-one.isDefinedAt(10)
+even.isDefinedAt(1)
 // false
-
-one(1)
-// one
-one(10)
-// MatchError: 10 (of class java.lang.Integer)
 ```
 
-Partial functions can be composed together in a similar way to how functions compose.
+When building apis that are given `PartialFunction`s, its your responsibility to make sure the given input is proper for the function.
 
 ```scala
-val one: PartialFunction[Int, String] = { case 1 => "one" }
-val two: PartialFunction[Int, String] = { case 2 => "two" }
-val three: PartialFunction[Int, String] = { case 3 => "three" }
-val wildcard: PartialFunction[Int, String] = { case _ => "something else" }
+def doWork[A, B](f: PartialFunction[A, B])(work: A): Option[B] =
+        if(f.isDefinedAt(work)) Option(f(work)) else None
 
-val allCases = one orElse two orElse three orElse wildcard
+doWork(even)(1)
+// None
 
-allCases(100)
-// something else
-allCases(3)
-// three
+doWork(even)(2)
+// Some(even)
 ```
 
-When would this be useful?  If you look at several REST frameworks, they work off this idea; `PartialFunction[Request, Response]`
+It was implied earlier that `PartialFunction`s are composable, lets show that.
+
+```scala
+val odd: PartialFunction[Int, String] = { case e: Int if e % 2 == 1 => "odd" }
+
+val evenOrOdd = even orElse odd
+```
+
+if you have two `PartialFunction`s `A => B` and `B => C`, you can create a new one from `A => C`.
+
+```scala
+val length: PartialFunction[String, Int] = { case e: String => e.length }
+
+val evensLength = even andThen length
+
+evensLength(2)
+// 4
+```
+
+Where is this really used?  `PartialFunction`s are very common in collections apis and in dealing with events.
+
+Collections example:
+
+```scala
+// think conditional map
+List(1, 2, 3, 4) collect even
+// List(even, even)
+```
+
+Events example:
+
+```scala
+// HTTP api that only works with GET requests at /hello.  Other cases will get a 404
+val service: HttpService = {
+  case Get -> Root / "hello" => Ok("Hello World!")
+}
+```
