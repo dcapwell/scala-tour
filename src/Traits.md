@@ -245,7 +245,7 @@ speaker.say("Are you a JAVA developer!?!")
 // Are you a JAVA developer!?!
 ```
 
-The `abstract override` annotation says that this implementation relies on other implementations in the trait hierarchy.  The trait now has access to `super` (you won't have access to super without it) and lets you control how to decorate the method.  Thats really want `abstract override` tries to do, let traits decorate other traits.  In a java based world, the decorator pattern is normally implemented by a wrapper object that will do some logic than delegate to the wrapped object but in scala the same thing can be done at the trait level and normally is (types defining behavior).
+The `abstract override` annotation says that this implementation relies on other implementations in the trait hierarchy.  The trait now has access to `super` (you won't have access to super without it) and lets you control how to decorate the method.  Thats really what `abstract override` tries to do, let traits decorate other traits.  In a java based world, the decorator pattern is normally implemented by a wrapper object that will do some logic than delegate to the wrapped object.  In scala the same thing can be done at the trait level and normally is (types defining behavior).
 
 ## Self =>
 Now that we see that traits can be mixed into other traits to create new behaviors, is there any way to say that a trait depends on another trait without extending it (abstract override does depend on a bottom trait implementing the base case)?  What about controlling the type of `this`?  This is where `self =>` comes in; self is the object implementing the trait, and as with other objects we can say what the type is.
@@ -270,27 +270,6 @@ trait Bar2 { self: Foo =>
 }
 ```
 
-Here we define that the object implementing `Bar` must have also added the type `Foo` to itself.  If that has been done, then we can use self to access the methods defined in other traits.
-
-```scala
-object Baz extends Foo with Bar {
-    def doWork = println("baz")
-}
-Baz.doMoreWork
-```
-
-If the user doesn't mixin `Foo`
-
-```scala
-object Baz2 extends Bar {
-    def doWork = println("baz")
-}
-<console>:62: error: illegal inheritance;
- self-type Baz2.type does not conform to Bar's selftype Bar with Foo
-       object Baz2 extends Bar {
-                           ^
-```
-
 Defining intersection types.
 
 ```scala
@@ -302,19 +281,62 @@ trait Biz { self: Bar with Foo =>
 }
 ```
 
+Here we define that the object implementing `Bar` must have also added the type `Foo` to itself.  If that has been done, then we can use self to access the methods defined in other traits.
+
+```scala
+object Baz extends Foo with Bar {
+    def doWork = println("baz")
+}
+Baz.doMoreWork
+// baz
+```
+
+If the user doesn't mixin `Foo` the compiler will reject the type.
+
+```scala
+object Baz2 extends Bar {
+    def doWork = println("baz")
+}
+<console>:62: error: illegal inheritance;
+ self-type Baz2.type does not conform to Bar's selftype Bar with Foo
+       object Baz2 extends Bar {
+                           ^
+```
+
 The question you might be wondering at this point is "how is this different than just extending?"  Right now we have shown that there really isn't any difference, but what each implies is infact different.  In the above case of `Bar`, we are really saying that `Bar` "requires" `Foo` and adds a method `doMoreWork` but does not define method `doWork`.  If `Bar` extended `Foo`, then it would be saying that `Bar` adds methods `doWork` and `doMoreWork`.  Self really lets you define a traits dependencies.  Lets try to explore this abit more.
 
 ### Mixin to predefined classes
-Trait extends follows very similar rules to java's interface extends, namely interfaces can extend other interfaces but not classes.
+Traits are like interfaces in that they can't construct a object on its own.
 
 ```scala
-trait FooInt extends Int
-<console>:58: error: illegal inheritance from final class Int
-       trait FooInt extends Int
+import java.util.Properties
+
+trait MyProperties extends Properties
+
+new MyProperties
+<console>:61: error: trait MyProperties is abstract; cannot be instantiated
+              new MyProperties
                             ^
 ```
 
-This makes sense, the JVM won't let interfaces extend a class, but what if I do want to define an interface that adds functionality to a class?
+As we see here, traits can extend classes, so can we hack java to let a class extend two classes?
+
+```scala
+import java.util.HashMap
+
+trait MyHashMap extends HashMap[String, String]
+
+case class MyClass extends MyHashMap with MyProperties
+<console>:64: error: illegal inheritance; superclass HashMap
+ is not a subclass of the superclass Properties
+ of the mixin trait MyProperties
+       case class MyClass extends MyHashMap with MyProperties
+                                                 ^
+```
+
+Seems like no; if we extend a class, then a trait acts more like an abstract class.  This is to be expected since the JVM doesn't allow this.
+
+Now lets take this idea but add new functionality for properties.
 
 ```scala
 import java.util.Properties
@@ -323,13 +345,16 @@ trait ScalaProperty { self: Properties =>
 }
 ```
 
-Now we can mix this behavior into the properties object when we create it.
+Here we define a trait that depends on properties (`self: Properties =>`) and adds a method apply to it.  Lets use it
 
 ```scala
 val prop = new Properties with ScalaProperty
 prop("missing")
 // None
 ```
+
+Trait mixins are a way to add new behavior to existing types.  This can be done when defining a class or creating a new instance of a class.
+
 
 Self is much more flexible than extends, namely because self is defining what dependencies the trait has.
 
