@@ -1,5 +1,7 @@
 # Variance and Bounds
 
+This doc was mostly taken from [Scala School](http://twitter.github.io/scala_school/).  You can read there for more detailed view on this topic.
+
 ## Variance
 When you have a type T and a type T' which extends that type, the question to ask is is Container[T'] considered a subclass of Container[T]?  Variance annotations lets you control when this is the case or not.
 
@@ -25,7 +27,7 @@ val cv: Contravariant[String] = new Contravariant[AnyRef]
 ```
 
 ## Bounds
-In java you had the ability to define `super` and/or `extends` to try to define what can be accepted.  Scala lets you do the same but with a different syntax:
+In java you had the ability to define `super` and/or `extends` to try to define what can be accepted.  Scala lets you do the same but lets you have more control over the lower and upper bounds of input:
 
 Lower bound
 ```scala
