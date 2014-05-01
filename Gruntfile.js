@@ -8,7 +8,6 @@ module.exports = function (grunt) {
     grunt.initConfig({
         'gitbook': {
             development: {
-                dest: path.join(__dirname, ".grunt/gitbook/site"),
                 input: "./src",
                 format: "site",
                 title: "Scala Tour",
@@ -18,7 +17,7 @@ module.exports = function (grunt) {
         },
         'gh-pages': {
             options: {
-                base: '.grunt/gitbook/site'
+                base: '_book'
             },
             src: ['**']
         },
