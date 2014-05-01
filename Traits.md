@@ -25,7 +25,7 @@ public interface Foo{
 }
 ```
 
-So whats the big deal?  Traits start to differ from interfaces with defaults when you start defining implementations and mixing in.  Lets look at defining behavior.
+So whats the big deal?  Traits start to differ from interfaces with defaults when you start defining implementations.  Lets look at defining behavior.
 
 ```scala
 trait Bar {
@@ -43,7 +43,7 @@ public interface Bar {
 }
 ```
 
-This looks very similar, but there is one big difference between the two: java's block goes away if overriden, so code reuse is not possible, scala's implementation of this uses a utility class to store the implementation.  This utility class can be reused and mixed into your code however you wish.  Lets take a look at the generated code from scala.
+This looks very similar, but there is one big difference between the two: java's block goes away if overriden, scala's implementation of this uses a utility class to store the implementation.  This utility class can be reused and mixed into your code however you wish.  Lets take a look at the generated code from scala.
 
 ```scala
 scala> :javap -p Bar
@@ -79,7 +79,7 @@ public class MyBar implements Bar {
 }
 ```
 
-Because code reuse of defaults is something that is desired, java 8 offers a solution to this by telling people to use static methods in default blocks.
+Because code reuse of defaults is something that is desired, it is recommended to use static methods in default blocks.
 
 ```java
 public static class Bars {
@@ -97,7 +97,7 @@ public interface Bar {
 }
 ```
 
-By doing the above, you get the same generated code that scala has (s/s/$class/).  So great, we have the same thing right?  Lets try mixing in behaviors.
+By doing the above, you get the same generated code that scala has (s/s/$class/).  So great, we have the same thing right?  Lets try mixing different behaviors together.
 
 ## Mixins
 In the java 8 based world, if you have the interface `Bar` and you want to add in new functionality, its up to you to define how thats done.  Lets try making echo use default echo and a logger echo.
@@ -111,7 +111,7 @@ public class MyBar implements Bar {
 }
 ```
 
-This seems ok, but to the consumer of `MyBar`, they won't know what is happening or that I have done this.  Scala view to how to do this is with types and mixing behaviors together (this is a common idea in functional programming; types should describe whats going on).
+This seems ok, but to the consumer of `MyBar`, he/she won't know what is happening or that `MyBar` has done this.  Scala's view of how to do this comes from a common thought in functional programming; types should reflect what happened.  What does it mean in this context?  Well, in normal scala code you won't see the above often (implement an interface and mix in multiple behaviors).  Instead you will see a powerful feature of scala; trait mixins. A mixin is a trait that adds or enhance functionality on the type its been mixed into; types should describe whats going on.
 
 ```scala
 trait BarLogger extends Bar {
@@ -122,7 +122,7 @@ trait BarLogger extends Bar {
 }
 ```
 
-Now lets mix these two together.
+Here we have a new type `BarLogger` that will enhance the `echo` method of `Bar`.  Now lets mix these two together.
 
 ```scala
 case class BarWorld(bar: String) extends Bar with BarLogger
@@ -158,7 +158,7 @@ public class MyBar implements Bar, BarLogger {
 }
 ```
 
-Scala defines a simple rule for how to know what the behavior should be (and if it gets it wrong, just override it): apply from right to left.  Lets show a few examples.
+If we are mixing traits together to compose a new type, how does scala know what the end behavior should be?  Scala defines a simple rule for how to know what the behavior should be (and if it gets it wrong, just override it): apply from right to left.  Lets show a few examples.
 
 ```scala
 trait Echoable {
@@ -248,7 +248,7 @@ speaker.say("Are you a JAVA developer!?!")
 The `abstract override` annotation says that this implementation relies on other implementations in the trait hierarchy.  The trait now has access to `super` (you won't have access to super without it) and lets you control how to decorate the method.  Thats really what `abstract override` tries to do, let traits decorate other traits.  In a java based world, the decorator pattern is normally implemented by a wrapper object that will do some logic than delegate to the wrapped object.  In scala the same thing can be done at the trait level and normally is (types defining behavior).
 
 ## Self =>
-Now that we see that traits can be mixed into other traits to create new behaviors, is there any way to say that a trait depends on another trait without extending it (abstract override does depend on a bottom trait implementing the base case)?  What about controlling the type of `this`?  This is where `self =>` comes in; self is the object implementing the trait, and as with other objects we can say what the type is.
+Now that we see that traits can be mixed into other traits to create new behaviors, is there any way to say that a trait depends on another trait without extending it?   What about controlling the type of `this`?  This is where `self =>` comes in; self is the object implementing the trait, and as with other objects we can say what the type is.
 
 Simple case, just defining self reference
 
@@ -281,7 +281,7 @@ trait Biz { self: Bar with Foo =>
 }
 ```
 
-Here we define that the object implementing `Bar` must have also added the type `Foo` to itself.  If that has been done, then we can use self to access the methods defined in other traits.
+As we see, we can define the type we expect self to be in.  Lets take a closer look at the `Bar` example.  Here we define that the object implementing `Bar` must have also added the type `Foo` to itself.
 
 ```scala
 object Baz extends Foo with Bar {
@@ -353,10 +353,21 @@ prop("missing")
 // None
 ```
 
-Trait mixins are a way to add new behavior to existing types.  This can be done when defining a class or creating a new instance of a class.
+Trait mixins are a way to add new behavior to existing types.  This can be done when defining a class or creating a new instance of a class.  We could do the same with extends, but from the usage perspective its weird.
 
+```scala
+import java.util.Properties
+trait ScalaProperty extends Properties { 
+    def apply(key: String): Option[String] = Option(this.getProperty(key))
+}
+val prop = new Properties with ScalaProperty
+prop("missing")
+// None
+```
 
-Self is much more flexible than extends, namely because self is defining what dependencies the trait has.
+In the example, extends and self will be used the same way but its weird in the fact that in the first case we are saying `ScalaProperty` depends on `Properties` but in the second case we are saying it is-a `Properties`.  If `ScalaProperty` is-a `Properties` then mixing it into a properties at creation time is different than how you normally deal with is-a relationships.
+
+Self is much more flexible than extends, namely because self is defining what dependencies the trait has.  This can be very helpful for modeling since we can keep the is-a relationships clean and mixin useful functionality without polluting the hierarchy.
 
 So would we ever want to use extends?  YES!  Look at collections apis for a great example of when to use extends; `List` is `Iterable` and `TraversableOnce`.  If the user had to always create a new list and mix in these traits, the api would be hard to use.  Second off, it would require that the user calls new since you can only mixin at object creation time, aka new.
 
@@ -367,4 +378,4 @@ List(1, 2, 3) with Foo
                      ^
 ```
 
-So when picking self vs extends, ask yourself is the functionality being added needed for almost all instances?  Do you own the implementation?  Are there conflicting functionalities that you want to define?
+So when picking self vs extends, ask yourself is the functionality being added needed for almost all instances?  Is the functionality a product of the type or just a utility? Do you own the implementation?  Are there conflicting functionalities that you want to define?
