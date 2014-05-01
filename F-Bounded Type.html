@@ -314,7 +314,7 @@
 
             <div class="page-inner">
             
-                <section class="normal" id="section-gitbook_11">
+                <section class="normal" id="section-gitbook_13">
                 
                     <h1 id="f-bounded-type">F-Bounded Type</h1>
 <p>F-Bounded types are types that point to the objects type.  What does this mean really?</p>
@@ -322,7 +322,7 @@
     def self: T
 }
 </code></pre>
-<p>This weird syntax <code>T &lt;: Foo[T]</code> is saying that the type of <code>Foo[T]</code> must be something that is itself a <code>Foo[T]</code> (the lower bound of <code>T</code> must atleast be <code>Foo[T]</code>).</p>
+<p>This weird syntax <code>T &lt;: Foo[T]</code> is saying that the type of <code>Foo[T]</code> must be something that is itself a <code>Foo[T]</code> (the lower bound of <code>T</code> must at least be <code>Foo[T]</code>).</p>
 <pre><code class="lang-scala">scala&gt; <span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Bar</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Foo</span>[<span class="hljs-title">Bar</span>] {</span>
     <span class="hljs-keyword">def</span> self = <span class="hljs-keyword">this</span>
 }

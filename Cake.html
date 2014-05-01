@@ -314,7 +314,7 @@
 
             <div class="page-inner">
             
-                <section class="normal" id="section-gitbook_1">
+                <section class="normal" id="section-gitbook_10">
                 
                     <h1 id="cake">Cake</h1>
 <p>The cake is a lie...  Now, with that out of my system, what is the cake pattern and didn&#39;t we learn to hate it in PHP?  Lets ignore that for now and look at the core of what the pattern is trying to solve: dependency injection.  Lets take a look at a basic example.</p>
@@ -369,7 +369,7 @@
     <span class="hljs-keyword">val</span> foo: Foo <span class="hljs-keyword">with</span> SimpleFoo = NonNameBrandFoo
 }
 </code></pre>
-<p>So what did we gain here?  Well the concreate implementations are tied together in one location but the traits are not tied to concreate values.  Second, we used <a href="Path Dependent Types.html">Path Dependent Types</a> so you can&#39;t mix <code>Foosicals</code> produced from different <code>Bar</code>s.</p>
+<p>So what did we gain here?  Well the concrete implementations are tied together in one location but the traits are not tied to concrete values.  Second, we used <a href="Path Dependent Types.html">Path Dependent Types</a> so you can&#39;t mix <code>Foosicals</code> produced from different <code>Bar</code>s.</p>
 <pre><code class="lang-scala">scala&gt; IcyBar.drink(IcyBar.serve)
 res0: IcyBar.Result = Some(it was good)
 
@@ -391,8 +391,8 @@ scala&gt; IcyBar.drink(OtherBar.serve)
     (which expands to)  IcyBar.foo.Isical
               IcyBar.drink(IcyFoo.iPittyThe)
 </code></pre>
-<p>In this case this seems to be very restricive since <code>IcyFoo</code> and <code>foo</code> are the same object and the compiler knows this!  But this has one thing that is nice about it, that each trait lives in its own world and can&#39;t be poluted from the outside.  Each trait is easier to test now since they can be tested in isolation.</p>
-<p>Lets take a look at anther more concreate example</p>
+<p>In this case this seems to be very restrictive since <code>IcyFoo</code> and <code>foo</code> are the same object and the compiler knows this!  But this has one thing that is nice about it, that each trait lives in its own world and can&#39;t be polluted from the outside.  Each trait is easier to test now since they can be tested in isolation.</p>
+<p>Lets take a look at anther more concrete example</p>
 <h2 id="cluster-management">Cluster Management</h2>
 <p>Lets say we are working on a new cluster management tool.  A cluster is a named entity that has nodes (which are also named).</p>
 <pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">ClusterService</span> {</span>

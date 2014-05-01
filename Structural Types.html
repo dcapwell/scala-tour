@@ -314,7 +314,7 @@
 
             <div class="page-inner">
             
-                <section class="normal" id="section-gitbook_13">
+                <section class="normal" id="section-gitbook_15">
                 
                     <h1 id="structural-types">Structural Types</h1>
 <p>When working in java for a long enough time, you will see that different libraries redefine types for themselves.  If you want to be able to work with the different types that structurally do the same thing then you had to define methods for each case.</p>
@@ -355,7 +355,7 @@ name(Baz(<span class="hljs-string">"baz"</span>))
                       ^
 </code></pre>
 <p>Awesome!  The compiler will reject useage of objects that don&#39;t looka like a named thing!  This feels a lot like <a href="http://golang.org/doc/effective_go.html#interfaces_and_types" target="_blank">Go&#39;s interfaces</a> but on the JVM!  So, how does this work?  The JVM doesn&#39;t have support for this outside of using... reflection!  Yep, thats how structural types are implemented at runtime; they use reflection.  Structural types are a very powerful typing system, but since it uses reflection at runtime you will see a performance hit for using them.  As with most things related to performance, if you use this in the 20% that matter, then switching to multiple methods will give you a boost.</p>
-<p>I tend to find that I use structural types in my test code more often than in my main code.  Below is a snippet from one of my test cases that work accross multiple case classes that looka alike, but don&#39;t share a common trait.</p>
+<p>I tend to find that I use structural types in my test code more often than in my main code.  Below is a snippet from one of my test cases that work across multiple case classes that looka alike, but don&#39;t share a common trait.</p>
 <pre><code class="lang-scala"><span class="hljs-keyword">type</span> Idable = {
     <span class="hljs-keyword">def</span> id: String
 }

@@ -314,7 +314,7 @@
 
             <div class="page-inner">
             
-                <section class="normal" id="section-gitbook_2">
+                <section class="normal" id="section-gitbook_9">
                 
                     <h1 id="higher-kind">Higher Kind</h1>
 <p>A higher kind is the type of a type constructor.  So what does that mean?  Lets look at a basic generic trait.</p>
@@ -326,7 +326,7 @@
 scala&gt; kind[MyList[String]
 MyList<span class="hljs-string">'s kind is * -&gt; *. This is a type constructor: a 1st-order-kinded type.</span>
 </code></pre>
-<p>The <code>MyList[String]</code> type is a 1st-order kinded type; the type of any <code>MyList</code> is paramaterized by <code>A</code>.  Think of <code>MyList</code> as a function for types as <code>A =&gt; MyList[A]</code> so given a type <code>A</code> we can created a new type <code>MyList[A]</code>.  So if <code>MyList</code> is a 1st-order kinded type, then what is a higher kind?  Well, what is a higher order function?  Its a function that accepts another function.  So what is a higher kinded type?  Its a type that is paramaterized by another type that is paramaterized.  Lets look at a simple example of this.</p>
+<p>The <code>MyList[String]</code> type is a 1st-order kinded type; the type of any <code>MyList</code> is parameterized by <code>A</code>.  Think of <code>MyList</code> as a function for types as <code>A =&gt; MyList[A]</code> so given a type <code>A</code> we can created a new type <code>MyList[A]</code>.  So if <code>MyList</code> is a 1st-order kinded type, then what is a higher kind?  Well, what is a higher order function?  Its a function that accepts another function.  So what is a higher kinded type?  Its a type that is parameterized by another type that is parameterized.  Lets look at a simple example of this.</p>
 <pre><code class="lang-scala">scala&gt; <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Foo</span>[<span class="hljs-title">A</span>[<span class="hljs-title">_</span>]]</span>
 scala&gt; kind[Foo[List]]
 Foo<span class="hljs-string">'s kind is (* -&gt; *) -&gt; *. This is a type constructor that takes type constructor(s): a higher-kinded type.</span>

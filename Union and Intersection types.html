@@ -314,7 +314,7 @@
 
             <div class="page-inner">
             
-                <section class="normal" id="section-gitbook_18">
+                <section class="normal" id="section-gitbook_19">
                 
                     <h1 id="union-and-intersection-types">Union and Intersection types</h1>
 <p>In scala you can define type intersection (and) in a very simple way</p>
@@ -348,7 +348,7 @@ scala&gt; size(<span class="hljs-number">10.0</span>)
 <p>Great, it does what we expect (but error is hard to understand);  it will only let us consume <code>Int</code> and <code>String</code> types, but nothing else.</p>
 <p>When I was just a java programmer I thought that one of the key features of ceylon was <a href="http://ceylon-lang.org/documentation/current/introduction/#principal_typing_union_types_and_intersection_types" target="_blank">union and intersection types</a>.  Now I see that I can do the same with scala.</p>
 <h2 id="scalaz">Scalaz</h2>
-<p>The authors of scalaz saw this same blog post and have added union types into scalaz so you don&#39;t have to add the above types first.  Lets reimplment the size function using scalaz&#39;s union type.</p>
+<p>The authors of scalaz saw this same blog post and have added union types into scalaz so you don&#39;t have to add the above types first.  Lets reimplement the size function using scalaz&#39;s union type.</p>
 <pre><code class="lang-scala"><span class="hljs-keyword">import</span> scalaz._, Scalaz._
 <span class="hljs-keyword">import</span> UnionTypes._
 
