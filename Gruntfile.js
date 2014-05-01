@@ -22,7 +22,7 @@ module.exports = function (grunt) {
             src: ['**']
         },
         'clean': {
-            files: '.grunt'
+            files: ['.grunt', '_book']
         }
     });
 

@@ -42,7 +42,7 @@
 
 
         
-    <div class="book" data-github="dcapwell/scala-tour" data-level="2.1" data-basepath="." data-revision="1398917830984">
+    <div class="book" data-github="dcapwell/scala-tour" data-level="2.1" data-basepath="." data-revision="1398964168556">
     <div class="book-header">
     <!-- Actions Left -->
     
@@ -359,6 +359,7 @@
                     <section class="normal" id="section-gitbook_21">
                     
                         <h1 id="variance-and-bounds">Variance and Bounds</h1>
+<p>This doc was mostly taken from <a href="http://twitter.github.io/scala_school/" target="_blank">Scala School</a>.  You can read there for more detailed view on this topic.</p>
 <h2 id="variance">Variance</h2>
 <p>When you have a type T and a type T&#39; which extends that type, the question to ask is is Container[T&#39;] considered a subclass of Container[T]?  Variance annotations lets you control when this is the case or not.</p>
 <p>Scala notation</p>
@@ -398,7 +399,7 @@
 <span class="hljs-comment">// val fail: Contravariant[AnyRef] = new Contravariant[String] // type mismatch</span>
 </code></pre>
 <h2 id="bounds">Bounds</h2>
-<p>In java you had the ability to define <code>super</code> and/or <code>extends</code> to try to define what can be accepted.  Scala lets you do the same but with a different syntax:</p>
+<p>In java you had the ability to define <code>super</code> and/or <code>extends</code> to try to define what can be accepted.  Scala lets you do the same but lets you have more control over the lower and upper bounds of input:</p>
 <p>Lower bound</p>
 <pre><code class="lang-scala">A &lt;: B
 </code></pre>

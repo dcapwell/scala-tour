@@ -1,26 +1,26 @@
 CACHE MANIFEST
-# Revision 1398917830985
+# Revision 1398964168557
 
 CACHE:
 References.html
 Language.html
 Memoization.html
-Partial Function.html
+F-Bounded Type.html
 Patterns.html
 Phantom Type.html
-index.html
-Path Dependent Types.html
-F-Bounded Type.html
 Higher Kind.html
-Tag Types.html
+index.html
+Partial Function.html
+Path Dependent Types.html
 Scalaz.html
+Tag Types.html
 Cake.html
 Types.html
 Structural Types.html
 Utils.html
-Union and Intersection types.html
 Type Classes.html
 Traits.html
+Union and Intersection types.html
 Value Classes.html
 Variance.html
 gitbook/app.js

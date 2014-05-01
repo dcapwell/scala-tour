@@ -42,7 +42,7 @@
 
 
         
-    <div class="book" data-github="dcapwell/scala-tour" data-level="2.2" data-basepath="." data-revision="1398917830984">
+    <div class="book" data-github="dcapwell/scala-tour" data-level="2.2" data-basepath="." data-revision="1398964168556">
     <div class="book-header">
     <!-- Actions Left -->
     
@@ -378,7 +378,7 @@
 }
 </code></pre>
 <p>we define a method print that will take the value of name and pass it to println.</p>
-<p>So whats so special here?  What scala will do for us is replace code that talks to <code>Foo</code> directly and replace them with function calls.  Lets try looking at javap to see if this gets more clear.</p>
+<p>So whats so special here?  What scala will do for us is replace code that talks to <code>Foo</code> directly and replace them with function calls.  Lets try looking at javap to see if this gets clearer.</p>
 <pre><code class="lang-scala">:javap Foo
 public <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">java</span>.<span class="hljs-title">lang</span>.<span class="hljs-title">Object</span>{</span>
     public java.lang.String name();
@@ -388,7 +388,7 @@ public <span class="hljs-keyword">final</span> <span class="hljs-class"><span cl
     public Foo(java.lang.String);
 }
 </code></pre>
-<p>There is nothing special here, this looks like very other reference type.  So how does scala remove the reference to Foo for the callers?  By sending them to the companion object.</p>
+<p>There is nothing special here, this looks like every other reference type.  So how does scala remove the reference to <code>Foo</code> for the callers?  By sending them to the companion object.</p>
 <pre><code class="lang-scala">:javap Foo$
 public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span>$ <span class="hljs-keyword">extends</span> <span class="hljs-title">java</span>.<span class="hljs-title">lang</span>.<span class="hljs-title">Object</span>{</span>
     public static <span class="hljs-keyword">final</span> Foo$ MODULE$;
@@ -399,7 +399,7 @@ public <span class="hljs-class"><span class="hljs-keyword">class</span> <span cl
     public Foo$();
 }
 </code></pre>
-<p>See the <code>void print$extension(java.lang.String)</code> function there?  That function is what scala will select for the caller to try to avoid the object creation overhead.  The <code>$extension</code> postfix is given to all methods from the Foo class and has the same logic that the method has, but acts on a argument rather than field/method lookup.</p>
+<p>See the <code>void print$extension(java.lang.String)</code> function there?  That function is what scala will select for the caller to try to avoid the object creation overhead.  The <code>$extension</code> postfix is given to all methods from the <code>Foo</code> class and has the same logic that the method has, but acts on a argument rather than field/method lookup.</p>
 <p>So, why should I care?  This seems more of a microlevel optimisation, so why would I need this?  Well, one nice place to put this is in implicit classes.</p>
 <pre><code class="lang-scala">scala&gt; implicit <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BetterIntOpt</span><span class="hljs-params">(val value: Int)</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AnyVal</span> {</span>
      | <span class="hljs-keyword">def</span> makeBetter = <span class="hljs-number">42</span> + value
