@@ -69,7 +69,7 @@ Events example:
 
 ```scala
 // HTTP api that only works with GET requests at /hello.  Other cases will get a 404
-val service: HttpService = {
+val service: PartialFunction[Request, Response] = {
   case Get -> Root / "hello" => Ok("Hello World!")
 }
 ```
