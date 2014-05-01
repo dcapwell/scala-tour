@@ -34,7 +34,7 @@ The rest of the statement looks like any other class
 
 we define a method print that will take the value of name and pass it to println.
 
-So whats so special here?  What scala will do for us is replace code that talks to `Foo` directly and replace them with function calls.  Lets try looking at javap to see if this gets more clear.
+So whats so special here?  What scala will do for us is replace code that talks to `Foo` directly and replace them with function calls.  Lets try looking at javap to see if this gets clearer.
 
 ```scala
 :javap Foo
@@ -47,7 +47,7 @@ public final class Foo extends java.lang.Object{
 }
 ```
 
-There is nothing special here, this looks like very other reference type.  So how does scala remove the reference to Foo for the callers?  By sending them to the companion object.
+There is nothing special here, this looks like every other reference type.  So how does scala remove the reference to `Foo` for the callers?  By sending them to the companion object.
 
 ```scala
 :javap Foo$
@@ -61,7 +61,7 @@ public class Foo$ extends java.lang.Object{
 }
 ```
 
-See the `void print$extension(java.lang.String)` function there?  That function is what scala will select for the caller to try to avoid the object creation overhead.  The `$extension` postfix is given to all methods from the Foo class and has the same logic that the method has, but acts on a argument rather than field/method lookup.
+See the `void print$extension(java.lang.String)` function there?  That function is what scala will select for the caller to try to avoid the object creation overhead.  The `$extension` postfix is given to all methods from the `Foo` class and has the same logic that the method has, but acts on a argument rather than field/method lookup.
 
 So, why should I care?  This seems more of a microlevel optimisation, so why would I need this?  Well, one nice place to put this is in implicit classes.
 
