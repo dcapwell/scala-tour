@@ -51,7 +51,7 @@ name(Baz("baz"))
 
 Awesome!  The compiler will reject useage of objects that don't looka like a named thing!  This feels a lot like [Go's interfaces](http://golang.org/doc/effective_go.html#interfaces_and_types) but on the JVM!  So, how does this work?  The JVM doesn't have support for this outside of using... reflection!  Yep, thats how structural types are implemented at runtime; they use reflection.  Structural types are a very powerful typing system, but since it uses reflection at runtime you will see a performance hit for using them.  As with most things related to performance, if you use this in the 20% that matter, then switching to multiple methods will give you a boost.
 
-I tend to find that I use structural types in my test code more often than in my main code.  Below is a snippet from one of my test cases that work accross multiple case classes that looka alike, but don't share a common trait.
+I tend to find that I use structural types in my test code more often than in my main code.  Below is a snippet from one of my test cases that work across multiple case classes that looka alike, but don't share a common trait.
 
 ```scala
 type Idable = {

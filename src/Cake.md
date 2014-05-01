@@ -60,7 +60,7 @@ object OtherBar extends SimpleBar {
 }
 ```
 
-So what did we gain here?  Well the concreate implementations are tied together in one location but the traits are not tied to concreate values.  Second, we used [Path Dependent Types](Path Dependent Types.html) so you can't mix `Foosicals` produced from different `Bar`s.
+So what did we gain here?  Well the concrete implementations are tied together in one location but the traits are not tied to concrete values.  Second, we used [Path Dependent Types](Path Dependent Types.html) so you can't mix `Foosicals` produced from different `Bar`s.
 
 ```scala
 scala> IcyBar.drink(IcyBar.serve)
@@ -88,9 +88,9 @@ scala> IcyBar.drink(IcyFoo.iPittyThe)
               IcyBar.drink(IcyFoo.iPittyThe)
 ```
 
-In this case this seems to be very restricive since `IcyFoo` and `foo` are the same object and the compiler knows this!  But this has one thing that is nice about it, that each trait lives in its own world and can't be poluted from the outside.  Each trait is easier to test now since they can be tested in isolation.
+In this case this seems to be very restrictive since `IcyFoo` and `foo` are the same object and the compiler knows this!  But this has one thing that is nice about it, that each trait lives in its own world and can't be polluted from the outside.  Each trait is easier to test now since they can be tested in isolation.
 
-Lets take a look at anther more concreate example
+Lets take a look at anther more concrete example
 
 ## Cluster Management
 Lets say we are working on a new cluster management tool.  A cluster is a named entity that has nodes (which are also named).

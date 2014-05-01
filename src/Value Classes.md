@@ -1,6 +1,6 @@
 # Value Classes
 
-In java you had primative types (`int`, `long`, `double`, `float`, etc.) and their wrapper objects (`Integer`, `Long`, `Double`, `Float`, etc.).  "Autoboxing" was the process of the java compiler to switch back and forth between a object and a primative depending on the context.  You had no way of taking advantage of this autoboxing in your own types.  Thats where value classes comes in!
+In java you had primitive types (`int`, `long`, `double`, `float`, etc.) and their wrapper objects (`Integer`, `Long`, `Double`, `Float`, etc.).  "Autoboxing" was the process of the java compiler to switch back and forth between a object and a primative depending on the context.  You had no way of taking advantage of this autoboxing in your own types.  Thats where value classes comes in!
 
 ```scala
 class Foo(val name: String) extends AnyVal {
@@ -14,7 +14,7 @@ The above is simple, but very powerful.  Lets go over it more in detail
 class Foo(val name: String)
 ```
 
-The first part of this statement is like any normal class.  There are a few things to call out that make this class different from others: name is `val` and class takes exactly one paramater, and no case statement in front of class.
+The first part of this statement is like any normal class.  There are a few things to call out that make this class different from others: name is `val` and class takes exactly one parameter, and no case statement in front of class.
 
 The next part
 
@@ -63,7 +63,7 @@ public class Foo$ extends java.lang.Object{
 
 See the `void print$extension(java.lang.String)` function there?  That function is what scala will select for the caller to try to avoid the object creation overhead.  The `$extension` postfix is given to all methods from the Foo class and has the same logic that the method has, but acts on a argument rather than field/method lookup.
 
-So, why should I care?  This seems more of a microlevel optomisation, so why would I need this?  Well, one nice place to put this is in implicit classes.
+So, why should I care?  This seems more of a microlevel optimisation, so why would I need this?  Well, one nice place to put this is in implicit classes.
 
 ```scala
 scala> implicit class BetterIntOpt(val value: Int) extends AnyVal {

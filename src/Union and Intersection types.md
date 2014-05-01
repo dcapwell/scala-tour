@@ -45,7 +45,7 @@ Great, it does what we expect (but error is hard to understand);  it will only l
 When I was just a java programmer I thought that one of the key features of ceylon was [union and intersection types](http://ceylon-lang.org/documentation/current/introduction/#principal_typing_union_types_and_intersection_types).  Now I see that I can do the same with scala.
 
 ## Scalaz
-The authors of scalaz saw this same blog post and have added union types into scalaz so you don't have to add the above types first.  Lets reimplment the size function using scalaz's union type.
+The authors of scalaz saw this same blog post and have added union types into scalaz so you don't have to add the above types first.  Lets reimplement the size function using scalaz's union type.
 
 ```scala
 import scalaz._, Scalaz._

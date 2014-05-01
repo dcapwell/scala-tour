@@ -147,7 +147,7 @@ The code above won't compile.
 java: class BarWorld inherits unrelated defaults for echo() from types Bar and BarLogger
 ```
 
-Java's view of mixins are over distjoin behaviors and not over similar behaviors.  In cases like this, its up to the developer to solve what the behavior should be.
+Java's view of mixins are over disjoin behaviors and not over similar behaviors.  In cases like this, its up to the developer to solve what the behavior should be.
 
 ```java
 public class MyBar implements Bar, BarLogger {
@@ -191,7 +191,7 @@ Here we define three top level traits `One`, `Two`, and `Three` that all extend 
 // three
 ```
 
-As we see here, the trait defined right most is the one that wins.  In traits, the `override` keyword anotations that this trait defines a fully implementation of a method, and to use it rather than using `super.echo`.  So what if we didn't define `override`?
+As we see here, the trait defined right most is the one that wins.  In traits, the `override` keyword annotations that this trait defines a fully implementation of a method, and to use it rather than using `super.echo`.  So what if we didn't define `override`?
 
 ```scala
 trait Printable {
@@ -245,10 +245,10 @@ speaker.say("Are you a JAVA developer!?!")
 // Are you a JAVA developer!?!
 ```
 
-The `abstract override` annotation says that this implementation relies on other implementations in the trait heirarchy.  The trait now has access to `super` (you won't have acccess to super without it) and lets you control how to decorate the method.  Thats really want `abstract override` tries to do, let traits decorate other traits.  In a java based world, the decorator pattern is normally implemented by a wrapper object that will do some logic than delegate to the wrapped object but in scala the same thing can be done at the trait level and normally is (types defining behavior).
+The `abstract override` annotation says that this implementation relies on other implementations in the trait hierarchy.  The trait now has access to `super` (you won't have access to super without it) and lets you control how to decorate the method.  Thats really want `abstract override` tries to do, let traits decorate other traits.  In a java based world, the decorator pattern is normally implemented by a wrapper object that will do some logic than delegate to the wrapped object but in scala the same thing can be done at the trait level and normally is (types defining behavior).
 
 ## Self =>
-Now that we see that traits can be mixed into other traits to create new behaviors, is there any way to say that a trait depends on another trait without extending it (abstract override does depend on a bottom trait implementing the base case)?  What about controlling the type of `this`?  This is where `self =>` comes in; self is the object impelementing the trait, and as with other objects we can say what the type is.
+Now that we see that traits can be mixed into other traits to create new behaviors, is there any way to say that a trait depends on another trait without extending it (abstract override does depend on a bottom trait implementing the base case)?  What about controlling the type of `this`?  This is where `self =>` comes in; self is the object implementing the trait, and as with other objects we can say what the type is.
 
 Simple case, just defining self reference
 

@@ -7,7 +7,7 @@ trait Foo[T <: Foo[T]] {
 }
 ```
 
-This weird syntax `T <: Foo[T]` is saying that the type of `Foo[T]` must be something that is itself a `Foo[T]` (the lower bound of `T` must atleast be `Foo[T]`).
+This weird syntax `T <: Foo[T]` is saying that the type of `Foo[T]` must be something that is itself a `Foo[T]` (the lower bound of `T` must at least be `Foo[T]`).
 
 ```scala
 scala> case class Bar extends Foo[Bar] {

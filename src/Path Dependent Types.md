@@ -113,7 +113,7 @@ createFanFiction(starTrek)(jadzia, quark)
 ```
 
 ## Pulling it together
-Fan fiction is great and all (as long as they don't cross the streams), but lets use a more relistic example: `KeyValue` databases.
+Fan fiction is great and all (as long as they don't cross the streams), but lets use a more realistic example: `KeyValue` databases.
 
 ```scala
 object KeyValue {

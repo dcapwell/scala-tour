@@ -1,5 +1,5 @@
 # Type Classes
-Type classes are a functional way to get inheritence like behavior and polymorphism without relying on inheritence.  The core idea for type classes is that you seperate the behavior from the class that gets effected by it.  Before going into type classes in scala, lets go over type classes in java.
+Type classes are a functional way to get inheritance like behavior and polymorphism without relying on inheritance.  The core idea for type classes is that you separate the behavior from the class that gets effected by it.  Before going into type classes in scala, lets go over type classes in java.
 
 ```java
 public interface Comparator<T> {
@@ -17,7 +17,7 @@ Most people will be familiar with `Comparator` and `Comparable` if they have dea
 Collections.sort(myArray, oddNumbersFirst)
 ```
 
-This basic idea gives the developer using these apis flexability with how to reuse them.  In the above example, the array is placing all odd numbers first.
+This basic idea gives the developer using these apis flexibility with how to reuse them.  In the above example, the array is placing all odd numbers first.
 
 ## The Scala Way
 In scala, there is short hand for this kind of behavior; implicits.  Lets go over the example above in a more scala friendly way.

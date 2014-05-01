@@ -1,7 +1,7 @@
 # Variance and Bounds
 
 ## Variance
-When you have a type T and a type T' which extends that type, the question to ask is is Container[T'] considered a sublcass of Container[T]?  Variace annotations lets you controll when this is the case or not.
+When you have a type T and a type T' which extends that type, the question to ask is is Container[T'] considered a subclass of Container[T]?  Variance annotations lets you control when this is the case or not.
 
 Scala notation
 

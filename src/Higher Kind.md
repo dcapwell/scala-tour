@@ -11,7 +11,7 @@ scala> kind[MyList[String]
 MyList's kind is * -> *. This is a type constructor: a 1st-order-kinded type.
 ```
 
-The `MyList[String]` type is a 1st-order kinded type; the type of any `MyList` is paramaterized by `A`.  Think of `MyList` as a function for types as `A => MyList[A]` so given a type `A` we can created a new type `MyList[A]`.  So if `MyList` is a 1st-order kinded type, then what is a higher kind?  Well, what is a higher order function?  Its a function that accepts another function.  So what is a higher kinded type?  Its a type that is paramaterized by another type that is paramaterized.  Lets look at a simple example of this.
+The `MyList[String]` type is a 1st-order kinded type; the type of any `MyList` is parameterized by `A`.  Think of `MyList` as a function for types as `A => MyList[A]` so given a type `A` we can created a new type `MyList[A]`.  So if `MyList` is a 1st-order kinded type, then what is a higher kind?  Well, what is a higher order function?  Its a function that accepts another function.  So what is a higher kinded type?  Its a type that is parameterized by another type that is parameterized.  Lets look at a simple example of this.
 
 ```scala
 scala> trait Foo[A[_]]
