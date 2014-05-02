@@ -15,6 +15,8 @@
     * [Union and Intersection types](Union and Intersection types.md)
 * [Patterns](Patterns.md)
     * [Cake](Cake.md)
+* [Monads and Monoids](Monads and Monoids.md)
+    * [Functor](Functor.md)
 * [Scalaz](Scalaz.md)
     * [Utils](Utils.md)
     * [Tag Types](Tag Types.md)
