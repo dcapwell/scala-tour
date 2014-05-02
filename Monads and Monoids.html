@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
         
         <meta charset="UTF-8">
-        <title>Variance | Scala Tour</title>
+        <title>Monads and Monoids | Scala Tour</title>
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="robots" content="index, follow">
@@ -13,13 +13,13 @@
         <meta name="generator" content="www.gitbook.io">
 
         
-        <link rel="next" href="./Value Classes.html" />
+        <link rel="next" href="./Functor.html" />
         
         
-        <link rel="prev" href="./Types.html" />
+        <link rel="prev" href="./Cake.html" />
         
 
-        <meta property="og:title" content="Variance | Scala Tour">
+        <meta property="og:title" content="Monads and Monoids | Scala Tour">
         <meta property="og:site_name" content="Scala Tour">
         <meta property="og:type" content="book">
         <meta property="og:locale" content="en_US">
@@ -42,7 +42,7 @@
 
 
         
-    <div class="book" data-github="dcapwell/scala-tour" data-level="2.1" data-basepath="." data-revision="1399051939999">
+    <div class="book" data-github="dcapwell/scala-tour" data-level="4" data-basepath="." data-revision="1399051939999">
     <div class="book-header">
     <!-- Actions Left -->
     
@@ -108,7 +108,7 @@
             <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
         </li>
         <li>
-            <a href="https://github.com/dcapwell/scala-tour/edit/master/Variance.md" target="blank">Edit and Contribute</a>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/Monads and Monoids.md" target="blank">Edit and Contribute</a>
         </li>
         <li class="divider"></li>
         
@@ -326,7 +326,7 @@
             <div class="page-wrapper" tabindex="-1">
                 <div class="book-progress">
     <div class="bar">
-        <div class="inner" style="width: 22.727272727272727%;min-width: 18.181818181818183%;"></div>
+        <div class="inner" style="width: 72.72727272727273%;min-width: 68.18181818181819%;"></div>
     </div>
     <div class="chapters">
     
@@ -342,27 +342,27 @@
     
         <a href="./Variance.html" title="Variance" class="chapter done " data-progress="2.1" style="left: 22.727272727272727%;"></a>
     
-        <a href="./Value Classes.html" title="Value Classes" class="chapter  " data-progress="2.2" style="left: 27.272727272727273%;"></a>
+        <a href="./Value Classes.html" title="Value Classes" class="chapter done " data-progress="2.2" style="left: 27.272727272727273%;"></a>
     
-        <a href="./F-Bounded Type.html" title="F-Bounded Type" class="chapter  " data-progress="2.3" style="left: 31.818181818181817%;"></a>
+        <a href="./F-Bounded Type.html" title="F-Bounded Type" class="chapter done " data-progress="2.3" style="left: 31.818181818181817%;"></a>
     
-        <a href="./Type Classes.html" title="Type Classes" class="chapter  " data-progress="2.4" style="left: 36.36363636363637%;"></a>
+        <a href="./Type Classes.html" title="Type Classes" class="chapter done " data-progress="2.4" style="left: 36.36363636363637%;"></a>
     
-        <a href="./Higher Kind.html" title="Higher Kind" class="chapter  " data-progress="2.5" style="left: 40.90909090909091%;"></a>
+        <a href="./Higher Kind.html" title="Higher Kind" class="chapter done " data-progress="2.5" style="left: 40.90909090909091%;"></a>
     
-        <a href="./Path Dependent Types.html" title="Path Dependent Types" class="chapter  " data-progress="2.6" style="left: 45.45454545454545%;"></a>
+        <a href="./Path Dependent Types.html" title="Path Dependent Types" class="chapter done " data-progress="2.6" style="left: 45.45454545454545%;"></a>
     
-        <a href="./Phantom Type.html" title="Phantom Type" class="chapter  " data-progress="2.7" style="left: 50%;"></a>
+        <a href="./Phantom Type.html" title="Phantom Type" class="chapter done " data-progress="2.7" style="left: 50%;"></a>
     
-        <a href="./Structural Types.html" title="Structural Types" class="chapter  " data-progress="2.8" style="left: 54.54545454545455%;"></a>
+        <a href="./Structural Types.html" title="Structural Types" class="chapter done " data-progress="2.8" style="left: 54.54545454545455%;"></a>
     
-        <a href="./Union and Intersection types.html" title="Union and Intersection types" class="chapter  " data-progress="2.9" style="left: 59.09090909090909%;"></a>
+        <a href="./Union and Intersection types.html" title="Union and Intersection types" class="chapter done " data-progress="2.9" style="left: 59.09090909090909%;"></a>
     
-        <a href="./Patterns.html" title="Patterns" class="chapter  new-chapter" data-progress="3" style="left: 63.63636363636363%;"></a>
+        <a href="./Patterns.html" title="Patterns" class="chapter done new-chapter" data-progress="3" style="left: 63.63636363636363%;"></a>
     
-        <a href="./Cake.html" title="Cake" class="chapter  " data-progress="3.1" style="left: 68.18181818181819%;"></a>
+        <a href="./Cake.html" title="Cake" class="chapter done " data-progress="3.1" style="left: 68.18181818181819%;"></a>
     
-        <a href="./Monads and Monoids.html" title="Monads and Monoids" class="chapter  new-chapter" data-progress="4" style="left: 72.72727272727273%;"></a>
+        <a href="./Monads and Monoids.html" title="Monads and Monoids" class="chapter done new-chapter" data-progress="4" style="left: 72.72727272727273%;"></a>
     
         <a href="./Functor.html" title="Functor" class="chapter  " data-progress="4.1" style="left: 77.27272727272727%;"></a>
     
@@ -381,88 +381,10 @@
 
                 <div class="page-inner">
                 
-                    <section class="normal" id="section-gitbook_23">
+                    <section class="normal" id="section-gitbook_5">
                     
-                        <h1 id="variance-and-bounds">Variance and Bounds</h1>
-<p>This doc was mostly taken from <a href="http://twitter.github.io/scala_school/" target="_blank">Scala School</a>.  You can read there for more detailed view on this topic.</p>
-<h2 id="variance">Variance</h2>
-<p>When you have a type T and a type T&#39; which extends that type, the question to ask is is Container[T&#39;] considered a subclass of Container[T]?  Variance annotations lets you control when this is the case or not.</p>
-<p>Scala notation</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>Meaning</th>
-<th>Scala notation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>covariant</strong></td>
-<td>C[T’] is a subclass of C[T]</td>
-<td>[+T]</td>
-</tr>
-<tr>
-<td><strong>contravariant</strong></td>
-<td>C[T] is a subclass of C[T’]</td>
-<td>[-T]</td>
-</tr>
-<tr>
-<td><strong>invariant</strong></td>
-<td>C[T] and C[T’] are not related</td>
-<td>[T]</td>
-</tr>
-</tbody>
-</table>
-<p>Lets go into a example</p>
-<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Covariant</span>[+<span class="hljs-title">A</span>]</span>
-<span class="hljs-keyword">val</span> cv: Covariant[AnyRef] = <span class="hljs-keyword">new</span> Covariant[String]
-<span class="hljs-comment">// val cv: Covariant[String] = new Covariant[AnyRef] // type mismatch</span>
-
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Contravariant</span>[-<span class="hljs-title">A</span>]</span>
-<span class="hljs-keyword">val</span> cv: Contravariant[String] = <span class="hljs-keyword">new</span> Contravariant[AnyRef]
-<span class="hljs-comment">// val fail: Contravariant[AnyRef] = new Contravariant[String] // type mismatch</span>
-</code></pre>
-<h2 id="bounds">Bounds</h2>
-<p>In java you had the ability to define <code>super</code> and/or <code>extends</code> to try to define what can be accepted.  Scala lets you do the same but lets you have more control over the lower and upper bounds of input:</p>
-<p>Lower bound</p>
-<pre><code class="lang-scala">A &lt;: B
-</code></pre>
-<p>Upper bound</p>
-<pre><code class="lang-scala">A &gt;: B
-</code></pre>
-<p>Lets see an example</p>
-<pre><code class="lang-scala">class Foo
-class Bar extends Foo
-class Baz extends Bar
-
-trait Container[A]
-// put lower bound of Foo
-case class FooContainer[A &lt;: Foo](foo: A) extends Container[A]
-FooContainer(new Foo)
-// FooContainer[Foo]
-FooContainer(new Bar)
-// FooContainer[Bar]
-FooContainer(new Baz)
-// FooContainer[Baz]
-// FooContainer(1)
-// compiler error
-
-case class BarContainer(bar: Bar) extends Container[Bar]
-BarContainer(new Bar)
-// BarContainer
-BarContainer(new Baz)
-// BarContainer
-
-// put a upper bound on Baz
-case class BazContainer[A &gt;: Baz](baz: A) extends Container[A]
-BazContainer(new Baz)
-// BazContainer[Baz]
-BazContainer(new Foo)
-// BazContainer[Foo]
-BazContainer(1)
-// BazContainer[Any]
-</code></pre>
+                        <h1 id="monads-and-monoids">Monads and Monoids</h1>
+<p>In functional programming there are these types called <code>Monad</code> and <code>Monoid</code> that let you build very complex things in a non-complex and composable way.  This section will reinvent these two types from bottom up.</p>
 
                     
                     </section>
@@ -472,10 +394,10 @@ BazContainer(1)
         </div>
 
         
-        <a href="./Types.html" class="navigation navigation-prev"><i class="fa fa-angle-left"></i></a>
+        <a href="./Cake.html" class="navigation navigation-prev"><i class="fa fa-angle-left"></i></a>
         
         
-        <a href="./Value Classes.html" class="navigation navigation-next"><i class="fa fa-angle-right"></i></a>
+        <a href="./Functor.html" class="navigation navigation-next"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
