@@ -112,4 +112,4 @@ printConfigRepo
 
 Great!  Adding the `Plugin` implict doesn't break the `Config` code.
 
-So what are the main differences between type aliases and tagged types?  A type alias is just that, an alias that the compiler knows about.  To the compiler `PluginRepo` is no different than `File`.  A tagged type is a brand new type that is saying `File with Plugin`.  The generated type is-a `File`, but its also a `Plugin`.  In order to do this you do need to cast the object to this type.  So the main difference at runtime is that alias doesn't have any effects at runtime where as tagged types require a cast.
+So what are the main differences between type aliases and tagged types?  A type alias is just that, an alias that the compiler knows about.  To the compiler `PluginRepo` is no different than `File`.  A tagged type is a brand new type that is saying `File with Taggged[Plugin]`.  The generated type is-a `File`, but its also a `Tagged[Plugin]`.  In order to do this you do need to cast the object to this type.  So the main difference at runtime is that alias doesn't have any effects at runtime where as tagged types require a cast.
