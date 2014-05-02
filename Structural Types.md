@@ -9,7 +9,7 @@ close(file)   // def close(c: Closeable)
 close(client) // def close(client: HiveMetaStoreClient)
 ```
 
-But really want you wanted was to say is ["it looka like a closeable"](http://youtu.be/U4EH0RtVlgE?t=35s).
+But really what you wanted was to say is ["it looka like a closeable"](http://youtu.be/U4EH0RtVlgE?t=35s).
 
 ```scala
 def close(closeable: { def close: Unit }) = closeable.close
@@ -24,7 +24,7 @@ type Closeable = {
 def close(closeable: Closeable) = closeable.close
 ```
 
-Now are `close` method is nice and clean, and can handle anything that "looka like a closeable"!
+Now our `close` method is nice and clean, and can handle anything that "looka like a closeable"!
 
 Lets play with this a bit more: named things.
 
@@ -87,3 +87,5 @@ def testTrackableUpdate(t1: => Trackable)(t2: => Trackable) = {
     }
 }
 ```
+
+Structural types are great in tests where we don't care about the reflection overread and don't want to start creating traits just to make testing easier.

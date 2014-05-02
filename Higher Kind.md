@@ -34,12 +34,18 @@ implicit val listFolable: Foldable[List] = new Foldable[List] {
     def leftFold[A, B](ob: List[A])(zero: B)(fn: (B, A) => B): B =
         ob.foldLeft(zero)(fn)
 }
+```
 
+We define a `Foldable` that works for any `List` instance.  The `leftFold` method will take an `A` and use the `A` to construct the `List[A]`.  Now lets "pimp" `List` to have a nicer shorthand.
+
+```scala
 import scala.language.implicitConversions
 implicit class ListFoldableOpt[A](list: List[A])(implicit fold: Foldable[List]) {
     def leftFold[B](zero: B)(fn: (B, A) => B): B =
         fold.leftFold(list)(zero)(fn)
 }
 
-List(1, 2, 3).foldLeft(0)(_ + _) // 6
+List(1, 2, 3).leftFold(0)(_ + _) // 6
 ```
+
+Given a `List[A]` and a `Foldable[List]`, we can now add a `leftFold` method to `List[A]`.  This example is a common example of where higher-kinded types are normally used; type classes over generic types.

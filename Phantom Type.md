@@ -24,7 +24,7 @@ trait FileHandle[State <: FileState] {
 }
 ```
 
-Here we define a `FileState` that can be either `Opened` or `Closed`.  We have marked each method with the type that it can work with: `write` only works if the `FileHandle` is opened, `close` will mark the `FileHandle` as `Closed`.
+Here we define a `FileState` that can be either `Opened` or `Closed`.  We have marked each method with the type that it can work with: `write` only works if the `FileHandle` is opened (lower bounded on opened), `close` will mark the `FileHandle` as `Closed`.
 
 Lets see what happens when we try to `write` to a `Closed` file.
 
@@ -58,4 +58,4 @@ You may wish to define State as +State instead. (SLS 4.5)
                                            ^
 ```
 
-Even if we could get from `Closed` to `FileState` we wouldn't be able to get to `Openeded`, so writing will still not be possible.
+Even if we can get a reference as `FileHandle[FileState]`, the `write` method has a lower bound on `Opened`, so we would have to up-cast to `Opened`.

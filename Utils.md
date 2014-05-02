@@ -9,28 +9,27 @@ import scalaz._, Scalaz._
 In normal scala, you could use `Some(x)` or `Option(x)` as a way to create a `Option`, but some times it is cleaner if this could be chained
 
 ```scala
-// creates Some(1)
 1.some
-// return None
+// creates Some(1)
 none
+// return None
 ```
 
 now that we have an `Option`
 
 ```scala
-// getOrElse
-1.some | 20
+1.some | 20 // getOrElse
 // 1
 none | 20
 // 20
 
-// getOrElse(Monoid[Int].zero)
-~ 10.some
+~ 10.some // getOrElse(Monoid[Int].zero)
 // 10
 ~ none[Int]
 // 0
 
 1.some ? "found it" | "nope"
+// found it
 
 1.some err "won't get called"
 // 1
@@ -54,12 +53,17 @@ conditional branching
 
 ```scala
 (1 < 10) when println("1 is less than 10")
+// 1 is less than 10
+
 (1 > 10) unless println("1 is less than 10")
+// 1 is less than 10
 
 (1 < 10) ? "less than 10" | "greater than 10"
+// less than 10
 
 (1 < 10) either "left" or "right"
 // \/[String,String] = -\/(left)
+// \/ is like Either in scala, but with a right bias (can use map/flatMap without projecting right)
 
 (1 < 10) ?? 7
 // 7

@@ -197,8 +197,15 @@ scala> // lets try to pollute res1
 scala> new MemoryClusterService
 res6: MemoryClusterService = MemoryClusterService@65c94f13
 
-scala> res1.nodes(res6.createCluster("foo").get))
-<console>:1: error: ';' expected but ')' found.
-       res1.nodes(res6.createCluster("foo").get))
-                                                ^
+scala> res1.nodes(res6.createCluster("foo").get)
+<console>:63: error: type mismatch;
+ found   : res6.Cluster
+ required: res1.Cluster
+              res1.nodes(res6.createCluster("foo").get)
+                                                   ^
 ```
+
+In the cake pattern, you define a set of dependent types that live in their own isolated world.  When you build your application, you "layer" these types together to make the cake.
+
+## TODO
+Find the presentation on "cupcake" pattern.

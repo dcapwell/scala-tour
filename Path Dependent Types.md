@@ -141,11 +141,14 @@ val bar = new Key("bar") with StringValued
 
 KeyValue.set(foo)(1)
 KeyValue.get(foo).get
+// Some(1)
 
-// KeyValue.set(bar)(1)
+KeyValue.set(bar)(1)
 // error: type mismatch;
 //  found   : Int(1)
 //  required: bar.Value
 //     (which expands to)  String
 //               KeyValue.set(bar)(1)
 ```
+
+Each key can define the type in which it can work with.  The compiler will check to make sure we don't add any values that don't match the key.
