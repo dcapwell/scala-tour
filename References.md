@@ -17,6 +17,8 @@
 
 [Monads, Monoids, and Make Believe.](http://www.youtube.com/watch?v=ww2Z1URx-G0)
 
+[Functional programming patterns for the non-mathematician](http://www.youtube.com/watch?v=AvgwKjTPMmM)
+
 ### Scalaz
 [Scalaz - The Good Parts](http://www.youtube.com/watch?v=jPdHQZnF56A)
 
