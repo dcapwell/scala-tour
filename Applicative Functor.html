@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
         
         <meta charset="UTF-8">
-        <title>Union and Intersection types | Scala Tour</title>
+        <title>Applicative Functor | Scala Tour</title>
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="robots" content="index, follow">
@@ -13,13 +13,13 @@
         <meta name="generator" content="www.gitbook.io">
 
         
-        <link rel="next" href="./Patterns.html" />
+        <link rel="next" href="./Scalaz.html" />
         
         
-        <link rel="prev" href="./Structural Types.html" />
+        <link rel="prev" href="./Functor.html" />
         
 
-        <meta property="og:title" content="Union and Intersection types | Scala Tour">
+        <meta property="og:title" content="Applicative Functor | Scala Tour">
         <meta property="og:site_name" content="Scala Tour">
         <meta property="og:type" content="book">
         <meta property="og:locale" content="en_US">
@@ -42,7 +42,7 @@
 
 
         
-    <div class="book" data-github="dcapwell/scala-tour" data-level="2.9" data-basepath="." data-revision="1399097629369">
+    <div class="book" data-github="dcapwell/scala-tour" data-level="4.2" data-basepath="." data-revision="1399097629369">
     <div class="book-header">
     <!-- Actions Left -->
     
@@ -108,7 +108,7 @@
             <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
         </li>
         <li>
-            <a href="https://github.com/dcapwell/scala-tour/edit/master/Union and Intersection types.md" target="blank">Edit and Contribute</a>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/Applicative Functor.md" target="blank">Edit and Contribute</a>
         </li>
         <li class="divider"></li>
         
@@ -334,7 +334,7 @@
             <div class="page-wrapper" tabindex="-1">
                 <div class="book-progress">
     <div class="bar">
-        <div class="inner" style="width: 56.52173913043478%;min-width: 52.17391304347826%;"></div>
+        <div class="inner" style="width: 78.26086956521739%;min-width: 73.91304347826087%;"></div>
     </div>
     <div class="chapters">
     
@@ -366,15 +366,15 @@
     
         <a href="./Union and Intersection types.html" title="Union and Intersection types" class="chapter done " data-progress="2.9" style="left: 56.52173913043478%;"></a>
     
-        <a href="./Patterns.html" title="Patterns" class="chapter  new-chapter" data-progress="3" style="left: 60.869565217391305%;"></a>
+        <a href="./Patterns.html" title="Patterns" class="chapter done new-chapter" data-progress="3" style="left: 60.869565217391305%;"></a>
     
-        <a href="./Cake.html" title="Cake" class="chapter  " data-progress="3.1" style="left: 65.21739130434783%;"></a>
+        <a href="./Cake.html" title="Cake" class="chapter done " data-progress="3.1" style="left: 65.21739130434783%;"></a>
     
-        <a href="./Monads and Monoids.html" title="Monads and Monoids" class="chapter  new-chapter" data-progress="4" style="left: 69.56521739130434%;"></a>
+        <a href="./Monads and Monoids.html" title="Monads and Monoids" class="chapter done new-chapter" data-progress="4" style="left: 69.56521739130434%;"></a>
     
-        <a href="./Functor.html" title="Functor" class="chapter  " data-progress="4.1" style="left: 73.91304347826087%;"></a>
+        <a href="./Functor.html" title="Functor" class="chapter done " data-progress="4.1" style="left: 73.91304347826087%;"></a>
     
-        <a href="./Applicative Functor.html" title="Applicative Functor" class="chapter  " data-progress="4.2" style="left: 78.26086956521739%;"></a>
+        <a href="./Applicative Functor.html" title="Applicative Functor" class="chapter done " data-progress="4.2" style="left: 78.26086956521739%;"></a>
     
         <a href="./Scalaz.html" title="Scalaz" class="chapter  new-chapter" data-progress="5" style="left: 82.6086956521739%;"></a>
     
@@ -391,74 +391,144 @@
 
                 <div class="page-inner">
                 
-                    <section class="normal" id="section-gitbook_20">
+                    <section class="normal" id="section-gitbook_24">
                     
-                        <h1 id="union-and-intersection-types">Union and Intersection types</h1>
-<p>In scala you can define type intersection (and) in a very simple way</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">type</span> Both = String <span class="hljs-keyword">with</span> Int
-</code></pre>
-<p>but there is no built in union (or).</p>
-<p>If you read <a href="http://www.chuusai.com/2011/06/09/scala-union-types-curry-howard/" target="_blank">Unboxed union types in Scala via the Curry-Howard isomorphism</a> the author shows a way to get union within scala!</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">type</span> ¬[A] = A =&gt; Nothing
-<span class="hljs-keyword">type</span> ¬¬[A] = ¬[¬[A]]
-<span class="hljs-keyword">type</span> ∨[T, U] = ¬[¬[T] <span class="hljs-keyword">with</span> ¬[U]]
-<span class="hljs-keyword">type</span> |∨|[T, U] = { <span class="hljs-keyword">type</span> λ[X] = ¬¬[X] &lt;:&lt; (T ∨ U) }
-</code></pre>
-<p>Now lets see how to use this.</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">def</span> size[T : (Int |∨| String)#λ](t : T) = t <span class="hljs-keyword">match</span> {
-    <span class="hljs-keyword">case</span> i : Int =&gt; i
-    <span class="hljs-keyword">case</span> s : String =&gt; s.length
+                        <h1 id="applicative-functor">Applicative Functor</h1>
+<p>So what is a applicative functor?  Its a <code>Functor</code> but with more methods!</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">import</span> scala.language.higherKinds
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Applicative</span>[<span class="hljs-title">F</span>[<span class="hljs-title">_</span>]] <span class="hljs-keyword">extends</span> <span class="hljs-title">Functor</span>[<span class="hljs-title">F</span>] {</span>
+    <span class="hljs-keyword">def</span> pure[A](a: =&gt; A): F[A]
+    <span class="hljs-keyword">def</span> &lt;*&gt;[A,B](fa: =&gt; F[A])(f: =&gt; F[A =&gt; B]): F[B]
 }
 </code></pre>
-<p>Not too bad, now lets see what happens when we use this.</p>
-<pre><code class="lang-scala">scala&gt; size(<span class="hljs-number">10</span>)
-res0: Int = <span class="hljs-number">10</span>
-
-scala&gt; size(<span class="hljs-string">"eggs"</span>)
-res1: Int = <span class="hljs-number">4</span>
-
-scala&gt; size(<span class="hljs-number">10.0</span>)
-&lt;console&gt;:<span class="hljs-number">39</span>: error: Cannot prove that (Double =&gt; Nothing) =&gt; Nothing &lt;:&lt; Int =&gt; Nothing <span class="hljs-keyword">with</span> String =&gt; Nothing =&gt; Nothing.
-              size(<span class="hljs-number">10.0</span>)
-                  ^
+<p>Lets go over each method one by one.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">def</span> pure[A](a: =&gt; A): F[A]
 </code></pre>
-<p>Great, it does what we expect (but error is hard to understand);  it will only let us consume <code>Int</code> and <code>String</code> types, but nothing else.</p>
-<p>When I was just a java programmer I thought that one of the key features of ceylon was <a href="http://ceylon-lang.org/documentation/current/introduction/#principal_typing_union_types_and_intersection_types" target="_blank">union and intersection types</a>.  Now I see that I can do the same with scala.</p>
-<h2 id="scalaz">Scalaz</h2>
-<p>The authors of scalaz saw this same blog post and have added union types into scalaz so you don&#39;t have to add the above types first.  Lets reimplement the size function using scalaz&#39;s union type.</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">import</span> scalaz._, Scalaz._
-<span class="hljs-keyword">import</span> UnionTypes._
-
-<span class="hljs-keyword">type</span> StringOrInt = t[String]#t[Int]
-<span class="hljs-keyword">def</span> size[A](a: A)(implicit ev: A ∈ StringOrInt): Int = a <span class="hljs-keyword">match</span> {
-    <span class="hljs-keyword">case</span> i: Int    =&gt; i
-    <span class="hljs-keyword">case</span> s: String =&gt; s.length
-}
-
-<span class="hljs-comment">// or</span>
-<span class="hljs-keyword">def</span> size[A](a: A)(implicit ev: A ∈ t[String]#t[Int]): Int = a <span class="hljs-keyword">match</span> {
-    <span class="hljs-keyword">case</span> i: Int    =&gt; i
-    <span class="hljs-keyword">case</span> s: String =&gt; s.length
-}
-
-<span class="hljs-comment">// or</span>
-<span class="hljs-comment">// I really like the |v| syntax</span>
-<span class="hljs-keyword">type</span> |∨|[T, U] = { <span class="hljs-keyword">type</span> λ[X] = X ∈ t[T]#t[U] }
-<span class="hljs-keyword">def</span> size[T : (Int |∨| String)#λ](t : T) = t <span class="hljs-keyword">match</span> {
-    <span class="hljs-keyword">case</span> i : Int =&gt; i
-    <span class="hljs-keyword">case</span> s : String =&gt; s.length
-}
-
-<span class="hljs-comment">// or</span>
-<span class="hljs-comment">// the same as |v| but with the scalaz syntax</span>
-<span class="hljs-keyword">type</span> |∈|[T, U] = { <span class="hljs-keyword">type</span> λ[X] = X ∈ t[T]#t[U] }
-<span class="hljs-keyword">def</span> size[T : (Int |∈| String)#λ](t : T) = t <span class="hljs-keyword">match</span> {
-    <span class="hljs-keyword">case</span> i : Int =&gt; i
-    <span class="hljs-keyword">case</span> s : String =&gt; s.length
-}
+<p>Look at the type of the function: <code>A =&gt; F[A]</code>.  This should look like a constructor to you!  Thats because <code>pure</code> really is just a constructor for only one element.</p>
+<pre><code class="lang-scala"><span class="hljs-comment">// wont work yet since we haven't defined Applicative[List]</span>
+Applicative[List].pure(<span class="hljs-number">1</span>)
+<span class="hljs-comment">// List(1)</span>
 </code></pre>
-<h2 id="sip">SIP</h2>
-<p>Found this scala suggestion <a href="https://issues.scala-lang.org/browse/SUGGEST-22" target="_blank">bug</a> when looking for union types.  Doesn&#39;t look like its getting too much traction and didn&#39;t see a SIP for it yet.</p>
+<p>Now lets look at the scary method.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">def</span> &lt;*&gt;[A,B](fa: =&gt; F[A])(f: =&gt; F[A =&gt; B]): F[B]
+</code></pre>
+<p>Lets look at this type a bit closer.</p>
+<pre><code class="lang-scala">F[A] =&gt; F[A =&gt; B] =&gt; F[B]
+</code></pre>
+<p>If you follow the arrows, it looks kinda like <code>map</code> from <code>Functor</code>, so lets figure out if we can deduce how they are the same.  To go over that, lets go back to <code>map</code>.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> add = (x: Int, y: Int) =&gt; x + y
+<span class="hljs-keyword">val</span> inc = add.curried(<span class="hljs-number">1</span>)
+</code></pre>
+<p>We just created two basic functions <code>add</code> and <code>inc</code> that will add two numbers together and increment the value of one number.  If we have a <code>Functor</code> we can map over the values and increment them.</p>
+<pre><code class="lang-scala">Functor[List].map(List(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>))(inc)
+</code></pre>
+<p>This is great and all, but lets say that I want to use my <code>add</code> function.  How would this work?  Well, how was the <code>inc</code> function defined?  Its the produce of currying <code>add</code>.  So what happens if we curry <code>add</code> in the <code>map</code>.</p>
+<pre><code class="lang-scala">Functor[List].map(List(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>))(add.curried)
+<span class="hljs-comment">// List[Int =&gt; Int]</span>
+</code></pre>
+<p>What just happened here?  We partially applied <code>add</code> to the elements in the list.  This gave us a new list of functions from <code>Int =&gt; Int</code>.  This is the same type we saw in the scary <code>&lt;*&gt;</code> method!</p>
+<p>Lets say we have two lists:</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> list1 = List(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
+<span class="hljs-keyword">val</span> list2 = List(<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>)
+</code></pre>
+<p>And we want to add them together.  The <code>&lt;*&gt;</code> method will let us do this!</p>
+<pre><code class="lang-scala">Applicative[List].&lt;*&gt;(list2)(Functor[List].map(list1)(add.curried))
+<span class="hljs-comment">// List(5, 6, 7, 6, 7, 8, 7, 8, 9)</span>
+</code></pre>
+<p>This might not be what you expected, but with <code>List</code>, the <code>&lt;*&gt;</code> normally adds every combination together.</p>
+<p>Now that we have seen these methods used and how they work, lets try to implement them!</p>
+<pre><code class="lang-scala">implicit <span class="hljs-keyword">val</span> listApplicative: Applicative[List] =
+  <span class="hljs-keyword">new</span> Applicative[List] {
+    <span class="hljs-keyword">def</span> pure[A](a: =&gt; A): List[A] = List(a)
+
+    <span class="hljs-keyword">def</span> &lt;*&gt;[A,B](fa: =&gt; List[A])(f: =&gt; List[A =&gt; B]): List[B] = <span class="hljs-keyword">for</span> {
+        elem &lt;- fa
+        func &lt;- f
+    } <span class="hljs-keyword">yield</span> func(elem)
+
+    <span class="hljs-comment">// we can reimplement map as &lt;*&gt; where f is wrapped around a list</span>
+    <span class="hljs-keyword">def</span> map[A, B](fa: List[A])(f: A =&gt; B): List[B] = &lt;*&gt;(fa)(pure(f))
+  }
+</code></pre>
+<p>Now lets retry the examples above.</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Applicative</span> {</span>
+    <span class="hljs-keyword">def</span> apply[F[_]](implicit a: Applicative[F]) = a
+}
+
+<span class="hljs-keyword">val</span> add = (x: Int, y: Int) =&gt; x + y
+
+<span class="hljs-keyword">val</span> list1 = List(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
+<span class="hljs-keyword">val</span> list2 = List(<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>)
+
+Applicative[List].&lt;*&gt;(list2)(Functor[List].map(list1)(add.curried))
+<span class="hljs-comment">// List(5, 6, 7, 6, 7, 8, 7, 8, 9)</span>
+</code></pre>
+<p>Now that we know what an applicative functor is, lets look at the laws.</p>
+<h2 id="its-the-law">Its the Law</h2>
+<p>Applicative functors are functors so they share the same laws that functors have.  With these new methods comes new laws.  Lets go over them one by one.</p>
+<h3 id="identity-">Identity <code>&lt;*&gt;</code></h3>
+<p>This law is basically the same as the law for identity map, but for <code>&lt;*&gt;</code>.  If the identity function is passed into <code>&lt;*&gt;</code>, the resulting applicative functor should equal the input applicative functor.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> expectedList = List(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
+
+<span class="hljs-keyword">val</span> outputList = Applicative[List].&lt;*&gt;(expectedList)(List((x: Int) =&gt; x))
+
+expectedList == outputList
+<span class="hljs-comment">// true</span>
+</code></pre>
+<h3 id="pure-composition">Pure Composition</h3>
+<p>Pure composition is saying that if you <code>&lt;*&gt;</code> a pureed data source and pured function, the result should be the same as if you did pure of applying the function with the data.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> af = Applicative[List]
+<span class="hljs-keyword">val</span> data = <span class="hljs-number">1</span>
+<span class="hljs-keyword">val</span> inc = (x: Int) =&gt; x + <span class="hljs-number">1</span>
+
+<span class="hljs-keyword">val</span> res1 = af.&lt;*&gt;(af.pure(data))(af.pure(inc))
+<span class="hljs-keyword">val</span> res2 = af.pure(inc(data))
+
+res1 == res2
+<span class="hljs-comment">// true</span>
+</code></pre>
+<h3 id="map-and-are-related">Map and <code>&lt;*&gt;</code> are related</h3>
+<p>We defined map in the <code>Applicative</code> trait as reusing <code>&lt;*&gt;</code>.  If you choose to not do this, you should make sure the results are the same.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> af = Applicative[List]
+
+<span class="hljs-keyword">val</span> list = List(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
+<span class="hljs-keyword">val</span> inc = (x: Int) =&gt; x + <span class="hljs-number">1</span>
+
+<span class="hljs-keyword">val</span> res1 = af.map(list)(inc)
+<span class="hljs-keyword">val</span> res2 = af.&lt;*&gt;(list)(af.pure(inc))
+
+res1 == res2
+<span class="hljs-comment">// true</span>
+</code></pre>
+<h3 id="-can-swap-order"><code>&lt;*&gt;</code> can swap order</h3>
+<p>This one sounds a bit weird; <code>&lt;*&gt;</code>&#39;s arguments are of different types!  This is true, but with pure you can make them the same type.  If you do this you should get the same output.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> af = Applicative[List]
+
+<span class="hljs-keyword">val</span> data = <span class="hljs-number">1</span>
+<span class="hljs-keyword">val</span> partialAf = af.pure((x: Int) =&gt; x + <span class="hljs-number">1</span>)
+
+<span class="hljs-keyword">val</span> res1 = af.&lt;*&gt;(af.pure(data))(partialAf)
+<span class="hljs-keyword">val</span> res2 = af.&lt;*&gt;(partialAf)(af.pure((func: Int =&gt; Int) =&gt; func(data)))
+
+res1 == res2
+<span class="hljs-comment">// true</span>
+</code></pre>
+<h3 id="lifting-functions-is-the-same-as-compose">Lifting functions is the same as compose</h3>
+<p>This sounds complex, and looks complex, but what this is saying is that when you have <code>F[A =&gt; B]</code> and <code>F[B =&gt; C]</code>, if you &quot;lift&quot; the functions out and compose them, its the same as applying <code>&lt;*&gt;</code> to those applicative functors.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> af = Applicative[List]
+
+<span class="hljs-keyword">val</span> lab: List[Int =&gt; String] = List((x: Int) =&gt; x.toString)
+<span class="hljs-keyword">val</span> lbc: List[String =&gt; Int] = List((x: String) =&gt; x.length)
+<span class="hljs-keyword">val</span> list = List(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
+
+<span class="hljs-keyword">val</span> comp = (bc: String =&gt; Int) =&gt; (ab: Int =&gt; String) =&gt; bc compose ab
+
+<span class="hljs-keyword">val</span> res1 = af.&lt;*&gt;( af.&lt;*&gt;(list)(lab) )(lbc)
+<span class="hljs-keyword">val</span> res2 = af.&lt;*&gt;(list)( af.&lt;*&gt;(lab)( af.&lt;*&gt;(lbc)( af.pure(comp) ) ) )
+
+res1 == res2
+</code></pre>
+<p>These laws seem very complex, but again in most cases they should just work.</p>
 
                     
                     </section>
@@ -468,10 +538,10 @@ scala&gt; size(<span class="hljs-number">10.0</span>)
         </div>
 
         
-        <a href="./Structural Types.html" class="navigation navigation-prev"><i class="fa fa-angle-left"></i></a>
+        <a href="./Functor.html" class="navigation navigation-prev"><i class="fa fa-angle-left"></i></a>
         
         
-        <a href="./Patterns.html" class="navigation navigation-next"><i class="fa fa-angle-right"></i></a>
+        <a href="./Scalaz.html" class="navigation navigation-next"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

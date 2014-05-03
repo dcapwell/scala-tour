@@ -1,30 +1,31 @@
 CACHE MANIFEST
-# Revision 1399051940000
+# Revision 1399097629370
 
 CACHE:
-index.html
-Functor.html
-Memoization.html
-Language.html
-Monads and Monoids.html
-Partial Function.html
-Patterns.html
-F-Bounded Type.html
-Higher Kind.html
-References.html
-Path Dependent Types.html
 Phantom Type.html
 Cake.html
+F-Bounded Type.html
+Functor.html
+Higher Kind.html
+Language.html
+Memoization.html
+Monads and Monoids.html
+Partial Function.html
+Path Dependent Types.html
+Patterns.html
+index.html
+References.html
 Scalaz.html
 Structural Types.html
-Types.html
 Tag Types.html
-Type Classes.html
 Traits.html
+Type Classes.html
+Types.html
 Union and Intersection types.html
 Utils.html
 Value Classes.html
 Variance.html
+Applicative Functor.html
 gitbook/app.js
 gitbook/fonts/anonymouspro/400.woff
 gitbook/fonts/anonymouspro/400i.woff
@@ -61,8 +62,8 @@ gitbook/jsrepl/sandbox.html
 gitbook/jsrepl/sandbox.js
 gitbook/print.css
 gitbook/style.css
-gitbook/plugins/gitbook-plugin-mixpanel/plugin.js
 gitbook/plugins/gitbook-plugin-mathjax/plugin.js
+gitbook/plugins/gitbook-plugin-mixpanel/plugin.js
 
 NETWORK:
 *
