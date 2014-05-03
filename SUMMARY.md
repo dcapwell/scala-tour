@@ -17,6 +17,7 @@
     * [Cake](Cake.md)
 * [Monads and Monoids](Monads and Monoids.md)
     * [Functor](Functor.md)
+    * [Applicative Functor](Applicative Functor.md)
 * [Scalaz](Scalaz.md)
     * [Utils](Utils.md)
     * [Tag Types](Tag Types.md)
