@@ -1,10 +1,12 @@
 CACHE MANIFEST
-# Revision 1399269013689
+# Revision 1402075458662
 
 CACHE:
-Phantom Type.html
+Patterns.html
 Cake.html
+Collections.html
 F-Bounded Type.html
+Failure.html
 Functor.html
 Higher Kind.html
 Language.html
@@ -12,8 +14,8 @@ Memoization.html
 Monads and Monoids.html
 Partial Function.html
 Path Dependent Types.html
-Patterns.html
 Applicative Functor.html
+Phantom Type.html
 index.html
 References.html
 Scalaz.html

@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
         
         <meta charset="UTF-8">
-        <title>Tag Types | Scala Tour</title>
+        <title>Collections | Scala Tour</title>
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="robots" content="index, follow">
@@ -13,13 +13,13 @@
         <meta name="generator" content="www.gitbook.io">
 
         
-        <link rel="next" href="./Memoization.html" />
+        <link rel="next" href="./References.html" />
         
         
-        <link rel="prev" href="./Utils.html" />
+        <link rel="prev" href="./Failure.html" />
         
 
-        <meta property="og:title" content="Tag Types | Scala Tour">
+        <meta property="og:title" content="Collections | Scala Tour">
         <meta property="og:site_name" content="Scala Tour">
         <meta property="og:type" content="book">
         <meta property="og:locale" content="en_US">
@@ -42,7 +42,7 @@
 
 
         
-    <div class="book" data-github="dcapwell/scala-tour" data-level="5.2" data-basepath="." data-revision="1402075458662">
+    <div class="book" data-github="dcapwell/scala-tour" data-level="6.1" data-basepath="." data-revision="1402075458662">
     <div class="book-header">
     <!-- Actions Left -->
     
@@ -108,7 +108,7 @@
             <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
         </li>
         <li>
-            <a href="https://github.com/dcapwell/scala-tour/edit/master/Tag Types.md" target="blank">Edit and Contribute</a>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/Collections.md" target="blank">Edit and Contribute</a>
         </li>
         <li class="divider"></li>
         
@@ -355,7 +355,7 @@
             <div class="page-wrapper" tabindex="-1">
                 <div class="book-progress">
     <div class="bar">
-        <div class="inner" style="width: 84%;min-width: 80%;"></div>
+        <div class="inner" style="width: 96%;min-width: 92%;"></div>
     </div>
     <div class="chapters">
     
@@ -403,11 +403,11 @@
     
         <a href="./Tag Types.html" title="Tag Types" class="chapter done " data-progress="5.2" style="left: 84%;"></a>
     
-        <a href="./Memoization.html" title="Memoization" class="chapter  " data-progress="5.3" style="left: 88%;"></a>
+        <a href="./Memoization.html" title="Memoization" class="chapter done " data-progress="5.3" style="left: 88%;"></a>
     
-        <a href="./Failure.html" title="Failure" class="chapter  new-chapter" data-progress="6" style="left: 92%;"></a>
+        <a href="./Failure.html" title="Failure" class="chapter done new-chapter" data-progress="6" style="left: 92%;"></a>
     
-        <a href="./Collections.html" title="Collections" class="chapter  " data-progress="6.1" style="left: 96%;"></a>
+        <a href="./Collections.html" title="Collections" class="chapter done " data-progress="6.1" style="left: 96%;"></a>
     
         <a href="./References.html" title="References" class="chapter  new-chapter" data-progress="7" style="left: 100%;"></a>
     
@@ -416,91 +416,91 @@
 
                 <div class="page-inner">
                 
-                    <section class="normal" id="section-gitbook_19">
+                    <section class="normal" id="section-gitbook_3">
                     
-                        <h1 id="tag-types">Tag Types</h1>
-<p>In default scala, we have a way to alias types.</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">type</span> Foo = String
+                        <h1 id="collections">Collections</h1>
+<p>Collections are the biggest points of failure in languages; if you look over the &quot;Java Puzzlers&quot; book, most of the examples are with collections.  This is also true for scala.  The way type inference works, the whole <code>CanBuildFrom</code> mess, and Collection Variance (cause you really meant List[Any] right?) all come together to give you wierd &quot;wtf&quot; moments.  Now, lets have some fun!</p>
+<h2 id="variance-fails">Variance Fails</h2>
+<pre><code class="lang-scala">List(<span class="hljs-number">1</span>).toSet()
 </code></pre>
-<p>This is great as a way to make code more readable, but if your type logically has a more limited range of support then the type won&#39;t enforce this.  Or if the type you are working with is used in different places to mean different things, then implicits wont know what to pick.</p>
-<p>Limited range of support:</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">type</span> KiloGram = Int
-<span class="hljs-keyword">def</span> someWorkWithKiloGrams(value: KiloGram): KiloGram
-someWorkWithKiloGrams(Integer.MIN_VALUE)
+<p>What does the above produce?  If you are thinking <code>Set(1)</code> then you are a sain person!.. But wrong!</p>
+<pre><code class="lang-scala">scala&gt; List(<span class="hljs-number">1</span>).toSet()
+res8: Boolean = <span class="hljs-keyword">false</span>
 </code></pre>
-<p>Scalaz provides a way to <code>Tag</code> these types.  What is tagging?  Its the act of creating a new type that has a reference to another type.  Lets look at the code for <code>KiloGram</code>.</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">import</span> scalaz._, Scalaz._
-<span class="hljs-keyword">sealed</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">KiloGram</span></span>
-<span class="hljs-keyword">def</span> KiloGram[A](a: A): A @@ KiloGram = Tag[A, KiloGram](a)
+<p>What just happened?  Well, lets add some spacing to see if this gets more clear.</p>
+<pre><code class="lang-scala">scala&gt; List(<span class="hljs-number">1</span>) toSet ()
+res9: Boolean = <span class="hljs-keyword">false</span>
 </code></pre>
-<p>Here we define a sealed trait <code>KiloGram</code> as the type we want to annotation other types with.  We also define a <code>KiloGram</code> function that takes any type <code>A</code> and returns <code>A @@ KiloGram</code>.  This is a new type and not an alias to a type, so any time you use it with an <code>A</code> you must convert to the proper type.</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">def</span> someWorkWithKiloGram(value: Int @@ KiloGram): Int @@ KiloGram = 
-  KiloGram(value - <span class="hljs-number">1</span>)
-
-someWorkWithKiloGram(KiloGram(<span class="hljs-number">10</span>))
-<span class="hljs-comment">// 9: Int @@ KiloGram</span>
-
-someWorkWithKiloGram(<span class="hljs-number">10</span>)
-&lt;console&gt;:<span class="hljs-number">79</span>: error: <span class="hljs-keyword">type</span> mismatch;
- found   : Int(<span class="hljs-number">10</span>)
- required: scalaz.@@[Int,KiloGram]
-    (which expands to)  Int <span class="hljs-keyword">with</span> AnyRef{<span class="hljs-keyword">type</span> Tag = KiloGram}
-              someWorkWithKiloGram(<span class="hljs-number">10</span>)
-                                   ^
+<p>With spacing it should be more clear what just happened; the langauge failed!</p>
+<p>So, what does <code>()</code> mean?  Its <code>Unit</code>.</p>
+<pre><code class="lang-scala">scala&gt; <span class="hljs-keyword">val</span> foo = ()
+foo: Unit = ()
 </code></pre>
-<p>This is nice because now each method can choose what base types they can work with, and still require callers to <code>Tag</code> the type before calling as a way to enforce that the values make sense.  The same can be accomplished with type aliases, but you could never enforce that a user must do work to use the type.  With <code>Tag</code>, you now make the user do work to tag the type before calling, making it more explicit to the caller.</p>
-<p>So how does this work?</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">type</span> Tagged[T] = {<span class="hljs-keyword">type</span> Tag = T}
-<span class="hljs-keyword">type</span> @@[+T, Tag] = T <span class="hljs-keyword">with</span> Tagged[Tag]
+<p>So what happened was this: a <code>List(1)</code> gets created, gets converted to <code>Set(1)</code>, then <code>contains</code> was called with <code>Unit</code> (cause <code>apply</code> is a pointer to <code>contains</code> for <code>Set</code>).</p>
+<p>But wait, <code>Set</code> is defined as</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Set</span>[<span class="hljs-title">A</span>]</span>
 
-<span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Tag</span> {</span>
-    <span class="hljs-annotation">@inline</span> <span class="hljs-keyword">def</span> apply[A, T](a: A): A @@ T = a.asInstanceOf[A @@ T]
-}
+scala&gt; Set(<span class="hljs-number">1</span>) contains ()
+&lt;console&gt;:<span class="hljs-number">8</span>: error: not enough arguments <span class="hljs-keyword">for</span> method contains: (elem: Int)Boolean.
+Unspecified value parameter elem.
+              Set(<span class="hljs-number">1</span>) contains ()
 </code></pre>
-<p>When working with a tagged type, it really is just a cast to another type.  The fact that its inlined is nice so all conversions to <code>KiloGram</code> are just a cast and nothing more.</p>
-<p>At the beginning, it was pointed out that tagging can be used to make implicits over similar types easier to work with.  Lets look at how this works.</p>
-<p>Implicits over similar types:</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">import</span> java.io.File
-<span class="hljs-keyword">type</span> PluginRepo = File
-<span class="hljs-keyword">type</span> ConfigRepo = File
-
-<span class="hljs-keyword">def</span> printConfigRepo(implicit repo: ConfigRepo): Unit = println(repo)
-
-implicit <span class="hljs-keyword">val</span> plugin: PluginRepo = <span class="hljs-keyword">new</span> File(<span class="hljs-string">"/tmp"</span>)
-implicit <span class="hljs-keyword">val</span> config: ConfigRepo = <span class="hljs-keyword">new</span> File(<span class="hljs-string">"/tmp"</span>)
-
-printConfigRepo
-&lt;console&gt;:<span class="hljs-number">71</span>: error: ambiguous implicit values:
- both value plugin of <span class="hljs-keyword">type</span> =&gt; PluginRepo
- and value config of <span class="hljs-keyword">type</span> =&gt; ConfigRepo
- <span class="hljs-keyword">match</span> expected <span class="hljs-keyword">type</span> ConfigRepo
-              printConfigRepo
-              ^
+<p>So how did we get here?  Its <code>toSet</code> that did this!</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">def</span> toSet[B &gt;: A]: immutable.Set[B] = to[immutable.Set].asInstanceOf[immutable.Set[B]]
 </code></pre>
-<p>Type alias fail us went working with implicits and same referenced type.  Now lets look at the same thing using tagged types.</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">sealed</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Owner</span></span>
-<span class="hljs-keyword">sealed</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Plugin</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Owner</span></span>
-<span class="hljs-keyword">sealed</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Config</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Owner</span></span>
-
-<span class="hljs-keyword">def</span> Plugin[A](a: A): A @@ Plugin = Tag[A, Plugin](a)
-<span class="hljs-keyword">def</span> Config[A](a: A): A @@ Config = Tag[A, Config](a)
+<p>The above lets <code>B</code> fall all the way down to <code>Any</code>.  Why would you ever want this?  Who knows!</p>
+<pre><code class="lang-scala">scala&gt; <span class="hljs-keyword">val</span> fail : Set[Any] = List(<span class="hljs-number">1</span>) toSet
+warning: there were <span class="hljs-number">1</span> feature warning(s); re-run <span class="hljs-keyword">with</span> -feature <span class="hljs-keyword">for</span> details
+fail: Set[Any] = Set(<span class="hljs-number">1</span>)
 </code></pre>
-<p>We first need to define the types to tag with and a function that will cast for us.  Once we have that we can use it.</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">def</span> printConfigRepo(implicit repo: File @@ Config) = println(repo)
+<p>So when you mix <code>()</code> being both function apply and unit together as the same tokens, then you sprinkle variance into things it doesn&#39;t belong with (hence the <code>asInstanceOf</code> cast...) you get weird behaviors that make no sense!</p>
+<p>Rule of thumb with the conversion calls... always give a type on the left hand side to get past this stuff (try not to cast when you can).</p>
+<h2 id="lazy-fails">Lazy Fails</h2>
+<p>In a functional programming language, you would expect that a lot of operations are lazy and interactions with immutable types are also lazy.  Scala doesn&#39;t follow this and picks and chooses when things are lazy but doesn&#39;t document them, which leads to weird behaviors.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> i = Seq(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>).iterator
+<span class="hljs-keyword">val</span> a = i.take(<span class="hljs-number">2</span>).toSeq
+<span class="hljs-keyword">val</span> b = i.take(<span class="hljs-number">2</span>).toSeq
 
-implicit <span class="hljs-keyword">val</span> config = Config(<span class="hljs-keyword">new</span> File(<span class="hljs-string">"/tmp/config"</span>))
-
-printConfigRepo
-<span class="hljs-comment">// /tmp/config</span>
+a.foreach(println)
+b.foreach(println)
 </code></pre>
-<p>Great, works just as expected, so now lets see if adding a <code>Plugin</code> file breaks this.</p>
-<pre><code class="lang-scala">implicit <span class="hljs-keyword">val</span> plugin = Plugin(<span class="hljs-keyword">new</span> File(<span class="hljs-string">"/tmp/plugin"</span>))
+<p>What do you think happens here?  First thing I expected was either <code>1 2</code> then <code>3 4</code> or <code>1 2</code> then <code>1 2</code> (thinking iterator was lazy and only did work when toSeq was called).  If you thought the same, then you would also be wrong!  Lets see what this does.</p>
+<pre><code class="lang-scala">scala&gt; <span class="hljs-keyword">val</span> i = Seq(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>).iterator
+i: Iterator[Int] = non-empty iterator
 
-printConfigRepo
-<span class="hljs-comment">// /tmp/config</span>
+scala&gt; <span class="hljs-keyword">val</span> a = i.take(<span class="hljs-number">2</span>).toSeq
+a: Seq[Int] = Stream(<span class="hljs-number">1</span>, ?)
+
+scala&gt; <span class="hljs-keyword">val</span> b = i.take(<span class="hljs-number">2</span>).toSeq
+b: Seq[Int] = Stream(<span class="hljs-number">2</span>, ?)
+
+scala&gt; a.foreach(println)
+<span class="hljs-number">1</span>
+<span class="hljs-number">3</span>
+
+scala&gt; b.foreach(println)
+<span class="hljs-number">2</span>
+<span class="hljs-number">4</span>
 </code></pre>
-<p>Great!  Adding the <code>Plugin</code> implict doesn&#39;t break the <code>Config</code> code.</p>
-<p>So what are the main differences between type aliases and tagged types?  A type alias is just that, an alias that the compiler knows about.  To the compiler <code>PluginRepo</code> is no different than <code>File</code>.  A tagged type is a brand new type that is saying <code>File with Taggged[Plugin]</code>.  The generated type is-a <code>File</code>, but its also a <code>Tagged[Plugin]</code>.  In order to do this you do need to cast the object to this type.  So the main difference at runtime is that alias doesn&#39;t have any effects at runtime where as tagged types require a cast.</p>
+<p>The call to <code>toSeq</code> will return a <code>Stream[Int]</code> back.  The way that <code>Stream</code> works is that the first argument must be evaludated, but the next one is lazy.  This means that we pluck the <code>1</code> out of the iterator and place it in the <code>Stream</code>.  When then repeat this process, but with <code>2</code> (the next element in the list).  Lets go to the docs!</p>
+<pre><code class="lang-scala"><span class="hljs-javadoc">/** Creates a new iterator over all elements contained in this iterable object.
+ *
+ *  <span class="hljs-javadoctag">@return</span> the new iterator
+ */</span>
+<span class="hljs-keyword">def</span> iterator: Iterator[A]
+</code></pre>
+<p>and</p>
+<pre><code class="lang-scala"><span class="hljs-comment">// TraversableOnce</span>
+
+<span class="hljs-keyword">def</span> toSeq: Seq[A] = toStream
+
+<span class="hljs-javadoc">/** Converts this $coll to a stream.
+ *  $willNotTerminateInf
+ *  <span class="hljs-javadoctag">@return</span> a stream containing all elements of this $coll.
+ */</span>
+<span class="hljs-keyword">def</span> toStream: Stream[A]
+</code></pre>
+<p>Thats cool, we don&#39;t get a doc for this, so the behavior is undefined!  You have to look at the source code to figure out why it does what it does.</p>
 
                     
                     </section>
@@ -510,10 +510,10 @@ printConfigRepo
         </div>
 
         
-        <a href="./Utils.html" class="navigation navigation-prev"><i class="fa fa-angle-left"></i></a>
+        <a href="./Failure.html" class="navigation navigation-prev"><i class="fa fa-angle-left"></i></a>
         
         
-        <a href="./Memoization.html" class="navigation navigation-next"><i class="fa fa-angle-right"></i></a>
+        <a href="./References.html" class="navigation navigation-next"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
