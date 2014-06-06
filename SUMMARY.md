@@ -22,5 +22,7 @@
     * [Utils](Utils.md)
     * [Tag Types](Tag Types.md)
     * [Memoization](Memoization.md)
+* [Failure](Failure.md)
+    * [Collections](Collections.md)
 * [References](References.md)
 
