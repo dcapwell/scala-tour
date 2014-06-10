@@ -109,7 +109,7 @@ In extending type: 12
 res3: Foo3Impl = Foo3Impl@2123dde6
 ```
 
-So, the output is 0, 12, 0, then 0 again?  Why is this?  When init is called for a super class/trait the parent constructor is done before the first line of the extending type (but after class definition).  Also with override, you would have assumed that the output was 12 12, but it was like the others (0, 12).  This is because how the compiler treats override vals: they are only initialized at the call site and not propgated lower.  What does this mean?  It means that if foo had a default that was non 0, the output would not change!
+So, the output is 0, 12, 0, then 0 again?  Why is this?  When init is called for a super class/trait the parent constructor is done before the first line of the extending type (but after class definition).  Also with override, you would have assumed that the output was 12 12, but it was like the others (0, 12).  This is because how the compiler treats override vals: they are only initialized at the call site and not propagated lower.  What does this mean?  It means that if foo had a default that was non 0, the output would not change!
 
 ```scala
 trait Bar {

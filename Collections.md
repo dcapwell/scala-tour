@@ -1,6 +1,6 @@
 # Collections
 
-Collections are the biggest points of failure in languages; if you look over the "Java Puzzlers" book, most of the examples are with collections.  This is also true for scala.  The way type inference works, the whole `CanBuildFrom` mess, and Collection Variance (cause you really meant List[Any] right?) all come together to give you wierd "wtf" moments.  Now, lets have some fun!
+Collections are the biggest points of failure in languages; if you look over the "Java Puzzlers" book, most of the examples are with collections.  This is also true for scala.  The way type inference works, the whole `CanBuildFrom` mess, and Collection Variance (cause you really meant List[Any] right?) all come together to give you weird "wtf" moments.  Now, lets have some fun!
 
 ## Variance Fails
 
@@ -22,7 +22,7 @@ scala> List(1) toSet ()
 res9: Boolean = false
 ```
 
-With spacing it should be more clear what just happened; the langauge failed!
+With spacing it should be more clear what just happened; the language failed!
 
 So, what does `()` mean?  Its `Unit`.
 

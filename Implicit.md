@@ -55,7 +55,7 @@ As we saw with Scalaz's Tag Types, we can solve this by tagging the types if the
 
 ## Variance
 
-Ever worked with implicits and hieractical types?
+Ever worked with implicits and hierarchical types?
 
 ```scala
 class Foo
