@@ -121,3 +121,99 @@ def toStream: Stream[A]
 ```
 
 Thats cool, we don't get a doc for this, so the behavior is undefined!  You have to look at the source code to figure out why it does what it does.
+
+## Iterable
+
+Coming from java, you know that working with iterables is a great way to make functions more reusable, but there are cases where this becomes unsafe in scala: Set.
+
+```scala
+def sumSizes(collections: Iterable[TraversableOnce[_]]): Int = collections.map(_.size).sum
+
+sumSizes(List(Set(1, 2), List(3, 4)))
+sumSizes(Set(List(1, 2), Set(3, 4)))
+```
+
+When `Set` is used and mapped over, the output gets uniqued.  This means that the result above is 4 then 2.
+
+## Map Fails
+
+Remember in Functor, the laws?  They are Composition and Identity.  You would expect that these laws hold true with the scala collections, right?
+
+WRONG!
+
+```scala
+import scala.collection._
+val f: Int => Int = _ % 3
+val g: Int => Int = _ => System.nanoTime % 1000000 toInt
+
+Set(3, 6, 9) map f map g
+Set(3, 6, 9) map (f andThen g)
+```
+
+If you run the code above, you get the following output
+
+```scala
+scala> Set(3, 6, 9) map f map g
+res11: scala.collection.Set[Int] = Set(679000)
+
+scala> Set(3, 6, 9) map (f andThen g)
+res12: scala.collection.Set[Int] = Set(842000, 845000, 848000)
+```
+
+The resulting sets are not equal!
+
+Ok, so they broke composition but identity should be fine, right?
+
+WRONG!
+
+```scala
+import scala.collection._
+BitSet(1, 2, 3) map (_.toString.toInt)
+BitSet(1, 2, 3) map (_.toString) map (_.toInt)
+(BitSet(1, 2, 3) map identity)(1)
+```
+
+If you run the above, you see that the result types are different depending on if you compose functions before calling map, but the last statement is scary!  Identity failed us!
+
+```scala
+scala> (BitSet(1, 2, 3) map identity)(1)
+<console>:14: error: type mismatch;
+ found   : Int(1)
+ required: scala.collection.generic.CanBuildFrom[scala.collection.BitSet,Int,?]
+              (BitSet(1, 2, 3) map identity)(1)
+```
+
+Ok, in scala's defence, if you split the map and the apply into different statements, it does what you expect.
+
+```scala
+val org = BitSet(1, 2, 3) map identity
+org(1)
+// true
+```
+
+
+```scala
+def f[T](x: T) = (x, new Object)
+
+val set = SortedSet(1 to 10: _*)
+
+set map (x => f(x)._1)
+
+set map f map (_._1)
+```
+
+## Type Safe Methods
+
+As we saw with type classes, we can build very type safe methods on objects (remember type safe equals?).  You would assume that scala's collections are type safe and won't compile if what you ask is not logical.
+
+```scala
+List(1, 2, 3) contains "your mom"
+```
+
+The above will output `false`.  This will always happen since a `List[Int]` can never contain a type `String`.  The reason for this is the same reason the above is also valid in java.  Here is the def.
+
+```scala
+def contains(elem: Any): Boolean
+```
+
+So I throw away the type to check if something contains...

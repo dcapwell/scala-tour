@@ -24,5 +24,7 @@
     * [Memoization](Memoization.md)
 * [Failure](Failure.md)
     * [Collections](Collections.md)
+    * [Object Init](Object Init.md)
+    * [Implicit](Implicit.md)
 * [References](References.md)
 
