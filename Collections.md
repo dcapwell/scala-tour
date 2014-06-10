@@ -1,6 +1,6 @@
 # Collections
 
-Collections are the biggest points of failure in languages; if you look over the "Java Puzzlers" book, most of the examples are with collections.  This is also true for scala.  The way type inference works, the whole `CanBuildFrom` mess, and Collection Variance (cause you really meant List[Any] right?) all come together to give you weird "wtf" moments.  Now, lets have some fun!
+Collections are the biggest points of failure in languages; if you look over the "Java Puzzlers" book, most of the examples are with collections.  This is also true for scala.  The way type inference works, the whole `CanBuildFrom` mess, and Collection Variance (cause you really meant List[Any] right?) all come together to give you wierd "wtf" moments.  Now, lets have some fun!
 
 ## Variance Fails
 
@@ -22,7 +22,7 @@ scala> List(1) toSet ()
 res9: Boolean = false
 ```
 
-With spacing it should be more clear what just happened; the language failed!
+With spacing it should be more clear what just happened; the langauge failed!
 
 So, what does `()` mean?  Its `Unit`.
 
@@ -36,17 +36,24 @@ So what happened was this: a `List(1)` gets created, gets converted to `Set(1)`,
 But wait, `Set` is defined as
 
 ```scala
-trait Set[A]
+// trait Set[A]
 
 scala> Set(1) contains ()
 <console>:8: error: not enough arguments for method contains: (elem: Int)Boolean.
 Unspecified value parameter elem.
               Set(1) contains ()
+
+scala> Set(1) ()
+<console>:8: error: not enough arguments for method apply: (elem: Int)Boolean in trait GenSetLike.
+Unspecified value parameter elem.
+              Set(1) ()
 ```
 
-So how did we get here?  Its `toSet` that did this!
+If I work with a `Set` directly, the compiler does what I expect and yells, so how did we get here?  Its `toSet` that did this!
 
 ```scala
+// trait TraversableOnce[+A] extends Any with GenTraversableOnce[A]
+
 def toSet[B >: A]: immutable.Set[B] = to[immutable.Set].asInstanceOf[immutable.Set[B]]
 ```
 
@@ -121,6 +128,8 @@ def toStream: Stream[A]
 ```
 
 Thats cool, we don't get a doc for this, so the behavior is undefined!  You have to look at the source code to figure out why it does what it does.
+
+Core issue here?  Mixing mutable state (`Iterator`), lazyness, and lack of docs.
 
 ## Iterable
 
