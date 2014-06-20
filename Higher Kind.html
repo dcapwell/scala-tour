@@ -42,7 +42,7 @@
 
 
         
-    <div class="book" data-github="dcapwell/scala-tour" data-level="2.5" data-basepath="." data-revision="1402422316994">
+    <div class="book" data-github="dcapwell/scala-tour" data-level="2.5" data-basepath="." data-revision="1403297670744">
     <div class="book-header">
     <!-- Actions Left -->
     
@@ -474,6 +474,39 @@ implicit <span class="hljs-class"><span class="hljs-keyword">class</span> <span 
 List(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>).leftFold(<span class="hljs-number">0</span>)(_ + _) <span class="hljs-comment">// 6</span>
 </code></pre>
 <p>Given a <code>List[A]</code> and a <code>Foldable[List]</code>, we can now add a <code>leftFold</code> method to <code>List[A]</code>.  This example is a common example of where higher-kinded types are normally used; type classes over generic types.</p>
+<h2 id="hackery">Hackery</h2>
+<p>Scala supports higher kinded types, but the support is not on-par with what you would hope for.  Lets say you have the following type</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Foo</span>[<span class="hljs-title">A</span>, <span class="hljs-title">B</span>]</span>
+</code></pre>
+<p>And now lets say we have a function that takes a higher type, but only with one type param.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">def</span> map[F[_], A, B](f: F[A])(fn: A =&gt; B): F[B] = ???
+</code></pre>
+<p>Lets try to call it with <code>Foo</code></p>
+<pre><code class="lang-scala">scala&gt; map(<span class="hljs-keyword">new</span> Foo[Int, Int]{})(x =&gt; x)
+error: <span class="hljs-keyword">type</span> mismatch;
+ found   : Foo[Int,Int]
+ required: ?F
+Note that implicit conversions are not applicable because they are ambiguous:
+ both method any2Ensuring in <span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Predef</span> <span class="hljs-title">of</span> <span class="hljs-title">type</span> [<span class="hljs-title">A</span>]<span class="hljs-params">(x: A)</span><span class="hljs-title">Ensuring</span>[<span class="hljs-title">A</span>]</span>
+ and method any2ArrowAssoc in <span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Predef</span> <span class="hljs-title">of</span> <span class="hljs-title">type</span> [<span class="hljs-title">A</span>]<span class="hljs-params">(x: A)</span><span class="hljs-title">ArrowAssoc</span>[<span class="hljs-title">A</span>]</span>
+ are possible conversion functions from Foo[Int,Int] to ?F
+</code></pre>
+<p>That is a very weird error, and not the one you will always see.  What this is saying is that its trying to verify that the types match, but not able to.  The reason for this is the higher kind that its looking for doesn&#39;t match what we are passing in: looking for <code>Foo[Int]</code> but passed in <code>Foo[Int, Int]</code>.</p>
+<p>There is a way to get the types to match, but it looks a bit scary at first...</p>
+<pre><code class="lang-scala">scala&gt; map[({<span class="hljs-keyword">type</span> F[X] = Foo[Int, X]})#F, Int, Int](<span class="hljs-keyword">new</span> Foo[Int, Int]{})(x =&gt; x)
+scala.NotImplementedError: an implementation is missing <span class="hljs-comment">// expected, impl was ???</span>
+</code></pre>
+<p>So what the heck is <code>({type F[X] = Foo[Int, X]})#F</code>?  Lets break it up, but lets first look at a simpler thing; a type within a trait.</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Machine</span> {</span>
+    <span class="hljs-keyword">type</span> Hostname = String
+
+    <span class="hljs-keyword">def</span> hostname: Hostname = <span class="hljs-string">"localhost"</span>
+}
+</code></pre>
+<p>As we see with the above, the syntax for defining a type alias is <code>type Hostname = String</code>, so when you look at the scary type thing above, you will see that there as well: <code>type F[X] = Foo[Int, X]</code>.  The only real difference there is that the type alias supports params.</p>
+<p>So to finish this off, the <code>({...})#F</code> is saying that scala should extract the type <code>F</code> from the <code>{...}</code> block inside.  And since <code>F</code> is of type <code>F[X]</code>, it will fit within the method!</p>
+<p>TL;DR</p>
+<p>When you are working with higher-kinded types and the number of types don&#39;t match, you can hack around it by creating a type alias inside a block, and extract it out with <code>(...)#TypeName</code>.</p>
 
                     
                     </section>
