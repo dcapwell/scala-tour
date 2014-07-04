@@ -7,6 +7,8 @@
 
 [Scala’s Types of Types](http://ktoso.github.io/scala-types-of-types/)
 
+[Type level programming](http://apocalisp.wordpress.com/2010/06/08/type-level-programming-in-scala/)
+
 ## Functional
 
 [The Typeclass Pattern - An Alternative to Inheritance](https://www.youtube.com/watch?v=yYo0gANYViE&list=PLk1rxAmpqRVLeBfjaQnULpDrN-FI9BOij)
@@ -18,6 +20,8 @@
 [Monads, Monoids, and Make Believe.](http://www.youtube.com/watch?v=ww2Z1URx-G0)
 
 [Functional programming patterns for the non-mathematician](http://www.youtube.com/watch?v=AvgwKjTPMmM)
+
+[Higher Order Blog](http://blog.higher-order.com/)
 
 ### Scalaz
 [Scalaz - The Good Parts](http://www.youtube.com/watch?v=jPdHQZnF56A)
