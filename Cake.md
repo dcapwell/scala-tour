@@ -209,3 +209,6 @@ In the cake pattern, you define a set of dependent types that live in their own 
 
 # Cup Cake
 This is from the talk [Designing Abstract with Types](http://www.youtube.com/watch?v=BTUm1Yy23Fg) by Chris Sachs.  Cup cake pattern is "a mini cake pattern".
+
+# Tangent
+To better understand scala's cake pattern, there is a very helpful video that explains it all: [Cake](http://www.youtube.com/watch?v=oeQvtETTxio)
