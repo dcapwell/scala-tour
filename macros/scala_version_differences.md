@@ -24,10 +24,10 @@ def toTuple[A <: Product](a: A): Any = macro CaseClassMacros.toTupleMacro[A]
 
 In this example, calling it as `toTuple(Foo("foo", "bar"))` yields `(String, String)` as the return type.  A good writeup on this can be found [here](http://docs.scala-lang.org/overviews/macros/blackbox-whitebox.html).
 
-Use whitebox macros with caution since IDE support is very limited (aka, intellij says that your code doesn't compile, but it typechecks!).  A common workaround for such a thing is by throwing an abstraction/typeclass over this function...
+Use whitebox macros with caution since IDE support is very limited (aka, intellij says that your code doesn't compile, but it does!).  They can also be less clear to the caller since the types are no longer documentation.  A common workaround for such a thing is by throwing an abstraction/typeclass over this function...
 
 #### Implicit Macros
-Since functions can be macros, and implicits can be used with functions... see where I am going with this?  Yep, implicit macro calls!
+(I believe this was also in 2.10) Since functions can be macros, and implicits can be used with functions... see where I am going with this?  Yep, implicit macro calls!
 
 A common pattern of hiding that you are really using macros is by defining a typeclass that does what the user wants (`CaseToTuple`), but the creation of the typeclass instance is via a macro.
 

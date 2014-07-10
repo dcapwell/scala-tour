@@ -1,9 +1,11 @@
 # Trees
 When you get deeper into macros, you will find yourself working with the `Tree` instances directly (quasiquotes are some times not as easy to use).  When this happens, you will need to know which instances to use.
 
-This section really just outputs whats in [Scala's Trees.scala](https://github.com/scala/scala/blob/2.11.x/src/reflect/scala/reflect/api/Trees.scala#L308).  Main reason for this is that I find this doc faster to look things up than in intellij (the whole trait within trait within trait that defines a trait thing... intellij has a harder time searching this).
+This section really just outputs whats in [Scala's Trees.scala](https://github.com/scala/scala/blob/2.11.x/src/reflect/scala/reflect/api/Trees.scala#L308).  Main reason for this is that I find this doc faster to look things up than in intellij (the whole trait within trait within trait that defines a trait thing... intellij has a harder time searching this.  I know I can search for the known case class, but intellij always infers the traits/vals, which are longer to find the APIs for).
 
 If you prefer ScalaDocs, you can look at them [here](http://www.scala-lang.org/files/archive/nightly/docs/library/index.html#scala.reflect.api.Trees).  Again, I find those docs to have way too much noise.
+
+Also, I find that writing this out really helps me figure out how the trees work.
 
 ## Modifiers
 Thie type doesn't really map to normal scala code, but many things have modifiers.
@@ -14,19 +16,13 @@ lazy val foo: String
 
 In this example, foo has modifiers, namely lazy (which is really a flag).
 
-To create
-```scala
-Modifiers(flags: FlagSet, privateWithin: Name, annotations: List[Tree])
-```
-
-To get values
+As case class:
 
 ```scala
-def flags: FlagSet
-def hasFlag(flag: FlagSet): Boolean
-def privateWithin: Name
-def annotations: List[Tree]
-def mapAnnotations(f: List[Tree] => List[Tree]): Modifiers
+case class Modifiers(flags: Long, privateWithin: Name, annotations: List[Tree]) {
+    def hasFlag(flag: FlagSet): Boolean
+    def mapAnnotations(f: List[Tree] => List[Tree]): Modifiers
+}
 ```
 
 ## FlagSet
@@ -201,46 +197,238 @@ val NoFlags: FlagSet
 ## ValDef
 Maps to `val foo = ...`.  It contains the type of variable (val, var), name, type, and rhs (right-hand-side, aka expression).
 
-To create
+As case class:
 
 ```scala
-ValDef(mods: Modifiers, name: TermName, tpt: Tree, rhs: Tree)
-```
-
-To read
-
-```scala
-def mods: Modifiers
-def name: TermName
-def tpt: Tree
-def rhs: Tree
+case class ValDef(mods: Modifiers, name: TermName, tpt: Tree, rhs: Tree)
 ```
 
 ## ClassDef
-This type maps to `... class Foo() extends ...`.
+This type maps to `<mods> class Foo[A](...) ...` and also trait defs.
 
-To create an instance, you need to call
-```scala
-ClassDef(mods: Modifiers, name: TypeName, tparams: List[TypeDef], impl: Template)
-```
-
-To get the values out of a class
+As case class:
 
 ```scala
-def mods: Modifiers
-def name: TypeName
-def tparams: List[TypeDef]
-def impl: Template
+case class ClassDef(mods: Modifiers, name: TypeName, tparams: List[TypeDef], impl: Template)
 ```
 
+## Template
+Template is really the content of a `ClassDef`.
+
+As case class:
+
+```scala
+case class Template(parents: List[Tree], self: ValDef, body: List[Tree])
+```
+
+`parents` map to `extends` and `with` calls.  Order matters to this list, so make sure the `.head` element maps to the expected `extends` type.
+
+`self` maps to `self: Foo =>` in traits
+
+```scala
+scala> q"""
+ trait Foo { self: String =>
+    def toString: String = self.toString
+ }
+"""
+res0: reflect.runtime.universe.ClassDef =
+abstract trait Foo extends scala.AnyRef { self: String =>
+  def $init$() = {
+    ()
+  };
+  def toString: String = self.toString
+}
+scala> res0.impl.self
+res1: reflect.runtime.universe.ValDef = private val self: String = _
+```
+
+Notes on `body`, order matters!  I found this out while trying to reinvent case classes as a macro (cause thats sain right?...).  I took all the class params and replaced them with `private[this]` params followed by `DefDef` (coming to this tree).  When I did this I got a very weird `MatchError` message, and while debugging the compiler code it became clear that scala makes assumptions about how the body looks like.
+
+Here is the code incase it bites you:
+
+```scala
+// undo gen.mkTemplate
+    protected object UnMkTemplate {
+      def unapply(templ: Template): Option[(List[Tree], ValDef, Modifiers, List[List[ValDef]], List[Tree], List[Tree])] = {
+        val Template(parents, selfType, _) = templ
+        val tbody = treeInfo.untypecheckedTemplBody(templ)
+
+        def result(ctorMods: Modifiers, vparamss: List[List[ValDef]], edefs: List[Tree], body: List[Tree]) =
+          Some((parents, selfType, ctorMods, vparamss, edefs, body))
+        def indexOfCtor(trees: List[Tree]) =
+          trees.indexWhere { case UnCtor(_, _, _) => true ; case _ => false }
+
+        if (tbody forall treeInfo.isInterfaceMember)
+          result(NoMods | Flag.TRAIT, Nil, Nil, tbody)
+        else if (indexOfCtor(tbody) == -1)
+          None
+        else {
+          val (rawEdefs, rest) = tbody.span(treeInfo.isEarlyDef)
+          val (gvdefs, etdefs) = rawEdefs.partition(treeInfo.isEarlyValDef)
+          val (fieldDefs, UnCtor(ctorMods, ctorVparamss, lvdefs) :: body) = rest.splitAt(indexOfCtor(rest))
+          val evdefs = gvdefs.zip(lvdefs).map {
+            case (gvdef @ ValDef(_, _, tpt: TypeTree, _), ValDef(_, _, _, rhs)) =>
+              copyValDef(gvdef)(tpt = tpt.original, rhs = rhs)
+          }
+          val edefs = evdefs ::: etdefs
+          if (ctorMods.isTrait)
+            result(ctorMods, Nil, edefs, body)
+          else {
+            // undo conversion from (implicit ... ) to ()(implicit ... ) when its the only parameter section
+            val vparamssRestoredImplicits = ctorVparamss match {
+              case Nil :: (tail @ ((head :: _) :: _)) if head.mods.isImplicit => tail
+              case other => other
+            }
+            // undo flag modifications by merging flag info from constructor args and fieldDefs
+            val modsMap = fieldDefs.map { case ValDef(mods, name, _, _) => name -> mods }.toMap
+            def ctorArgsCorrespondToFields = vparamssRestoredImplicits.flatten.forall { vd => modsMap.contains(vd.name) }
+            if (!ctorArgsCorrespondToFields) None
+            else {
+              val vparamss = mmap(vparamssRestoredImplicits) { vd =>
+                val originalMods = modsMap(vd.name) | (vd.mods.flags & DEFAULTPARAM)
+                atPos(vd.pos)(ValDef(originalMods, vd.name, vd.tpt, vd.rhs))
+              }
+              result(ctorMods, vparamss, edefs, body)
+            }
+          }
+        }
+      }
+    }
+```
+
+If you look close enough, you will see
+
+```scala
+val modsMap = fieldDefs.map { case ValDef(mods, name, _, _) => name -> mods }.toMap
+```
+
+`fieldDefs` comes from this call
+
+```scala
+val (fieldDefs, UnCtor(ctorMods, ctorVparamss, lvdefs) :: body) = rest.splitAt(indexOfCtor(rest))
+```
+
+So, it takes the body, splits it on the constructor, and assumes everything before then are `ValDef` instances.
+
+TODO, should I file a bug against the compiler for this?  Might bite other macro developers...
+
+## DefDef
+This tree maps to `def foo: String = "foo"`
+
+As case class
+
+```scala
+case class DefDef(mods: Modifiers, name: Name, tparams: List[TypeDef],
+                    vparamss: List[List[ValDef]], tpt: Tree, rhs: Tree)
+```
+
+`vparamss` is nested `List[ValDef]` for currying.  `def foo(name: String)(age: Int)` will have `vparamss.size` equal 2, where `vparamss.head` is a `List[ValDef]` that matches the `name` group.
+
+## TypeDef
+When building generics into a function or a type, you are working with `TypeDef`.
+
+As case class
+
+```scala
+case class TypeDef(mods: Modifiers, name: TypeName, tparams: List[TypeDef], rhs: Tree)
+```
+
+Playing with the tree
+
+```scala
+scala> q""" def foo[A](a: A): A = a """
+scala> res3.tparams
+res4: List[reflect.runtime.universe.TypeDef] = List(type A)
+
+scala> res3.tparams.head.name
+res6: reflect.runtime.universe.TypeName = A
+
+scala> res3.tparams.head.tparams
+res7: List[reflect.runtime.universe.TypeDef] = List()
+
+scala> res3.tparams.head.rhs
+res8: reflect.runtime.universe.Tree =
+
+scala> res3.tparams.head.rhs.getClass
+res9: Class[_ <: reflect.runtime.universe.Tree] = class scala.reflect.internal.Trees$TypeBoundsTree
+
+```
+
+## Literal
+This tree maps to literals in the language such as `3` and `"foo"`
+
+As case class
+
+```scala
+case class Literal(value: Constant)
+```
+
+## Constant
+Represents a constant value, such as `3` or `"foo"`
+
+As case class
+
+```scala
+case class Constant(value: Any)
+```
+
+## Ident
+We saw that `Literal(Constant(3))` maps to `3`, but what about variable references?  This is where Ident comes in.
+
+```scala
+scala> val foo = "bar"
+foo: String = bar
+
+scala> q""" foo """
+res20: reflect.runtime.universe.Ident = foo
+```
+
+As case class
+
+```scala
+case class Ident(name: Name)
+```
+
+## Block
+This does what it sounds like, its a tree that maps to a scala block expression.
+
+```scala
+q"""
+{
+    val foo = 3
+    foo
+}
+""".asInstanceOf[Block]
+res2: reflect.runtime.universe.Block =
+{
+  val foo = 3;
+  foo
+}
+```
+
+As case class
+
+```scala
+case class Block(stats: List[Tree], expr: Tree)
+```
+
+`stats` are all the statements within the block
+`expr` is the expression to return from the block.  In the case above, it returns `foo`
+
+```scala
+scala> res2.expr.asInstanceOf[Ident]
+res5: reflect.runtime.universe.Ident = foo
+```
+
+## This
+## Select
+## Apply
+## TypeApply
+## TypeTree
 ## PackageDef
 ## ModuleDef
-## DefDef
-## TypeDef
 ## LabelDef
 ## Import
-## Template
-## Block
 ## CaseDef
 ## Alternative
 ## Star
@@ -256,16 +444,9 @@ def impl: Template
 ## Throw
 ## New
 ## Typed
-## TypeApply
-## Apply
 ## Super
-## This
-## Select
-## Ident
 ## RefTree
 ## ReferenceToBoxed
-## Literal
-## TypeTree
 ## Annotated
 ## SingletonTypeTree
 ## SelectFromTypeTree
