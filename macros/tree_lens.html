@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
         
         <meta charset="UTF-8">
-        <title>Context | Scala Tour</title>
+        <title>Tree Lens | Scala Tour</title>
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="robots" content="index, follow">
@@ -13,13 +13,13 @@
         <meta name="generator" content="www.gitbook.io">
 
         
-        <link rel="next" href="../macros/fun_with_println.html" />
+        <link rel="next" href="../References.html" />
         
         
-        <link rel="prev" href="../macros/macro_basics.html" />
+        <link rel="prev" href="../macros/trees.html" />
         
 
-        <meta property="og:title" content="Context | Scala Tour">
+        <meta property="og:title" content="Tree Lens | Scala Tour">
         <meta property="og:site_name" content="Scala Tour">
         <meta property="og:type" content="book">
         <meta property="og:locale" content="en_US">
@@ -42,7 +42,7 @@
 
 
         
-    <div class="book" data-github="dcapwell/scala-tour" data-level="7.3" data-basepath=".." data-revision="1404966796304">
+    <div class="book" data-github="dcapwell/scala-tour" data-level="7.8" data-basepath=".." data-revision="1404966796304">
     <div class="book-header">
     <!-- Actions Left -->
     
@@ -108,7 +108,7 @@
             <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
         </li>
         <li>
-            <a href="https://github.com/dcapwell/scala-tour/edit/master/macros/context.md" target="blank">Edit and Contribute</a>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/macros/tree_lens.md" target="blank">Edit and Contribute</a>
         </li>
         <li class="divider"></li>
         
@@ -448,7 +448,7 @@
             <div class="page-wrapper" tabindex="-1">
                 <div class="book-progress">
     <div class="bar">
-        <div class="inner" style="width: 83.33333333333333%;min-width: 80.55555555555556%;"></div>
+        <div class="inner" style="width: 97.22222222222223%;min-width: 94.44444444444444%;"></div>
     </div>
     <div class="chapters">
     
@@ -514,15 +514,15 @@
     
         <a href="../macros/context.html" title="Context" class="chapter done " data-progress="7.3" style="left: 83.33333333333333%;"></a>
     
-        <a href="../macros/fun_with_println.html" title="Fun with println" class="chapter  " data-progress="7.4" style="left: 86.11111111111111%;"></a>
+        <a href="../macros/fun_with_println.html" title="Fun with println" class="chapter done " data-progress="7.4" style="left: 86.11111111111111%;"></a>
     
-        <a href="../macros/scala_version_differences.html" title="Scala Version Differences" class="chapter  " data-progress="7.5" style="left: 88.88888888888889%;"></a>
+        <a href="../macros/scala_version_differences.html" title="Scala Version Differences" class="chapter done " data-progress="7.5" style="left: 88.88888888888889%;"></a>
     
-        <a href="../macros/quasiquotes.html" title="Quasiquotes" class="chapter  " data-progress="7.6" style="left: 91.66666666666667%;"></a>
+        <a href="../macros/quasiquotes.html" title="Quasiquotes" class="chapter done " data-progress="7.6" style="left: 91.66666666666667%;"></a>
     
-        <a href="../macros/trees.html" title="Trees" class="chapter  " data-progress="7.7" style="left: 94.44444444444444%;"></a>
+        <a href="../macros/trees.html" title="Trees" class="chapter done " data-progress="7.7" style="left: 94.44444444444444%;"></a>
     
-        <a href="../macros/tree_lens.html" title="Tree Lens" class="chapter  " data-progress="7.8" style="left: 97.22222222222223%;"></a>
+        <a href="../macros/tree_lens.html" title="Tree Lens" class="chapter done " data-progress="7.8" style="left: 97.22222222222223%;"></a>
     
         <a href="../References.html" title="References" class="chapter  new-chapter" data-progress="8" style="left: 100%;"></a>
     
@@ -531,77 +531,28 @@
 
                 <div class="page-inner">
                 
-                    <section class="normal" id="section-gitbook_30">
+                    <section class="normal" id="section-gitbook_36">
                     
-                        <h1 id="context">Context</h1>
-<p>So what is the compiler&#39;s <code>Context</code>?  Its basically the main entry point for macros to tell the compiler what to do.  Compilers work with <a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree" target="_blank">AST</a>s or Abstract Syntax Trees so when you are working with the <code>Context</code>, you build up these ASTs in the form of <code>c.universe.Tree</code> instances.</p>
-<h2 id="useful-functions">Useful Functions</h2>
-<h3 id="-c-freshname-foo-"><code>c.freshName(&quot;foo&quot;)</code></h3>
-<p>There are a few different versions of this function:</p>
-<pre><code class="lang-scala">() =&gt; String
-String =&gt; String
-NameType =&gt; NameType
-</code></pre>
-<p>Each of these functions tries to give the caller a unique name for the given compilation run.  As of this writing, names are unique to the compilation run but does not hold true between runs, nor does it guarantee that the names will be the same for the call site between compile runs.  This may change with <a href="https://issues.scala-lang.org/browse/SI-6879" target="_blank">SI-6879</a>.</p>
-<p>Based off the docs, the output is said to be unique but what the form is isn&#39;t defined.  Based off 2.11, here is an example of calling the <code>String =&gt; String</code> form.</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">val</span> name = c.freshName(<span class="hljs-string">"foo"</span>)
-<span class="hljs-comment">// foo$macro$1</span>
-<span class="hljs-keyword">val</span> name = c.freshName(<span class="hljs-string">"foo"</span>)
-<span class="hljs-comment">// foo$macro$2</span>
-</code></pre>
-<p>Remember that <code>freshName</code> may not give the same results between compile runs, so when a class is <code>Serializable</code>, or inside a trait and using <code>val</code>s, or a param to a function/method that these are all part of the public API or binary compatibility. The main place <code>freshName</code> can be used safely is within a block or function scope.</p>
-<h3 id="logging">Logging</h3>
-<p>The compiler gives you a few ways to send messages to the user as a form of logging (not just warnings/compile errors).</p>
-<pre><code class="lang-scala"><span class="hljs-comment">// always logs</span>
-c.echo(c.enclosingPosition, <span class="hljs-string">"my msg"</span>)
-<span class="hljs-comment">// logs only if -verbose or last arg is true</span>
-c.info(c.enclosingPosition, <span class="hljs-string">"my msg"</span>, <span class="hljs-keyword">false</span>)
-<span class="hljs-comment">// logs a compile warning</span>
-c.warning(c.enclosingPosition, <span class="hljs-string">"WARNING WILL ROBINSON"</span>)
-<span class="hljs-comment">// marks compiliation as failed</span>
-c.error(c.enclosingPosition, <span class="hljs-string">"COMPILE FAIL!"</span>)
-<span class="hljs-comment">// stops the world!</span>
-c.abort(c.enclosingPosition, <span class="hljs-string">"YOUR WORLD IS OVER!"</span>)
-</code></pre>
-<h3 id="hear-evil-c-eval-x1-run-">Hear evil, <code>c.eval(x1)</code>, RUN!</h3>
-<p>This function does what it sounds like, it evals the expression inside the compiler and generates the results.  This can be useful for speeding up costly operations or avoiding boxing.</p>
-<p>There is a limitation  <a href="https://issues.scala-lang.org/browse/SI-5748" target="_blank">SI-5748</a> which says that <code>eval</code> doesn&#39;t work with typed trees.  To get around this, you must first untype the tree.</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">val</span> x: c.Expr[String]
-c.untypecheck(x.tree)
-</code></pre>
-<p>But here is the thing; typing mutates the tree, doesn&#39;t create a new one!  To make sure that mutability doesn&#39;t effect you (I did say that this is evil?), you should always <code>duplicate</code> the tree first</p>
-<pre><code class="lang-scala">c.untypecheck(x.tree.duplicate)
-</code></pre>
-<p>Now that we have done that, lets show an example (taken from scala doc)</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">def</span> impl(c: Context)(x: c.Expr[String]) = {
-   <span class="hljs-keyword">val</span> x1 = c.Expr[String](c.untypecheck(x.tree.duplicate))
-   println(s<span class="hljs-string">"compile-time value is: ${c.eval(x1)}"</span>)
-   x
-}
+                        <h1 id="tree-lens">Tree Lens</h1>
+<p>It might be just me, but I find updating <code>Tree</code>s unpleasant.  The API for each type of <code>Tree</code> has a trait that defines how to interact with it, and a val &quot;Extractor&quot; that provides <code>apply</code> and <code>unapply</code>.</p>
+<p>So when you have a deeply nested immutable structure, what do you do?  Throw a <code>Lens</code> at it!</p>
+<p>I first looked at using shapeless for creating a lens for each part of the different trees (cause the macro auto gen), but found that this is not as nice since <code>Tree</code> is not a case class, and the API was a bit harder to build these trees by hand.  I then switched to scalaz&#39;s <code>Lens</code> since they are simple to build up and compose (and I auto depend on it for every project...).</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> modFlags = Lens.lensu[Modifiers, FlagSet](
+  set = (m, flags) =&gt; Modifiers(flags, m.privateWithin, m.annotations),
+  get = (m) =&gt; m.flags
+)
 
-<span class="hljs-keyword">def</span> test(x: String) = macro impl
+<span class="hljs-keyword">val</span> valMods = Lens.lensu[ValDef, Modifiers](
+  set = (v, m) =&gt; ValDef(m, v.name, v.tpt, v.rhs),
+  get = (v) =&gt; v.mods
+)
 
-scala&gt; test(<span class="hljs-string">"x"</span>)
-compile-time value is: x
-res0: String = x
-
-scala&gt; test(<span class="hljs-string">"x"</span> + <span class="hljs-string">"y"</span>)
-compile-time value is: xy
-res1: String = xy
-
-scala&gt; <span class="hljs-keyword">val</span> x = <span class="hljs-string">"x"</span>
-x: String = x
-
-scala&gt; test(x + <span class="hljs-string">"y"</span>)
-compile-time value is: xy
-res2: String = xy
-
-scala&gt; { <span class="hljs-keyword">val</span> x = <span class="hljs-string">"x"</span>; test(x + <span class="hljs-string">"y"</span>) }
-error: exception during macro expansion:
-scala.tools.reflect.ToolBoxError: reflective compilation failed
+<span class="hljs-keyword">val</span> valFlags: Lens[ValDef, FlagSet] = valMods andThen modFlags
 </code></pre>
-<h3 id="there-is-more-">There is more!</h3>
-<p>But Ill leave you to explore them; <code>you explore andThen =)</code></p>
+<p>Now that I have done that, I am able to update deep leafs very simply</p>
+<pre><code class="lang-scala">clazzFlags.mod(_ | CASE, clazzBody.set(clazz, newBody ::: caseDefs))
+</code></pre>
+<p>I am adding more lenses as I need them, but for a set of pre-made lenses you can find them <a href="https://github.com/dcapwell/scala-playground/blob/38401439c850baacc3f41d6f13e4d3e2221050ba/macros/src/main/scala/com/github/dcapwell/scala/playground/macros/MacroSupport.scala#L6" target="_blank">in my playground</a>.</p>
 
                     
                     </section>
@@ -611,10 +562,10 @@ scala.tools.reflect.ToolBoxError: reflective compilation failed
         </div>
 
         
-        <a href="../macros/macro_basics.html" class="navigation navigation-prev"><i class="fa fa-angle-left"></i></a>
+        <a href="../macros/trees.html" class="navigation navigation-prev"><i class="fa fa-angle-left"></i></a>
         
         
-        <a href="../macros/fun_with_println.html" class="navigation navigation-next"><i class="fa fa-angle-right"></i></a>
+        <a href="../References.html" class="navigation navigation-next"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
