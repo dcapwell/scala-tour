@@ -71,3 +71,5 @@
 [Symbols trees and types](http://docs.scala-lang.org/overviews/reflection/symbols-trees-types.html#trees)
 
 [implicit class materialization ](https://groups.google.com/forum/#!topic/scala-user/uXqWJU0kbHs)
+
+[Densh quasiquotes](https://github.com/densh/densh.github.io/blob/master/quasiquotes.md)
