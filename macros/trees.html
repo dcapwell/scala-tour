@@ -42,7 +42,7 @@
 
 
         
-    <div class="book" data-github="dcapwell/scala-tour" data-level="7.7" data-basepath=".." data-revision="1405013934741">
+    <div class="book" data-github="dcapwell/scala-tour" data-level="7.7" data-basepath=".." data-revision="1405026200124">
     <div class="book-header">
     <!-- Actions Left -->
     
@@ -550,7 +550,7 @@
 }
 </code></pre>
 <h2 id="flagset">FlagSet</h2>
-<p>A FlagSet is a single instance or a set of instances of flags.  So what are flags?</p>
+<p>A FlagSet is a single instance or a set of instances of flags.  You build up these FlagSets with the <code>|</code> operator.  So what are flags?</p>
 <pre><code class="lang-scala"><span class="hljs-javadoc">/** Flag indicating that tree represents a trait */</span>
 <span class="hljs-keyword">val</span> TRAIT: FlagSet
 
@@ -715,6 +715,9 @@
 */</span>
 <span class="hljs-keyword">val</span> NoFlags: FlagSet
 </code></pre>
+<p>Building up a FlagSet</p>
+<pre><code class="lang-scala">Modifiers(PARAMACCESSOR | LOCAL | PRIVATE)
+</code></pre>
 <h2 id="valdef">ValDef</h2>
 <p>Maps to <code>val foo = ...</code>.  It contains the type of variable (val, var), name, type, and rhs (right-hand-side, aka expression).</p>
 <p>As case class:</p>
@@ -877,25 +880,183 @@ res2: reflect.runtime.universe.Block =
 <pre><code class="lang-scala">scala&gt; res2.expr.asInstanceOf[Ident]
 res5: reflect.runtime.universe.Ident = foo
 </code></pre>
-<h2 id="this">This</h2>
-<h2 id="select">Select</h2>
 <h2 id="apply">Apply</h2>
+<p>Apply is function invocation</p>
+<pre><code class="lang-scala">scala&gt; q<span class="hljs-string">""" java.lang.System.out.println("foo") """</span>.asInstanceOf[Apply]
+res17: reflect.runtime.universe.Apply = java.lang.System.out.println(<span class="hljs-string">"foo"</span>)
+</code></pre>
+<p>As case class</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Apply</span><span class="hljs-params">(fun: Tree, args: List[Tree])</span></span>
+</code></pre>
+<p><code>fun</code> is the path to the function we want to run</p>
+<pre><code class="lang-scala"><span class="hljs-comment">// don't blindly do the cast, in the above example its clear we have a select, we might not always (could be a Ident)</span>
+scala&gt; res17.fun.asInstanceOf[Select]
+res18: reflect.runtime.universe.Select = java.lang.System.out.println
+
+scala&gt; res17.args
+res19: List[reflect.runtime.universe.Tree] = List(<span class="hljs-string">"foo"</span>)
+</code></pre>
+<h2 id="select">Select</h2>
+<p>This tree represents a path to something.  Quick example</p>
+<pre><code class="lang-scala">java.lang.System.out.println(<span class="hljs-string">"foo"</span>)
+</code></pre>
+<p>In this example, <code>java.lang.System.out.println</code> is the path you want to &quot;select&quot; for the function apply.</p>
+<pre><code class="lang-scala">scala&gt; q<span class="hljs-string">""" java.lang.System.out.println("foo") """</span>.asInstanceOf[Apply]
+res28: reflect.runtime.universe.Apply = java.lang.System.out.println(<span class="hljs-string">"foo"</span>)
+</code></pre>
+<p>As case class</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Select</span><span class="hljs-params">(qualifier: Tree, name: Name)</span></span>
+</code></pre>
+<p><code>qualifier</code> is the parent you want to select from.</p>
+<pre><code class="lang-scala">scala&gt; res28.fun.asInstanceOf[Select]
+res29: reflect.runtime.universe.Select = java.lang.System.out.println
+
+scala&gt; res29.qualifier.asInstanceOf[Select]
+res31: reflect.runtime.universe.Select = java.lang.System.out
+
+scala&gt; res31.qualifier.asInstanceOf[Select]
+res32: reflect.runtime.universe.Select = java.lang.System
+
+scala&gt; res32.qualifier.asInstanceOf[Select]
+res33: reflect.runtime.universe.Select = java.lang
+
+scala&gt; res33.qualifier.asInstanceOf[Ident]
+res35: reflect.runtime.universe.Ident = java
+</code></pre>
 <h2 id="typeapply">TypeApply</h2>
+<p>TypeApply is really just apply for functions that have generics in their call.</p>
+<pre><code class="lang-scala">scala&gt; q<span class="hljs-string">""" scala.concurrent.Future(1) """</span>.asInstanceOf[Apply]
+res37: reflect.runtime.universe.Apply = scala.concurrent.Future(<span class="hljs-number">1</span>)
+
+scala&gt; res37.fun.getClass
+res39: Class[_ &lt;: reflect.runtime.universe.Tree] = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">scala</span>.<span class="hljs-title">reflect</span>.<span class="hljs-title">internal</span>.<span class="hljs-title">Trees</span>$<span class="hljs-title">Select</span></span>
+
+scala&gt; q<span class="hljs-string">""" scala.concurrent.Future[Int](1) """</span>.asInstanceOf[Apply]
+res40: reflect.runtime.universe.Apply = scala.concurrent.Future[Int](<span class="hljs-number">1</span>)
+
+scala&gt; res40.fun.getClass
+res41: Class[_ &lt;: reflect.runtime.universe.Tree] = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">scala</span>.<span class="hljs-title">reflect</span>.<span class="hljs-title">internal</span>.<span class="hljs-title">Trees</span>$<span class="hljs-title">TypeApply</span></span>
+
+scala&gt; showRaw(res40)
+res43: String = Apply(TypeApply(Select(Select(Ident(TermName(<span class="hljs-string">"scala"</span>)), TermName(<span class="hljs-string">"concurrent"</span>)), TermName(<span class="hljs-string">"Future"</span>)), List(Ident(TypeName(<span class="hljs-string">"Int"</span>)))), List(Literal(Constant(<span class="hljs-number">1</span>))))
+</code></pre>
+<p>The above is saying that we <code>Apply(Future[Int], List(1))</code></p>
+<p>If you compair this with the infered type way</p>
+<pre><code class="lang-scala">scala&gt; showRaw(res37)
+res44: String = Apply(Select(Select(Ident(TermName(<span class="hljs-string">"scala"</span>)), TermName(<span class="hljs-string">"concurrent"</span>)), TermName(<span class="hljs-string">"Future"</span>)), List(Literal(Constant(<span class="hljs-number">1</span>))))
+</code></pre>
+<p>Here the only difference is that <code>Select</code> is used, but when the generic type is given we switch to <code>TypeApply(Select...)</code></p>
+<p>Be careful when matching against <code>Apply</code>.  If the function is generic and inferes the type then <code>Select</code> is used, if not infered but given by the user <code>TypeApply(Select...)</code> is used.</p>
 <h2 id="typetree">TypeTree</h2>
+<p>When building up a class, you have the ability to say which classes/traits it extends from.  The <code>parents</code> param is a <code>List[Tree]</code>, so you might be tempted to use <code>Select</code> to solve this problem.  You will find that when you do this scala thinks you are talking about the object at the path, not the class/trait.  To get the class/trait form, you use <code>TypeTree</code>.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> product = TypeTree(typeOf[Product])
+Template(List(product), ...)
+</code></pre>
+<p>The above will correctly point to the <code>Product</code> trait and not search for an object named &quot;Product&quot;.</p>
+<p>As case class</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">TypeTree</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">def</span> <span class="hljs-keyword">this</span>(tp: Type) = <span class="hljs-keyword">this</span>()
+}
+</code></pre>
+<p>As we see, there doesn&#39;t seem to be any useful functions on this type.</p>
+<h2 id="this">This</h2>
+<p>Is just this.</p>
+<pre><code class="lang-scala">Foo.<span class="hljs-keyword">this</span>
+</code></pre>
+<p>or</p>
+<pre><code class="lang-scala">scala&gt; q<span class="hljs-string">""" Foo.this """</span>
+res50: reflect.runtime.universe.This = Foo.<span class="hljs-keyword">this</span>
+</code></pre>
+<p>As a case class</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">This</span><span class="hljs-params">(qual: TypeName)</span></span>
+</code></pre>
+<p>When you are working with classes/traits and need to call a function on this, most of the time quasiquotes will work, but when they don&#39;t this is a good backup.</p>
+<h2 id="match">Match</h2>
+<p>Matches match statements.</p>
+<pre><code class="lang-scala"><span class="hljs-number">1</span> <span class="hljs-keyword">match</span> { <span class="hljs-keyword">case</span> <span class="hljs-number">1</span> =&gt; <span class="hljs-number">1</span> }
+</code></pre>
+<p>with quas</p>
+<pre><code class="lang-scala">scala&gt; q<span class="hljs-string">""" 1 match { case 1 =&gt; 1 } """</span>
+res53: reflect.runtime.universe.Match =
+<span class="hljs-number">1</span> <span class="hljs-keyword">match</span> {
+  <span class="hljs-keyword">case</span> <span class="hljs-number">1</span> =&gt; <span class="hljs-number">1</span>
+}
+</code></pre>
+<p>As case class</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Match</span><span class="hljs-params">(selector: Tree, cases: List[CaseDef])</span></span>
+</code></pre>
+<p><code>selector</code> is the left hand side of the match</p>
+<pre><code class="lang-scala">scala&gt; res53.selector
+res54: reflect.runtime.universe.Tree = <span class="hljs-number">1</span>
+</code></pre>
+<p>and <code>cases</code> maps to each case clause</p>
+<h2 id="casedef">CaseDef</h2>
+<p>Is the case statements in a match block.  This is such a common thing you will need to build up that quasiquotes has a special form for it.</p>
+<pre><code class="lang-scala">scala&gt; cq<span class="hljs-string">""" 1 =&gt; 1 """</span>
+res56: reflect.runtime.universe.CaseDef = <span class="hljs-keyword">case</span> <span class="hljs-number">1</span> =&gt; <span class="hljs-number">1</span>
+</code></pre>
+<p>As case class</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">CaseDef</span><span class="hljs-params">(pat: Tree, guard: Tree, body: Tree)</span></span>
+</code></pre>
+<p><code>pat</code> can be a few things</p>
+<p>Literal</p>
+<pre><code class="lang-scala">scala&gt; cq<span class="hljs-string">""" 1 =&gt; 1 """</span>.pat
+res63: reflect.runtime.universe.Tree = <span class="hljs-number">1</span>
+
+scala&gt; cq<span class="hljs-string">""" 1 =&gt; 1 """</span>.pat.getClass
+res64: Class[_ &lt;: reflect.runtime.universe.Tree] = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">scala</span>.<span class="hljs-title">reflect</span>.<span class="hljs-title">internal</span>.<span class="hljs-title">Trees</span>$<span class="hljs-title">Literal</span></span>
+</code></pre>
+<p>Bind</p>
+<pre><code class="lang-scala">scala&gt; cq<span class="hljs-string">""" foo if foo.bar == 1 =&gt; 1 """</span>
+res65: reflect.runtime.universe.CaseDef = <span class="hljs-keyword">case</span> (foo @ _) <span class="hljs-keyword">if</span> foo.bar.$eq$eq(<span class="hljs-number">1</span>) =&gt; <span class="hljs-number">1</span>
+
+scala&gt; cq<span class="hljs-string">""" foo if foo.bar == 1 =&gt; 1 """</span>.pat
+res66: reflect.runtime.universe.Tree = (foo @ _)
+
+scala&gt; cq<span class="hljs-string">""" foo if foo.bar == 1 =&gt; 1 """</span>.pat.getClass
+res67: Class[_ &lt;: reflect.runtime.universe.Tree] = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">scala</span>.<span class="hljs-title">reflect</span>.<span class="hljs-title">internal</span>.<span class="hljs-title">Trees</span>$<span class="hljs-title">Bind</span></span>
+
+scala&gt; cq<span class="hljs-string">""" foo: Bar =&gt; foo """</span>.pat
+res71: reflect.runtime.universe.Tree = (foo @ (_: Bar))
+
+scala&gt; cq<span class="hljs-string">""" foo: Bar =&gt; foo """</span>.pat.getClass
+res72: Class[_ &lt;: reflect.runtime.universe.Tree] = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">scala</span>.<span class="hljs-title">reflect</span>.<span class="hljs-title">internal</span>.<span class="hljs-title">Trees</span>$<span class="hljs-title">Bind</span></span>
+</code></pre>
+<p><code>guard</code> is the if statement.  It can be empty</p>
+<pre><code class="lang-scala">scala&gt; cq<span class="hljs-string">""" foo: Bar =&gt; foo """</span>.guard
+res0: reflect.runtime.universe.Tree = &lt;empty&gt;
+</code></pre>
+<p>or have checks</p>
+<pre><code class="lang-scala">scala&gt; cq<span class="hljs-string">""" foo: Bar if foo.size == 2 =&gt; foo """</span>.guard.asInstanceOf[Apply]
+res3: reflect.runtime.universe.Apply = foo.size.$eq$eq(<span class="hljs-number">2</span>)
+</code></pre>
+<h2 id="bind">Bind</h2>
+<p>Bind is used to &quot;bind&quot; variables to patterns.  When in a CaseDef, it is what is on the left hand side when there is a pattern match.</p>
+<pre><code class="lang-scala">cq<span class="hljs-string">""" foo: Bar =&gt; foo """</span>.pat.asInstanceOf[Bind]
+</code></pre>
+<p>as case class</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Bind</span><span class="hljs-params">(name: Name, body: Tree)</span></span>
+</code></pre>
+<p>The body can be different things,
+such as <code>Typed</code></p>
+<pre><code class="lang-scala">scala&gt; cq<span class="hljs-string">""" foo: Bar =&gt; foo """</span>.pat.asInstanceOf[Bind].body.asInstanceOf[Typed]
+res76: reflect.runtime.universe.Typed = (_: Bar)
+</code></pre>
+<p>and <code>Ident</code></p>
+<pre><code class="lang-scala">scala&gt; cq<span class="hljs-string">""" foo =&gt; 1 """</span>.pat.asInstanceOf[Bind].body.asInstanceOf[Ident]
+res84: reflect.runtime.universe.Ident = _
+</code></pre>
+<h2 id="function">Function</h2>
 <h2 id="packagedef">PackageDef</h2>
 <h2 id="moduledef">ModuleDef</h2>
 <h2 id="labeldef">LabelDef</h2>
 <h2 id="import">Import</h2>
-<h2 id="casedef">CaseDef</h2>
 <h2 id="alternative">Alternative</h2>
 <h2 id="star">Star</h2>
-<h2 id="bind">Bind</h2>
 <h2 id="unapply">UnApply</h2>
-<h2 id="function">Function</h2>
 <h2 id="assign">Assign</h2>
 <h2 id="assignornamedarg">AssignOrNamedArg</h2>
 <h2 id="if">If</h2>
-<h2 id="match">Match</h2>
 <h2 id="return">Return</h2>
 <h2 id="try">Try</h2>
 <h2 id="throw">Throw</h2>
