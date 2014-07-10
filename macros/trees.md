@@ -544,20 +544,157 @@ case class TypeTree() {
 As we see, there doesn't seem to be any useful functions on this type.
 
 ## This
+Is just this.
+
+```scala
+Foo.this
+```
+
+or
+
+```scala
+scala> q""" Foo.this """
+res50: reflect.runtime.universe.This = Foo.this
+```
+
+As a case class
+
+```scala
+case class This(qual: TypeName)
+```
+
+When you are working with classes/traits and need to call a function on this, most of the time quasiquotes will work, but when they don't this is a good backup.
+
+## Match
+Matches match statements.
+
+```scala
+1 match { case 1 => 1 }
+```
+
+with quas
+
+```scala
+scala> q""" 1 match { case 1 => 1 } """
+res53: reflect.runtime.universe.Match =
+1 match {
+  case 1 => 1
+}
+```
+
+As case class
+
+```scala
+case class Match(selector: Tree, cases: List[CaseDef])
+```
+
+`selector` is the left hand side of the match
+
+```scala
+scala> res53.selector
+res54: reflect.runtime.universe.Tree = 1
+```
+
+and `cases` maps to each case clause
+
+## CaseDef
+Is the case statements in a match block.  This is such a common thing you will need to build up that quasiquotes has a special form for it.
+
+```scala
+scala> cq""" 1 => 1 """
+res56: reflect.runtime.universe.CaseDef = case 1 => 1
+```
+
+As case class
+
+```scala
+case class CaseDef(pat: Tree, guard: Tree, body: Tree)
+```
+
+`pat` can be a few things
+
+Literal
+
+```scala
+scala> cq""" 1 => 1 """.pat
+res63: reflect.runtime.universe.Tree = 1
+
+scala> cq""" 1 => 1 """.pat.getClass
+res64: Class[_ <: reflect.runtime.universe.Tree] = class scala.reflect.internal.Trees$Literal
+```
+
+Bind
+
+```scala
+scala> cq""" foo if foo.bar == 1 => 1 """
+res65: reflect.runtime.universe.CaseDef = case (foo @ _) if foo.bar.$eq$eq(1) => 1
+
+scala> cq""" foo if foo.bar == 1 => 1 """.pat
+res66: reflect.runtime.universe.Tree = (foo @ _)
+
+scala> cq""" foo if foo.bar == 1 => 1 """.pat.getClass
+res67: Class[_ <: reflect.runtime.universe.Tree] = class scala.reflect.internal.Trees$Bind
+
+scala> cq""" foo: Bar => foo """.pat
+res71: reflect.runtime.universe.Tree = (foo @ (_: Bar))
+
+scala> cq""" foo: Bar => foo """.pat.getClass
+res72: Class[_ <: reflect.runtime.universe.Tree] = class scala.reflect.internal.Trees$Bind
+```
+
+`guard` is the if statement.  It can be empty
+
+```scala
+scala> cq""" foo: Bar => foo """.guard
+res0: reflect.runtime.universe.Tree = <empty>
+```
+
+or have checks
+
+```scala
+scala> cq""" foo: Bar if foo.size == 2 => foo """.guard.asInstanceOf[Apply]
+res3: reflect.runtime.universe.Apply = foo.size.$eq$eq(2)
+```
+
+## Bind
+Bind is used to "bind" variables to patterns.  When in a CaseDef, it is what is on the left hand side when there is a pattern match.
+
+```scala
+cq""" foo: Bar => foo """.pat.asInstanceOf[Bind]
+```
+
+as case class
+
+```scala
+case class Bind(name: Name, body: Tree)
+```
+
+The body can be different things,
+such as `Typed`
+
+```scala
+scala> cq""" foo: Bar => foo """.pat.asInstanceOf[Bind].body.asInstanceOf[Typed]
+res76: reflect.runtime.universe.Typed = (_: Bar)
+```
+
+and `Ident`
+
+```scala
+scala> cq""" foo => 1 """.pat.asInstanceOf[Bind].body.asInstanceOf[Ident]
+res84: reflect.runtime.universe.Ident = _
+```
+
+## Function
 ## PackageDef
 ## ModuleDef
 ## LabelDef
 ## Import
-## CaseDef
 ## Alternative
 ## Star
-## Bind
 ## UnApply
-## Function
 ## Assign
 ## AssignOrNamedArg
 ## If
-## Match
 ## Return
 ## Try
 ## Throw
