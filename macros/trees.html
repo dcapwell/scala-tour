@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
         
         <meta charset="UTF-8">
-        <title>Macros | Scala Tour</title>
+        <title>Trees | Scala Tour</title>
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="robots" content="index, follow">
@@ -13,13 +13,13 @@
         <meta name="generator" content="www.gitbook.io">
 
         
-        <link rel="next" href="../macros/macro_types.html" />
+        <link rel="next" href="../References.html" />
         
         
-        <link rel="prev" href="../Implicit.html" />
+        <link rel="prev" href="../macros/quasiquotes.html" />
         
 
-        <meta property="og:title" content="Macros | Scala Tour">
+        <meta property="og:title" content="Trees | Scala Tour">
         <meta property="og:site_name" content="Scala Tour">
         <meta property="og:type" content="book">
         <meta property="og:locale" content="en_US">
@@ -42,7 +42,7 @@
 
 
         
-    <div class="book" data-github="dcapwell/scala-tour" data-level="7" data-basepath=".." data-revision="1404965528346">
+    <div class="book" data-github="dcapwell/scala-tour" data-level="7.7" data-basepath=".." data-revision="1404965528346">
     <div class="book-header">
     <!-- Actions Left -->
     
@@ -108,7 +108,7 @@
             <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
         </li>
         <li>
-            <a href="https://github.com/dcapwell/scala-tour/edit/master/macros/README.md" target="blank">Edit and Contribute</a>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/macros/trees.md" target="blank">Edit and Contribute</a>
         </li>
         <li class="divider"></li>
         
@@ -440,7 +440,7 @@
             <div class="page-wrapper" tabindex="-1">
                 <div class="book-progress">
     <div class="bar">
-        <div class="inner" style="width: 77.14285714285714%;min-width: 74.28571428571429%;"></div>
+        <div class="inner" style="width: 97.14285714285714%;min-width: 94.28571428571429%;"></div>
     </div>
     <div class="chapters">
     
@@ -500,19 +500,19 @@
     
         <a href="../macros/README.html" title="Macros" class="chapter done new-chapter" data-progress="7" style="left: 77.14285714285714%;"></a>
     
-        <a href="../macros/macro_types.html" title="Macro Types" class="chapter  " data-progress="7.1" style="left: 80%;"></a>
+        <a href="../macros/macro_types.html" title="Macro Types" class="chapter done " data-progress="7.1" style="left: 80%;"></a>
     
-        <a href="../macros/macro_basics.html" title="Macro Basics" class="chapter  " data-progress="7.2" style="left: 82.85714285714286%;"></a>
+        <a href="../macros/macro_basics.html" title="Macro Basics" class="chapter done " data-progress="7.2" style="left: 82.85714285714286%;"></a>
     
-        <a href="../macros/context.html" title="Context" class="chapter  " data-progress="7.3" style="left: 85.71428571428571%;"></a>
+        <a href="../macros/context.html" title="Context" class="chapter done " data-progress="7.3" style="left: 85.71428571428571%;"></a>
     
-        <a href="../macros/fun_with_println.html" title="Fun with println" class="chapter  " data-progress="7.4" style="left: 88.57142857142857%;"></a>
+        <a href="../macros/fun_with_println.html" title="Fun with println" class="chapter done " data-progress="7.4" style="left: 88.57142857142857%;"></a>
     
-        <a href="../macros/scala_version_differences.html" title="Scala Version Differences" class="chapter  " data-progress="7.5" style="left: 91.42857142857143%;"></a>
+        <a href="../macros/scala_version_differences.html" title="Scala Version Differences" class="chapter done " data-progress="7.5" style="left: 91.42857142857143%;"></a>
     
-        <a href="../macros/quasiquotes.html" title="Quasiquotes" class="chapter  " data-progress="7.6" style="left: 94.28571428571429%;"></a>
+        <a href="../macros/quasiquotes.html" title="Quasiquotes" class="chapter done " data-progress="7.6" style="left: 94.28571428571429%;"></a>
     
-        <a href="../macros/trees.html" title="Trees" class="chapter  " data-progress="7.7" style="left: 97.14285714285714%;"></a>
+        <a href="../macros/trees.html" title="Trees" class="chapter done " data-progress="7.7" style="left: 97.14285714285714%;"></a>
     
         <a href="../References.html" title="References" class="chapter  new-chapter" data-progress="8" style="left: 100%;"></a>
     
@@ -521,11 +521,255 @@
 
                 <div class="page-inner">
                 
-                    <section class="normal" id="section-gitbook_29">
+                    <section class="normal" id="section-gitbook_36">
                     
-                        <h1 id="macros">Macros</h1>
-<p>Macros were first introduced in scala 2.10 as an experimental feature; as of 2.11 they are still a experimental feature.</p>
-<p>Even though macros are experimental, they are still a very powerful feature.  Use with care and please consider the user before blindly creating macros for everything!</p>
+                        <h1 id="trees">Trees</h1>
+<p>When you get deeper into macros, you will find yourself working with the <code>Tree</code> instances directly (quasiquotes are some times not as easy to use).  When this happens, you will need to know which instances to use.</p>
+<p>This section really just outputs whats in <a href="https://github.com/scala/scala/blob/2.11.x/src/reflect/scala/reflect/api/Trees.scala#L308" target="_blank">Scala&#39;s Trees.scala</a>.  Main reason for this is that I find this doc faster to look things up than in intellij (the whole trait within trait within trait that defines a trait thing... intellij has a harder time searching this).</p>
+<p>If you prefer ScalaDocs, you can look at them <a href="http://www.scala-lang.org/files/archive/nightly/docs/library/index.html#scala.reflect.api.Trees" target="_blank">here</a>.  Again, I find those docs to have way too much noise.</p>
+<h2 id="modifiers">Modifiers</h2>
+<p>Thie type doesn&#39;t really map to normal scala code, but many things have modifiers.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">lazy</span> <span class="hljs-keyword">val</span> foo: String
+</code></pre>
+<p>In this example, foo has modifiers, namely lazy (which is really a flag).</p>
+<p>To create</p>
+<pre><code class="lang-scala">Modifiers(flags: FlagSet, privateWithin: Name, annotations: List[Tree])
+</code></pre>
+<p>To get values</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">def</span> flags: FlagSet
+<span class="hljs-keyword">def</span> hasFlag(flag: FlagSet): Boolean
+<span class="hljs-keyword">def</span> privateWithin: Name
+<span class="hljs-keyword">def</span> annotations: List[Tree]
+<span class="hljs-keyword">def</span> mapAnnotations(f: List[Tree] =&gt; List[Tree]): Modifiers
+</code></pre>
+<h2 id="flagset">FlagSet</h2>
+<p>A FlagSet is a single instance or a set of instances of flags.  So what are flags?</p>
+<pre><code class="lang-scala"><span class="hljs-javadoc">/** Flag indicating that tree represents a trait */</span>
+<span class="hljs-keyword">val</span> TRAIT: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that a tree is an interface (i.e. a trait which defines only abstract methods) */</span>
+<span class="hljs-keyword">val</span> INTERFACE: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents a mutable variable */</span>
+<span class="hljs-keyword">val</span> MUTABLE: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents a macro definition. */</span>
+<span class="hljs-keyword">val</span> MACRO: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents an abstract type, method, or value */</span>
+<span class="hljs-keyword">val</span> DEFERRED: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents an abstract class */</span>
+<span class="hljs-keyword">val</span> ABSTRACT: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree has `final` modifier set */</span>
+<span class="hljs-keyword">val</span> FINAL: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree has `sealed` modifier set */</span>
+<span class="hljs-keyword">val</span> SEALED: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree has `implicit` modifier set */</span>
+<span class="hljs-keyword">val</span> IMPLICIT: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree has `lazy` modifier set */</span>
+<span class="hljs-keyword">val</span> LAZY: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree has `override` modifier set */</span>
+<span class="hljs-keyword">val</span> OVERRIDE: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree has `private` modifier set */</span>
+<span class="hljs-keyword">val</span> PRIVATE: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree has `protected` modifier set */</span>
+<span class="hljs-keyword">val</span> PROTECTED: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents a member local to current class,
+*  i.e. private[this] or protected[this].
+*  This requires having either PRIVATE or PROTECTED set as well.
+*/</span>
+<span class="hljs-keyword">val</span> LOCAL: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree has `case` modifier set */</span>
+<span class="hljs-keyword">val</span> CASE: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree has `abstract` and `override` modifiers set */</span>
+<span class="hljs-keyword">val</span> ABSOVERRIDE: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents a by-name parameter */</span>
+<span class="hljs-keyword">val</span> BYNAMEPARAM: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents a class or parameter.
+*  Both type and value parameters carry the flag. */</span>
+<span class="hljs-keyword">val</span> PARAM: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents a covariant
+*  type parameter (marked with `+`). */</span>
+<span class="hljs-keyword">val</span> COVARIANT: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents a contravariant
+*  type parameter (marked with `-`). */</span>
+<span class="hljs-keyword">val</span> CONTRAVARIANT: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents a parameter that has a default value */</span>
+<span class="hljs-keyword">val</span> DEFAULTPARAM: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents an early definition */</span>
+<span class="hljs-keyword">val</span> PRESUPER: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents a variable or a member initialized to the default value */</span>
+<span class="hljs-keyword">val</span> DEFAULTINIT: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents an enum.
+*
+*  It can only appear at
+*  - the enum's class
+*  - enum constants
+**/</span>
+<span class="hljs-keyword">val</span> ENUM: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents a parameter of the primary constructor of some class
+*  or a synthetic member underlying thereof. E.g. here's how 'class C(val x: Int)' is represented:
+*
+*      [[syntax trees at end of parser]]// Scala source: tmposDU52
+*      class C extends scala.AnyRef {
+*        &lt;paramaccessor&gt; val x: Int = _;
+*        def &lt;init&gt;(x: Int) = {
+*          super.&lt;init&gt;();
+*          ()
+*        }
+*      }
+*      ClassDef(
+*        Modifiers(), TypeName("C"), List(),
+*        Template(
+*          List(Select(Ident(scala), TypeName("AnyRef"))),
+*          noSelfType,
+*          List(
+*            ValDef(Modifiers(PARAMACCESSOR), TermName("x"), Ident(TypeName("Int")), EmptyTree),
+*            DefDef(
+*              Modifiers(), nme.CONSTRUCTOR, List(),
+*              List(List(ValDef(Modifiers(PARAM | PARAMACCESSOR), TermName("x"), Ident(TypeName("Int")), EmptyTree))), TypeTree(),
+*              Block(List(pendingSuperCall), Literal(Constant(())))))))))
+*/</span>
+<span class="hljs-keyword">val</span> PARAMACCESSOR: FlagSet
+
+<span class="hljs-javadoc">/** Flag indicating that tree represents a parameter of the primary constructor of some case class
+*  or a synthetic member underlying thereof.  E.g. here's how 'case class C(val x: Int)' is represented:
+*
+*      [[syntax trees at end of parser]]// Scala source: tmpnHkJ3y
+*      case class C extends scala.Product with scala.Serializable {
+*        &lt;caseaccessor&gt; &lt;paramaccessor&gt; val x: Int = _;
+*        def &lt;init&gt;(x: Int) = {
+*          super.&lt;init&gt;();
+*          ()
+*        }
+*      }
+*      ClassDef(
+*        Modifiers(CASE), TypeName("C"), List(),
+*        Template(
+*          List(Select(Ident(scala), TypeName("Product")), Select(Ident(scala), TypeName("Serializable"))),
+*          noSelfType,
+*          List(
+*            ValDef(Modifiers(CASEACCESSOR | PARAMACCESSOR), TermName("x"), Ident(TypeName("Int")), EmptyTree),
+*            DefDef(
+*              Modifiers(), nme.CONSTRUCTOR, List(),
+*              List(List(ValDef(Modifiers(PARAM | PARAMACCESSOR), TermName("x"), Ident(TypeName("Int")), EmptyTree))), TypeTree(),
+*              Block(List(pendingSuperCall), Literal(Constant(())))))))))
+*/</span>
+<span class="hljs-keyword">val</span> CASEACCESSOR: FlagSet
+
+<span class="hljs-javadoc">/** Flag used to distinguish programmatically generated definitions from user-written ones.
+*  <span class="hljs-javadoctag">@see</span> ARTIFACT
+*/</span>
+<span class="hljs-keyword">val</span> SYNTHETIC: FlagSet
+
+<span class="hljs-javadoc">/** Flag used to distinguish platform-specific implementation details.
+*  Trees and symbols which are currently marked ARTIFACT by scalac:
+*    * $outer fields and accessors
+*    * super accessors
+*    * protected accessors
+*    * lazy local accessors
+*    * bridge methods
+*    * default argument getters
+*    * evaluation-order preserving locals for right-associative and out-of-order named arguments
+*    * catch-expression storing vals
+*    * anything else which feels a setFlag(ARTIFACT)
+*
+*  <span class="hljs-javadoctag">@see</span> SYNTHETIC
+*/</span>
+<span class="hljs-keyword">val</span> ARTIFACT: FlagSet
+
+<span class="hljs-javadoc">/** Flag that indicates methods that are supposed to be stable
+*  (e.g. synthetic getters of valdefs).
+*/</span>
+<span class="hljs-keyword">val</span> STABLE: FlagSet
+
+<span class="hljs-javadoc">/** The empty set of flags
+*  <span class="hljs-javadoctag">@group</span> Flags
+*/</span>
+<span class="hljs-keyword">val</span> NoFlags: FlagSet
+</code></pre>
+<h2 id="valdef">ValDef</h2>
+<p>Maps to <code>val foo = ...</code>.  It contains the type of variable (val, var), name, type, and rhs (right-hand-side, aka expression).</p>
+<p>To create</p>
+<pre><code class="lang-scala">ValDef(mods: Modifiers, name: TermName, tpt: Tree, rhs: Tree)
+</code></pre>
+<p>To read</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">def</span> mods: Modifiers
+<span class="hljs-keyword">def</span> name: TermName
+<span class="hljs-keyword">def</span> tpt: Tree
+<span class="hljs-keyword">def</span> rhs: Tree
+</code></pre>
+<h2 id="classdef">ClassDef</h2>
+<p>This type maps to <code>... class Foo() extends ...</code>.</p>
+<p>To create an instance, you need to call</p>
+<pre><code class="lang-scala">ClassDef(mods: Modifiers, name: TypeName, tparams: List[TypeDef], impl: Template)
+</code></pre>
+<p>To get the values out of a class</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">def</span> mods: Modifiers
+<span class="hljs-keyword">def</span> name: TypeName
+<span class="hljs-keyword">def</span> tparams: List[TypeDef]
+<span class="hljs-keyword">def</span> impl: Template
+</code></pre>
+<h2 id="packagedef">PackageDef</h2>
+<h2 id="moduledef">ModuleDef</h2>
+<h2 id="defdef">DefDef</h2>
+<h2 id="typedef">TypeDef</h2>
+<h2 id="labeldef">LabelDef</h2>
+<h2 id="import">Import</h2>
+<h2 id="template">Template</h2>
+<h2 id="block">Block</h2>
+<h2 id="casedef">CaseDef</h2>
+<h2 id="alternative">Alternative</h2>
+<h2 id="star">Star</h2>
+<h2 id="bind">Bind</h2>
+<h2 id="unapply">UnApply</h2>
+<h2 id="function">Function</h2>
+<h2 id="assign">Assign</h2>
+<h2 id="assignornamedarg">AssignOrNamedArg</h2>
+<h2 id="if">If</h2>
+<h2 id="match">Match</h2>
+<h2 id="return">Return</h2>
+<h2 id="try">Try</h2>
+<h2 id="throw">Throw</h2>
+<h2 id="new">New</h2>
+<h2 id="typed">Typed</h2>
+<h2 id="typeapply">TypeApply</h2>
+<h2 id="apply">Apply</h2>
+<h2 id="super">Super</h2>
+<h2 id="this">This</h2>
+<h2 id="select">Select</h2>
+<h2 id="ident">Ident</h2>
+<h2 id="reftree">RefTree</h2>
+<h2 id="referencetoboxed">ReferenceToBoxed</h2>
+<h2 id="literal">Literal</h2>
+<h2 id="typetree">TypeTree</h2>
+<h2 id="annotated">Annotated</h2>
+<h2 id="singletontypetree">SingletonTypeTree</h2>
+<h2 id="selectfromtypetree">SelectFromTypeTree</h2>
+<h2 id="compoundtypetree">CompoundTypeTree</h2>
+<h2 id="appliedtypetree">AppliedTypeTree</h2>
+<h2 id="typeboundstree">TypeBoundsTree</h2>
+<h2 id="existentialtypetree">ExistentialTypeTree</h2>
 
                     
                     </section>
@@ -535,10 +779,10 @@
         </div>
 
         
-        <a href="../Implicit.html" class="navigation navigation-prev"><i class="fa fa-angle-left"></i></a>
+        <a href="../macros/quasiquotes.html" class="navigation navigation-prev"><i class="fa fa-angle-left"></i></a>
         
         
-        <a href="../macros/macro_types.html" class="navigation navigation-next"><i class="fa fa-angle-right"></i></a>
+        <a href="../References.html" class="navigation navigation-next"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
