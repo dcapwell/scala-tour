@@ -23,7 +23,7 @@ val name = c.freshName("foo")
 // foo$macro$2
 ```
 
-Remember that `freshName` may not give the same results between compile runs, so when a class is `Serializable`, or inside a trait and using `val`s, or a param to a function/method that these are all part of the public API or binary compatability. The main place `freshName` can be used safely is within a block or function scope.
+Remember that `freshName` may not give the same results between compile runs, so when a class is `Serializable`, or inside a trait and using `val`s, or a param to a function/method that these are all part of the public API or binary compatibility. The main place `freshName` can be used safely is within a block or function scope.
 
 ### Logging
 The compiler gives you a few ways to send messages to the user as a form of logging (not just warnings/compile errors).

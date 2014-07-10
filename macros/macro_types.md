@@ -1,5 +1,5 @@
 # Macro Types
-As of this writting, there are 3~ ways to define a macro
+As of this writing, there are 3~ ways to define a macro
 
 1. Function
 2. Type

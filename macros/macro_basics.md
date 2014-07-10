@@ -1,7 +1,7 @@
 # Macro Basics
 When defining a macro, there are always two functions created: user facing, compiler facing.  These two functions should always be mirror images of each other (name, input, output all match) with one exception; compiler facing wraps types.
 
-So what is the basic structor of a macro?
+So what is the basic structure of a macro?
 
 ## User Facing
 User facing API is very similar to writing a normal function but the implementation is missing and replaced by the keyword `macro` which references the compiler facing API.
@@ -35,4 +35,4 @@ Scala's compiler will load the compiler function into its code, but nothing else
 ### Macro Bundles
 When defining the user facing API, you can tell it that the macro can be found inside a given class (`Foo.bar`).  This lets you define the `Context` as a param to the class and import its `universe` one time.  Each function inside this class will look like the function above, but with the first param group omitted.
 
-There is one issue with this though, macro bundles was only added in scala 2.11.  If you want support for this in 2.10 you will need a compiler plugin called [Macro Paradise](http://docs.scala-lang.org/overviews/macros/paradise.html). Need to test it, but I belive that users of the macro code that depends on macro paradise will also need to include macro paradise.  This still needs to be tested.
+There is one issue with this though, macro bundles was only added in scala 2.11.  If you want support for this in 2.10 you will need a compiler plugin called [Macro Paradise](http://docs.scala-lang.org/overviews/macros/paradise.html). Need to test it, but I believe that users of the macro code that depends on macro paradise will also need to include macro paradise.  This still needs to be tested.
