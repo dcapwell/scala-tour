@@ -35,3 +35,39 @@
 [Learning Scalaz](https://thenewcircle.com/s/post/1578/learning_scalaz_eugene_yokota_video)
 
 [Hacking Scala - Scalaz resources for beginners](http://hacking-scala.org/post/49050104489/scalaz-resources-for-beginners)
+
+## Macros
+
+[Scala Lang Docs](http://docs.scala-lang.org/overviews/macros/usecases.html)
+
+[Quasi-case class](https://github.com/paulp/quasi-case-class)
+
+[Scala Macros](http://www.youtube.com/watch?v=ATl4s7XgrcA)
+
+[Inlining anonymous functions with macros](http://www.youtube.com/watch?v=bQbqOIuZGas)
+
+[Akka Typed Channels: Implementing Type Calculations as Macros](http://www.youtube.com/watch?v=PCk2SHufw3E)
+
+[Exploring scala macros.macros map to case class conversion](http://blog.echo.sh/post/65955606729/exploring-scala-macros.macros-map-to-case-class-conversion)
+
+[Quasiquotes](http://docs.scala-lang.org/overviews/quasiquotes/intro.html)
+
+[Quasiquotes for multiple paramater lists](http://meta.plasm.us/posts/2013/09/06/quasiquotes-for-multiple-parameter-lists/)
+
+[Figi](https://github.com/ncreep/figi/blob/master/macros.macros/src/main/scala/ncreep/figi/Figi.scala)
+
+[Debugging scala macros.macros](http://www.cakesolutions.net/teamblogs/2013/09/30/debugging-scala-macros.macros)
+
+[Debug macro](https://github.com/adamw/scala-macro-debug/blob/master/macros.macros/src/main/scala/com/softwaremill/debug/DebugMacros.scala)
+
+[Scala Lang Macro Doc](http://docs.scala-lang.org/overviews/macros.macros/overview.html)
+
+[Learning scala macros.macros](http://imranrashid.com/posts/learning-scala-macros.macros/)
+
+[Quasiquotes for scala](http://infoscience.epfl.ch/record/185242/files/QuasiquotesForScala.pdf)
+
+[parse](http://stackoverflow.com/questions/14790115/where-can-i-learn-about-constructing-asts-for-scala-macros.macros/14795999#14795999)
+
+[Symbols trees and types](http://docs.scala-lang.org/overviews/reflection/symbols-trees-types.html#trees)
+
+[implicit class materialization ](https://groups.google.com/forum/#!topic/scala-user/uXqWJU0kbHs)
