@@ -30,5 +30,9 @@
    * [Macro Types](macros/macro_types.md)
    * [Macro Basics](macros/macro_basics.md)
    * [Context](macros/context.md)
+   * [Fun with println](macros/fun_with_println.md)
+   * [Scala Version Differences](macros/scala_version_differences.md)
+   * [Quasiquotes](macros/quasiquotes.md)
+   * [Trees](macros/trees.md)
 * [References](References.md)
 
