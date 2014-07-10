@@ -34,5 +34,6 @@
    * [Scala Version Differences](macros/scala_version_differences.md)
    * [Quasiquotes](macros/quasiquotes.md)
    * [Trees](macros/trees.md)
+   * [Tree Lens](macros/tree_lens.md)
 * [References](References.md)
 
