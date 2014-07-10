@@ -26,7 +26,7 @@ case class Modifiers(flags: Long, privateWithin: Name, annotations: List[Tree]) 
 ```
 
 ## FlagSet
-A FlagSet is a single instance or a set of instances of flags.  So what are flags?
+A FlagSet is a single instance or a set of instances of flags.  You build up these FlagSets with the `|` operator.  So what are flags?
 
 ```scala
 /** Flag indicating that tree represents a trait */
@@ -192,6 +192,12 @@ val STABLE: FlagSet
 *  @group Flags
 */
 val NoFlags: FlagSet
+```
+
+Building up a FlagSet
+
+```scala
+Modifiers(PARAMACCESSOR | LOCAL | PRIVATE)
 ```
 
 ## ValDef
@@ -420,11 +426,124 @@ scala> res2.expr.asInstanceOf[Ident]
 res5: reflect.runtime.universe.Ident = foo
 ```
 
-## This
-## Select
 ## Apply
+Apply is function invocation
+
+```scala
+scala> q""" java.lang.System.out.println("foo") """.asInstanceOf[Apply]
+res17: reflect.runtime.universe.Apply = java.lang.System.out.println("foo")
+```
+
+As case class
+
+```scala
+case class Apply(fun: Tree, args: List[Tree])
+```
+
+`fun` is the path to the function we want to run
+
+```scala
+// don't blindly do the cast, in the above example its clear we have a select, we might not always (could be a Ident)
+scala> res17.fun.asInstanceOf[Select]
+res18: reflect.runtime.universe.Select = java.lang.System.out.println
+
+scala> res17.args
+res19: List[reflect.runtime.universe.Tree] = List("foo")
+```
+
+## Select
+This tree represents a path to something.  Quick example
+
+```scala
+java.lang.System.out.println("foo")
+```
+
+In this example, `java.lang.System.out.println` is the path you want to "select" for the function apply.
+
+```scala
+scala> q""" java.lang.System.out.println("foo") """.asInstanceOf[Apply]
+res28: reflect.runtime.universe.Apply = java.lang.System.out.println("foo")
+```
+
+As case class
+
+```scala
+case class Select(qualifier: Tree, name: Name)
+```
+
+`qualifier` is the parent you want to select from.
+
+```scala
+scala> res28.fun.asInstanceOf[Select]
+res29: reflect.runtime.universe.Select = java.lang.System.out.println
+
+scala> res29.qualifier.asInstanceOf[Select]
+res31: reflect.runtime.universe.Select = java.lang.System.out
+
+scala> res31.qualifier.asInstanceOf[Select]
+res32: reflect.runtime.universe.Select = java.lang.System
+
+scala> res32.qualifier.asInstanceOf[Select]
+res33: reflect.runtime.universe.Select = java.lang
+
+scala> res33.qualifier.asInstanceOf[Ident]
+res35: reflect.runtime.universe.Ident = java
+```
+
 ## TypeApply
+TypeApply is really just apply for functions that have generics in their call.
+
+```scala
+scala> q""" scala.concurrent.Future(1) """.asInstanceOf[Apply]
+res37: reflect.runtime.universe.Apply = scala.concurrent.Future(1)
+
+scala> res37.fun.getClass
+res39: Class[_ <: reflect.runtime.universe.Tree] = class scala.reflect.internal.Trees$Select
+
+scala> q""" scala.concurrent.Future[Int](1) """.asInstanceOf[Apply]
+res40: reflect.runtime.universe.Apply = scala.concurrent.Future[Int](1)
+
+scala> res40.fun.getClass
+res41: Class[_ <: reflect.runtime.universe.Tree] = class scala.reflect.internal.Trees$TypeApply
+
+scala> showRaw(res40)
+res43: String = Apply(TypeApply(Select(Select(Ident(TermName("scala")), TermName("concurrent")), TermName("Future")), List(Ident(TypeName("Int")))), List(Literal(Constant(1))))
+```
+
+The above is saying that we `Apply(Future[Int], List(1))`
+
+If you compair this with the infered type way
+
+```scala
+scala> showRaw(res37)
+res44: String = Apply(Select(Select(Ident(TermName("scala")), TermName("concurrent")), TermName("Future")), List(Literal(Constant(1))))
+```
+
+Here the only difference is that `Select` is used, but when the generic type is given we switch to `TypeApply(Select...)`
+
+Be careful when matching against `Apply`.  If the function is generic and inferes the type then `Select` is used, if not infered but given by the user `TypeApply(Select...)` is used.
+
 ## TypeTree
+When building up a class, you have the ability to say which classes/traits it extends from.  The `parents` param is a `List[Tree]`, so you might be tempted to use `Select` to solve this problem.  You will find that when you do this scala thinks you are talking about the object at the path, not the class/trait.  To get the class/trait form, you use `TypeTree`.
+
+```scala
+val product = TypeTree(typeOf[Product])
+Template(List(product), ...)
+```
+
+The above will correctly point to the `Product` trait and not search for an object named "Product".
+
+As case class
+
+```scala
+case class TypeTree() {
+    def this(tp: Type) = this()
+}
+```
+
+As we see, there doesn't seem to be any useful functions on this type.
+
+## This
 ## PackageDef
 ## ModuleDef
 ## LabelDef
