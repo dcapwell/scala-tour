@@ -42,7 +42,7 @@
 
 
         
-    <div class="book" data-github="dcapwell/scala-tour" data-level="7.5" data-basepath=".." data-revision="1404967423734">
+    <div class="book" data-github="dcapwell/scala-tour" data-level="7.5" data-basepath=".." data-revision="1405013934741">
     <div class="book-header">
     <!-- Actions Left -->
     
@@ -556,9 +556,9 @@
 <pre><code class="lang-scala"><span class="hljs-keyword">def</span> toTuple[A &lt;: Product](a: A): Any = macro CaseClassMacros.toTupleMacro[A]
 </code></pre>
 <p>In this example, calling it as <code>toTuple(Foo(&quot;foo&quot;, &quot;bar&quot;))</code> yields <code>(String, String)</code> as the return type.  A good writeup on this can be found <a href="http://docs.scala-lang.org/overviews/macros/blackbox-whitebox.html" target="_blank">here</a>.</p>
-<p>Use whitebox macros with caution since IDE support is very limited (aka, intellij says that your code doesn&#39;t compile, but it typechecks!).  A common workaround for such a thing is by throwing an abstraction/typeclass over this function...</p>
+<p>Use whitebox macros with caution since IDE support is very limited (aka, intellij says that your code doesn&#39;t compile, but it does!).  They can also be less clear to the caller since the types are no longer documentation.  A common workaround for such a thing is by throwing an abstraction/typeclass over this function...</p>
 <h4 id="implicit-macros">Implicit Macros</h4>
-<p>Since functions can be macros, and implicits can be used with functions... see where I am going with this?  Yep, implicit macro calls!</p>
+<p>(I believe this was also in 2.10) Since functions can be macros, and implicits can be used with functions... see where I am going with this?  Yep, implicit macro calls!</p>
 <p>A common pattern of hiding that you are really using macros is by defining a typeclass that does what the user wants (<code>CaseToTuple</code>), but the creation of the typeclass instance is via a macro.</p>
 <pre><code class="lang-scala">implicit <span class="hljs-keyword">def</span> caseToTuple[C,T]: CaseToTuple[C, T] = macro ...
 </code></pre>

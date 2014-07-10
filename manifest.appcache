@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# Revision 1404967423735
+# Revision 1405013934742
 
 CACHE:
 Path Dependent Types.html
@@ -33,8 +33,8 @@ Variance.html
 macros/README.html
 macros/context.html
 macros/fun_with_println.html
-macros/macro_types.html
 macros/macro_basics.html
+macros/macro_types.html
 macros/quasiquotes.html
 macros/scala_version_differences.html
 macros/tree_lens.html

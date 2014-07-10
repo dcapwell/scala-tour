@@ -42,7 +42,7 @@
 
 
         
-    <div class="book" data-github="dcapwell/scala-tour" data-level="7.7" data-basepath=".." data-revision="1404967423734">
+    <div class="book" data-github="dcapwell/scala-tour" data-level="7.7" data-basepath=".." data-revision="1405013934741">
     <div class="book-header">
     <!-- Actions Left -->
     
@@ -535,22 +535,19 @@
                     
                         <h1 id="trees">Trees</h1>
 <p>When you get deeper into macros, you will find yourself working with the <code>Tree</code> instances directly (quasiquotes are some times not as easy to use).  When this happens, you will need to know which instances to use.</p>
-<p>This section really just outputs whats in <a href="https://github.com/scala/scala/blob/2.11.x/src/reflect/scala/reflect/api/Trees.scala#L308" target="_blank">Scala&#39;s Trees.scala</a>.  Main reason for this is that I find this doc faster to look things up than in intellij (the whole trait within trait within trait that defines a trait thing... intellij has a harder time searching this).</p>
+<p>This section really just outputs whats in <a href="https://github.com/scala/scala/blob/2.11.x/src/reflect/scala/reflect/api/Trees.scala#L308" target="_blank">Scala&#39;s Trees.scala</a>.  Main reason for this is that I find this doc faster to look things up than in intellij (the whole trait within trait within trait that defines a trait thing... intellij has a harder time searching this.  I know I can search for the known case class, but intellij always infers the traits/vals, which are longer to find the APIs for).</p>
 <p>If you prefer ScalaDocs, you can look at them <a href="http://www.scala-lang.org/files/archive/nightly/docs/library/index.html#scala.reflect.api.Trees" target="_blank">here</a>.  Again, I find those docs to have way too much noise.</p>
+<p>Also, I find that writing this out really helps me figure out how the trees work.</p>
 <h2 id="modifiers">Modifiers</h2>
 <p>Thie type doesn&#39;t really map to normal scala code, but many things have modifiers.</p>
 <pre><code class="lang-scala"><span class="hljs-keyword">lazy</span> <span class="hljs-keyword">val</span> foo: String
 </code></pre>
 <p>In this example, foo has modifiers, namely lazy (which is really a flag).</p>
-<p>To create</p>
-<pre><code class="lang-scala">Modifiers(flags: FlagSet, privateWithin: Name, annotations: List[Tree])
-</code></pre>
-<p>To get values</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">def</span> flags: FlagSet
-<span class="hljs-keyword">def</span> hasFlag(flag: FlagSet): Boolean
-<span class="hljs-keyword">def</span> privateWithin: Name
-<span class="hljs-keyword">def</span> annotations: List[Tree]
-<span class="hljs-keyword">def</span> mapAnnotations(f: List[Tree] =&gt; List[Tree]): Modifiers
+<p>As case class:</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Modifiers</span><span class="hljs-params">(flags: Long, privateWithin: Name, annotations: List[Tree])</span> {</span>
+    <span class="hljs-keyword">def</span> hasFlag(flag: FlagSet): Boolean
+    <span class="hljs-keyword">def</span> mapAnnotations(f: List[Tree] =&gt; List[Tree]): Modifiers
+}
 </code></pre>
 <h2 id="flagset">FlagSet</h2>
 <p>A FlagSet is a single instance or a set of instances of flags.  So what are flags?</p>
@@ -720,34 +717,175 @@
 </code></pre>
 <h2 id="valdef">ValDef</h2>
 <p>Maps to <code>val foo = ...</code>.  It contains the type of variable (val, var), name, type, and rhs (right-hand-side, aka expression).</p>
-<p>To create</p>
-<pre><code class="lang-scala">ValDef(mods: Modifiers, name: TermName, tpt: Tree, rhs: Tree)
-</code></pre>
-<p>To read</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">def</span> mods: Modifiers
-<span class="hljs-keyword">def</span> name: TermName
-<span class="hljs-keyword">def</span> tpt: Tree
-<span class="hljs-keyword">def</span> rhs: Tree
+<p>As case class:</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ValDef</span><span class="hljs-params">(mods: Modifiers, name: TermName, tpt: Tree, rhs: Tree)</span></span>
 </code></pre>
 <h2 id="classdef">ClassDef</h2>
-<p>This type maps to <code>... class Foo() extends ...</code>.</p>
-<p>To create an instance, you need to call</p>
-<pre><code class="lang-scala">ClassDef(mods: Modifiers, name: TypeName, tparams: List[TypeDef], impl: Template)
+<p>This type maps to <code>&lt;mods&gt; class Foo[A](...) ...</code> and also trait defs.</p>
+<p>As case class:</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">ClassDef</span><span class="hljs-params">(mods: Modifiers, name: TypeName, tparams: List[TypeDef], impl: Template)</span></span>
 </code></pre>
-<p>To get the values out of a class</p>
-<pre><code class="lang-scala"><span class="hljs-keyword">def</span> mods: Modifiers
-<span class="hljs-keyword">def</span> name: TypeName
-<span class="hljs-keyword">def</span> tparams: List[TypeDef]
-<span class="hljs-keyword">def</span> impl: Template
+<h2 id="template">Template</h2>
+<p>Template is really the content of a <code>ClassDef</code>.</p>
+<p>As case class:</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Template</span><span class="hljs-params">(parents: List[Tree], self: ValDef, body: List[Tree])</span></span>
 </code></pre>
+<p><code>parents</code> map to <code>extends</code> and <code>with</code> calls.  Order matters to this list, so make sure the <code>.head</code> element maps to the expected <code>extends</code> type.</p>
+<p><code>self</code> maps to <code>self: Foo =&gt;</code> in traits</p>
+<pre><code class="lang-scala">scala&gt; q<span class="hljs-string">"""
+ trait Foo { self: String =&gt;
+    def toString: String = self.toString
+ }
+"""</span>
+res0: reflect.runtime.universe.ClassDef =
+<span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Foo</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">scala</span>.<span class="hljs-title">AnyRef</span> {</span> self: String =&gt;
+  <span class="hljs-keyword">def</span> $init$() = {
+    ()
+  };
+  <span class="hljs-keyword">def</span> toString: String = self.toString
+}
+scala&gt; res0.impl.self
+res1: reflect.runtime.universe.ValDef = <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> self: String = _
+</code></pre>
+<p>Notes on <code>body</code>, order matters!  I found this out while trying to reinvent case classes as a macro (cause thats sain right?...).  I took all the class params and replaced them with <code>private[this]</code> params followed by <code>DefDef</code> (coming to this tree).  When I did this I got a very weird <code>MatchError</code> message, and while debugging the compiler code it became clear that scala makes assumptions about how the body looks like.</p>
+<p>Here is the code incase it bites you:</p>
+<pre><code class="lang-scala"><span class="hljs-comment">// undo gen.mkTemplate</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">UnMkTemplate</span> {</span>
+      <span class="hljs-keyword">def</span> unapply(templ: Template): Option[(List[Tree], ValDef, Modifiers, List[List[ValDef]], List[Tree], List[Tree])] = {
+        <span class="hljs-keyword">val</span> Template(parents, selfType, _) = templ
+        <span class="hljs-keyword">val</span> tbody = treeInfo.untypecheckedTemplBody(templ)
+
+        <span class="hljs-keyword">def</span> result(ctorMods: Modifiers, vparamss: List[List[ValDef]], edefs: List[Tree], body: List[Tree]) =
+          Some((parents, selfType, ctorMods, vparamss, edefs, body))
+        <span class="hljs-keyword">def</span> indexOfCtor(trees: List[Tree]) =
+          trees.indexWhere { <span class="hljs-keyword">case</span> UnCtor(_, _, _) =&gt; <span class="hljs-keyword">true</span> ; <span class="hljs-keyword">case</span> _ =&gt; <span class="hljs-keyword">false</span> }
+
+        <span class="hljs-keyword">if</span> (tbody forall treeInfo.isInterfaceMember)
+          result(NoMods | Flag.TRAIT, Nil, Nil, tbody)
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (indexOfCtor(tbody) == -<span class="hljs-number">1</span>)
+          None
+        <span class="hljs-keyword">else</span> {
+          <span class="hljs-keyword">val</span> (rawEdefs, rest) = tbody.span(treeInfo.isEarlyDef)
+          <span class="hljs-keyword">val</span> (gvdefs, etdefs) = rawEdefs.partition(treeInfo.isEarlyValDef)
+          <span class="hljs-keyword">val</span> (fieldDefs, UnCtor(ctorMods, ctorVparamss, lvdefs) :: body) = rest.splitAt(indexOfCtor(rest))
+          <span class="hljs-keyword">val</span> evdefs = gvdefs.zip(lvdefs).map {
+            <span class="hljs-keyword">case</span> (gvdef @ ValDef(_, _, tpt: TypeTree, _), ValDef(_, _, _, rhs)) =&gt;
+              copyValDef(gvdef)(tpt = tpt.original, rhs = rhs)
+          }
+          <span class="hljs-keyword">val</span> edefs = evdefs ::: etdefs
+          <span class="hljs-keyword">if</span> (ctorMods.isTrait)
+            result(ctorMods, Nil, edefs, body)
+          <span class="hljs-keyword">else</span> {
+            <span class="hljs-comment">// undo conversion from (implicit ... ) to ()(implicit ... ) when its the only parameter section</span>
+            <span class="hljs-keyword">val</span> vparamssRestoredImplicits = ctorVparamss <span class="hljs-keyword">match</span> {
+              <span class="hljs-keyword">case</span> Nil :: (tail @ ((head :: _) :: _)) <span class="hljs-keyword">if</span> head.mods.isImplicit =&gt; tail
+              <span class="hljs-keyword">case</span> other =&gt; other
+            }
+            <span class="hljs-comment">// undo flag modifications by merging flag info from constructor args and fieldDefs</span>
+            <span class="hljs-keyword">val</span> modsMap = fieldDefs.map { <span class="hljs-keyword">case</span> ValDef(mods, name, _, _) =&gt; name -&gt; mods }.toMap
+            <span class="hljs-keyword">def</span> ctorArgsCorrespondToFields = vparamssRestoredImplicits.flatten.forall { vd =&gt; modsMap.contains(vd.name) }
+            <span class="hljs-keyword">if</span> (!ctorArgsCorrespondToFields) None
+            <span class="hljs-keyword">else</span> {
+              <span class="hljs-keyword">val</span> vparamss = mmap(vparamssRestoredImplicits) { vd =&gt;
+                <span class="hljs-keyword">val</span> originalMods = modsMap(vd.name) | (vd.mods.flags &amp; DEFAULTPARAM)
+                atPos(vd.pos)(ValDef(originalMods, vd.name, vd.tpt, vd.rhs))
+              }
+              result(ctorMods, vparamss, edefs, body)
+            }
+          }
+        }
+      }
+    }
+</code></pre>
+<p>If you look close enough, you will see</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> modsMap = fieldDefs.map { <span class="hljs-keyword">case</span> ValDef(mods, name, _, _) =&gt; name -&gt; mods }.toMap
+</code></pre>
+<p><code>fieldDefs</code> comes from this call</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">val</span> (fieldDefs, UnCtor(ctorMods, ctorVparamss, lvdefs) :: body) = rest.splitAt(indexOfCtor(rest))
+</code></pre>
+<p>So, it takes the body, splits it on the constructor, and assumes everything before then are <code>ValDef</code> instances.</p>
+<p>TODO, should I file a bug against the compiler for this?  Might bite other macro developers...</p>
+<h2 id="defdef">DefDef</h2>
+<p>This tree maps to <code>def foo: String = &quot;foo&quot;</code></p>
+<p>As case class</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">DefDef</span><span class="hljs-params">(mods: Modifiers, name: Name, tparams: List[TypeDef],
+                    vparamss: List[List[ValDef]], tpt: Tree, rhs: Tree)</span></span>
+</code></pre>
+<p><code>vparamss</code> is nested <code>List[ValDef]</code> for currying.  <code>def foo(name: String)(age: Int)</code> will have <code>vparamss.size</code> equal 2, where <code>vparamss.head</code> is a <code>List[ValDef]</code> that matches the <code>name</code> group.</p>
+<h2 id="typedef">TypeDef</h2>
+<p>When building generics into a function or a type, you are working with <code>TypeDef</code>.</p>
+<p>As case class</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">TypeDef</span><span class="hljs-params">(mods: Modifiers, name: TypeName, tparams: List[TypeDef], rhs: Tree)</span></span>
+</code></pre>
+<p>Playing with the tree</p>
+<pre><code class="lang-scala">scala&gt; q<span class="hljs-string">""" def foo[A](a: A): A = a """</span>
+scala&gt; res3.tparams
+res4: List[reflect.runtime.universe.TypeDef] = List(<span class="hljs-keyword">type</span> A)
+
+scala&gt; res3.tparams.head.name
+res6: reflect.runtime.universe.TypeName = A
+
+scala&gt; res3.tparams.head.tparams
+res7: List[reflect.runtime.universe.TypeDef] = List()
+
+scala&gt; res3.tparams.head.rhs
+res8: reflect.runtime.universe.Tree =
+
+scala&gt; res3.tparams.head.rhs.getClass
+res9: Class[_ &lt;: reflect.runtime.universe.Tree] = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">scala</span>.<span class="hljs-title">reflect</span>.<span class="hljs-title">internal</span>.<span class="hljs-title">Trees</span>$<span class="hljs-title">TypeBoundsTree</span></span>
+</code></pre>
+<h2 id="literal">Literal</h2>
+<p>This tree maps to literals in the language such as <code>3</code> and <code>&quot;foo&quot;</code></p>
+<p>As case class</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Literal</span><span class="hljs-params">(value: Constant)</span></span>
+</code></pre>
+<h2 id="constant">Constant</h2>
+<p>Represents a constant value, such as <code>3</code> or <code>&quot;foo&quot;</code></p>
+<p>As case class</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Constant</span><span class="hljs-params">(value: Any)</span></span>
+</code></pre>
+<h2 id="ident">Ident</h2>
+<p>We saw that <code>Literal(Constant(3))</code> maps to <code>3</code>, but what about variable references?  This is where Ident comes in.</p>
+<pre><code class="lang-scala">scala&gt; <span class="hljs-keyword">val</span> foo = <span class="hljs-string">"bar"</span>
+foo: String = bar
+
+scala&gt; q<span class="hljs-string">""" foo """</span>
+res20: reflect.runtime.universe.Ident = foo
+</code></pre>
+<p>As case class</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Ident</span><span class="hljs-params">(name: Name)</span></span>
+</code></pre>
+<h2 id="block">Block</h2>
+<p>This does what it sounds like, its a tree that maps to a scala block expression.</p>
+<pre><code class="lang-scala">q<span class="hljs-string">"""
+{
+    val foo = 3
+    foo
+}
+"""</span>.asInstanceOf[Block]
+res2: reflect.runtime.universe.Block =
+{
+  <span class="hljs-keyword">val</span> foo = <span class="hljs-number">3</span>;
+  foo
+}
+</code></pre>
+<p>As case class</p>
+<pre><code class="lang-scala"><span class="hljs-class"><span class="hljs-keyword">case</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Block</span><span class="hljs-params">(stats: List[Tree], expr: Tree)</span></span>
+</code></pre>
+<p><code>stats</code> are all the statements within the block
+<code>expr</code> is the expression to return from the block.  In the case above, it returns <code>foo</code></p>
+<pre><code class="lang-scala">scala&gt; res2.expr.asInstanceOf[Ident]
+res5: reflect.runtime.universe.Ident = foo
+</code></pre>
+<h2 id="this">This</h2>
+<h2 id="select">Select</h2>
+<h2 id="apply">Apply</h2>
+<h2 id="typeapply">TypeApply</h2>
+<h2 id="typetree">TypeTree</h2>
 <h2 id="packagedef">PackageDef</h2>
 <h2 id="moduledef">ModuleDef</h2>
-<h2 id="defdef">DefDef</h2>
-<h2 id="typedef">TypeDef</h2>
 <h2 id="labeldef">LabelDef</h2>
 <h2 id="import">Import</h2>
-<h2 id="template">Template</h2>
-<h2 id="block">Block</h2>
 <h2 id="casedef">CaseDef</h2>
 <h2 id="alternative">Alternative</h2>
 <h2 id="star">Star</h2>
@@ -763,16 +901,9 @@
 <h2 id="throw">Throw</h2>
 <h2 id="new">New</h2>
 <h2 id="typed">Typed</h2>
-<h2 id="typeapply">TypeApply</h2>
-<h2 id="apply">Apply</h2>
 <h2 id="super">Super</h2>
-<h2 id="this">This</h2>
-<h2 id="select">Select</h2>
-<h2 id="ident">Ident</h2>
 <h2 id="reftree">RefTree</h2>
 <h2 id="referencetoboxed">ReferenceToBoxed</h2>
-<h2 id="literal">Literal</h2>
-<h2 id="typetree">TypeTree</h2>
 <h2 id="annotated">Annotated</h2>
 <h2 id="singletontypetree">SingletonTypeTree</h2>
 <h2 id="selectfromtypetree">SelectFromTypeTree</h2>
