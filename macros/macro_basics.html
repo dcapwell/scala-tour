@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
-<html lang="en-US" manifest="./manifest.appcache">
+<html lang="en-US" manifest="../manifest.appcache">
     <head prefix="og: http://ogp.me/ns# book: http://ogp.me/ns/book#">
         
         <meta charset="UTF-8">
-        <title>Monads and Monoids | Scala Tour</title>
+        <title>Macro Basics | Scala Tour</title>
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="robots" content="index, follow">
@@ -13,13 +13,13 @@
         <meta name="generator" content="www.gitbook.io">
 
         
-        <link rel="next" href="./Functor.html" />
+        <link rel="next" href="../macros/context.html" />
         
         
-        <link rel="prev" href="./Cake.html" />
+        <link rel="prev" href="../macros/macro_types.html" />
         
 
-        <meta property="og:title" content="Monads and Monoids | Scala Tour">
+        <meta property="og:title" content="Macro Basics | Scala Tour">
         <meta property="og:site_name" content="Scala Tour">
         <meta property="og:type" content="book">
         <meta property="og:locale" content="en_US">
@@ -31,18 +31,18 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
         
     </head>
     <body>
         
 
-        <link rel="stylesheet" href="gitbook/style.css">
+        <link rel="stylesheet" href="../gitbook/style.css">
         
 
 
         
-    <div class="book" data-github="dcapwell/scala-tour" data-level="4" data-basepath="." data-revision="1404958310791">
+    <div class="book" data-github="dcapwell/scala-tour" data-level="7.2" data-basepath=".." data-revision="1404958310791">
     <div class="book-header">
     <!-- Actions Left -->
     
@@ -91,7 +91,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-spinner fa-spin"></i>
-        <a href="./" >Scala Tour</a>
+        <a href="../" >Scala Tour</a>
     </h1>
 </div>
 
@@ -108,17 +108,17 @@
             <a href="https://github.com/dcapwell/scala-tour/issues" target="blank">Questions and Issues</a>
         </li>
         <li>
-            <a href="https://github.com/dcapwell/scala-tour/edit/master/Monads and Monoids.md" target="blank">Edit and Contribute</a>
+            <a href="https://github.com/dcapwell/scala-tour/edit/master/macros/macro_basics.md" target="blank">Edit and Contribute</a>
         </li>
         <li class="divider"></li>
         
         <li data-level="0" data-path="index.html">
-            <a href="./"><i class="fa fa-check"></i> Introduction</a>
+            <a href="../"><i class="fa fa-check"></i> Introduction</a>
         </li>
         
             <li  data-level="1" data-path="Language.html">
                 
-                <a href="./Language.html">
+                <a href="../Language.html">
                     <i class="fa fa-check"></i> <b>1.</b> Language
                 </a>
                 
@@ -127,7 +127,7 @@
                     
                         <li  data-level="1.1" data-path="Traits.html">
                             
-                            <a href="./Traits.html">
+                            <a href="../Traits.html">
                                 <i class="fa fa-check"></i> <b>1.1.</b> Traits
                             </a>
                             
@@ -135,7 +135,7 @@
                     
                         <li  data-level="1.2" data-path="Partial Function.html">
                             
-                            <a href="./Partial Function.html">
+                            <a href="../Partial Function.html">
                                 <i class="fa fa-check"></i> <b>1.2.</b> Partial Function
                             </a>
                             
@@ -147,7 +147,7 @@
         
             <li  data-level="2" data-path="Types.html">
                 
-                <a href="./Types.html">
+                <a href="../Types.html">
                     <i class="fa fa-check"></i> <b>2.</b> Types
                 </a>
                 
@@ -156,7 +156,7 @@
                     
                         <li  data-level="2.1" data-path="Variance.html">
                             
-                            <a href="./Variance.html">
+                            <a href="../Variance.html">
                                 <i class="fa fa-check"></i> <b>2.1.</b> Variance
                             </a>
                             
@@ -164,7 +164,7 @@
                     
                         <li  data-level="2.2" data-path="Value Classes.html">
                             
-                            <a href="./Value Classes.html">
+                            <a href="../Value Classes.html">
                                 <i class="fa fa-check"></i> <b>2.2.</b> Value Classes
                             </a>
                             
@@ -172,7 +172,7 @@
                     
                         <li  data-level="2.3" data-path="F-Bounded Type.html">
                             
-                            <a href="./F-Bounded Type.html">
+                            <a href="../F-Bounded Type.html">
                                 <i class="fa fa-check"></i> <b>2.3.</b> F-Bounded Type
                             </a>
                             
@@ -180,7 +180,7 @@
                     
                         <li  data-level="2.4" data-path="Type Classes.html">
                             
-                            <a href="./Type Classes.html">
+                            <a href="../Type Classes.html">
                                 <i class="fa fa-check"></i> <b>2.4.</b> Type Classes
                             </a>
                             
@@ -188,7 +188,7 @@
                     
                         <li  data-level="2.5" data-path="Higher Kind.html">
                             
-                            <a href="./Higher Kind.html">
+                            <a href="../Higher Kind.html">
                                 <i class="fa fa-check"></i> <b>2.5.</b> Higher Kind
                             </a>
                             
@@ -196,7 +196,7 @@
                     
                         <li  data-level="2.6" data-path="Path Dependent Types.html">
                             
-                            <a href="./Path Dependent Types.html">
+                            <a href="../Path Dependent Types.html">
                                 <i class="fa fa-check"></i> <b>2.6.</b> Path Dependent Types
                             </a>
                             
@@ -204,7 +204,7 @@
                     
                         <li  data-level="2.7" data-path="Phantom Type.html">
                             
-                            <a href="./Phantom Type.html">
+                            <a href="../Phantom Type.html">
                                 <i class="fa fa-check"></i> <b>2.7.</b> Phantom Type
                             </a>
                             
@@ -212,7 +212,7 @@
                     
                         <li  data-level="2.8" data-path="Structural Types.html">
                             
-                            <a href="./Structural Types.html">
+                            <a href="../Structural Types.html">
                                 <i class="fa fa-check"></i> <b>2.8.</b> Structural Types
                             </a>
                             
@@ -220,7 +220,7 @@
                     
                         <li  data-level="2.9" data-path="Union and Intersection types.html">
                             
-                            <a href="./Union and Intersection types.html">
+                            <a href="../Union and Intersection types.html">
                                 <i class="fa fa-check"></i> <b>2.9.</b> Union and Intersection types
                             </a>
                             
@@ -232,7 +232,7 @@
         
             <li  data-level="3" data-path="Patterns.html">
                 
-                <a href="./Patterns.html">
+                <a href="../Patterns.html">
                     <i class="fa fa-check"></i> <b>3.</b> Patterns
                 </a>
                 
@@ -241,7 +241,7 @@
                     
                         <li  data-level="3.1" data-path="Cake.html">
                             
-                            <a href="./Cake.html">
+                            <a href="../Cake.html">
                                 <i class="fa fa-check"></i> <b>3.1.</b> Cake
                             </a>
                             
@@ -253,7 +253,7 @@
         
             <li  data-level="4" data-path="Monads and Monoids.html">
                 
-                <a href="./Monads and Monoids.html">
+                <a href="../Monads and Monoids.html">
                     <i class="fa fa-check"></i> <b>4.</b> Monads and Monoids
                 </a>
                 
@@ -262,7 +262,7 @@
                     
                         <li  data-level="4.1" data-path="Functor.html">
                             
-                            <a href="./Functor.html">
+                            <a href="../Functor.html">
                                 <i class="fa fa-check"></i> <b>4.1.</b> Functor
                             </a>
                             
@@ -270,7 +270,7 @@
                     
                         <li  data-level="4.2" data-path="Applicative Functor.html">
                             
-                            <a href="./Applicative Functor.html">
+                            <a href="../Applicative Functor.html">
                                 <i class="fa fa-check"></i> <b>4.2.</b> Applicative Functor
                             </a>
                             
@@ -282,7 +282,7 @@
         
             <li  data-level="5" data-path="Scalaz.html">
                 
-                <a href="./Scalaz.html">
+                <a href="../Scalaz.html">
                     <i class="fa fa-check"></i> <b>5.</b> Scalaz
                 </a>
                 
@@ -291,7 +291,7 @@
                     
                         <li  data-level="5.1" data-path="Utils.html">
                             
-                            <a href="./Utils.html">
+                            <a href="../Utils.html">
                                 <i class="fa fa-check"></i> <b>5.1.</b> Utils
                             </a>
                             
@@ -299,7 +299,7 @@
                     
                         <li  data-level="5.2" data-path="Tag Types.html">
                             
-                            <a href="./Tag Types.html">
+                            <a href="../Tag Types.html">
                                 <i class="fa fa-check"></i> <b>5.2.</b> Tag Types
                             </a>
                             
@@ -307,7 +307,7 @@
                     
                         <li  data-level="5.3" data-path="Memoization.html">
                             
-                            <a href="./Memoization.html">
+                            <a href="../Memoization.html">
                                 <i class="fa fa-check"></i> <b>5.3.</b> Memoization
                             </a>
                             
@@ -319,7 +319,7 @@
         
             <li  data-level="6" data-path="Failure.html">
                 
-                <a href="./Failure.html">
+                <a href="../Failure.html">
                     <i class="fa fa-check"></i> <b>6.</b> Failure
                 </a>
                 
@@ -328,7 +328,7 @@
                     
                         <li  data-level="6.1" data-path="Collections.html">
                             
-                            <a href="./Collections.html">
+                            <a href="../Collections.html">
                                 <i class="fa fa-check"></i> <b>6.1.</b> Collections
                             </a>
                             
@@ -336,7 +336,7 @@
                     
                         <li  data-level="6.2" data-path="Object Init.html">
                             
-                            <a href="./Object Init.html">
+                            <a href="../Object Init.html">
                                 <i class="fa fa-check"></i> <b>6.2.</b> Object Init
                             </a>
                             
@@ -344,7 +344,7 @@
                     
                         <li  data-level="6.3" data-path="Implicit.html">
                             
-                            <a href="./Implicit.html">
+                            <a href="../Implicit.html">
                                 <i class="fa fa-check"></i> <b>6.3.</b> Implicit
                             </a>
                             
@@ -356,7 +356,7 @@
         
             <li  data-level="7" data-path="macros/README.html">
                 
-                <a href="./macros/README.html">
+                <a href="../macros/README.html">
                     <i class="fa fa-check"></i> <b>7.</b> Macros
                 </a>
                 
@@ -365,7 +365,7 @@
                     
                         <li  data-level="7.1" data-path="macros/macro_types.html">
                             
-                            <a href="./macros/macro_types.html">
+                            <a href="../macros/macro_types.html">
                                 <i class="fa fa-check"></i> <b>7.1.</b> Macro Types
                             </a>
                             
@@ -373,7 +373,7 @@
                     
                         <li  data-level="7.2" data-path="macros/macro_basics.html">
                             
-                            <a href="./macros/macro_basics.html">
+                            <a href="../macros/macro_basics.html">
                                 <i class="fa fa-check"></i> <b>7.2.</b> Macro Basics
                             </a>
                             
@@ -381,7 +381,7 @@
                     
                         <li  data-level="7.3" data-path="macros/context.html">
                             
-                            <a href="./macros/context.html">
+                            <a href="../macros/context.html">
                                 <i class="fa fa-check"></i> <b>7.3.</b> Context
                             </a>
                             
@@ -393,7 +393,7 @@
         
             <li  data-level="8" data-path="References.html">
                 
-                <a href="./References.html">
+                <a href="../References.html">
                     <i class="fa fa-check"></i> <b>8.</b> References
                 </a>
                 
@@ -408,83 +408,108 @@
             <div class="page-wrapper" tabindex="-1">
                 <div class="book-progress">
     <div class="bar">
-        <div class="inner" style="width: 51.61290322580645%;min-width: 48.38709677419355%;"></div>
+        <div class="inner" style="width: 93.54838709677419%;min-width: 90.3225806451613%;"></div>
     </div>
     <div class="chapters">
     
-        <a href="./index.html" title="Introduction" class="chapter done new-chapter" data-progress="0" style="left: 0%;"></a>
+        <a href="../index.html" title="Introduction" class="chapter done new-chapter" data-progress="0" style="left: 0%;"></a>
     
-        <a href="./Language.html" title="Language" class="chapter done new-chapter" data-progress="1" style="left: 3.225806451612903%;"></a>
+        <a href="../Language.html" title="Language" class="chapter done new-chapter" data-progress="1" style="left: 3.225806451612903%;"></a>
     
-        <a href="./Traits.html" title="Traits" class="chapter done " data-progress="1.1" style="left: 6.451612903225806%;"></a>
+        <a href="../Traits.html" title="Traits" class="chapter done " data-progress="1.1" style="left: 6.451612903225806%;"></a>
     
-        <a href="./Partial Function.html" title="Partial Function" class="chapter done " data-progress="1.2" style="left: 9.67741935483871%;"></a>
+        <a href="../Partial Function.html" title="Partial Function" class="chapter done " data-progress="1.2" style="left: 9.67741935483871%;"></a>
     
-        <a href="./Types.html" title="Types" class="chapter done new-chapter" data-progress="2" style="left: 12.903225806451612%;"></a>
+        <a href="../Types.html" title="Types" class="chapter done new-chapter" data-progress="2" style="left: 12.903225806451612%;"></a>
     
-        <a href="./Variance.html" title="Variance" class="chapter done " data-progress="2.1" style="left: 16.129032258064516%;"></a>
+        <a href="../Variance.html" title="Variance" class="chapter done " data-progress="2.1" style="left: 16.129032258064516%;"></a>
     
-        <a href="./Value Classes.html" title="Value Classes" class="chapter done " data-progress="2.2" style="left: 19.35483870967742%;"></a>
+        <a href="../Value Classes.html" title="Value Classes" class="chapter done " data-progress="2.2" style="left: 19.35483870967742%;"></a>
     
-        <a href="./F-Bounded Type.html" title="F-Bounded Type" class="chapter done " data-progress="2.3" style="left: 22.580645161290324%;"></a>
+        <a href="../F-Bounded Type.html" title="F-Bounded Type" class="chapter done " data-progress="2.3" style="left: 22.580645161290324%;"></a>
     
-        <a href="./Type Classes.html" title="Type Classes" class="chapter done " data-progress="2.4" style="left: 25.806451612903224%;"></a>
+        <a href="../Type Classes.html" title="Type Classes" class="chapter done " data-progress="2.4" style="left: 25.806451612903224%;"></a>
     
-        <a href="./Higher Kind.html" title="Higher Kind" class="chapter done " data-progress="2.5" style="left: 29.032258064516128%;"></a>
+        <a href="../Higher Kind.html" title="Higher Kind" class="chapter done " data-progress="2.5" style="left: 29.032258064516128%;"></a>
     
-        <a href="./Path Dependent Types.html" title="Path Dependent Types" class="chapter done " data-progress="2.6" style="left: 32.25806451612903%;"></a>
+        <a href="../Path Dependent Types.html" title="Path Dependent Types" class="chapter done " data-progress="2.6" style="left: 32.25806451612903%;"></a>
     
-        <a href="./Phantom Type.html" title="Phantom Type" class="chapter done " data-progress="2.7" style="left: 35.483870967741936%;"></a>
+        <a href="../Phantom Type.html" title="Phantom Type" class="chapter done " data-progress="2.7" style="left: 35.483870967741936%;"></a>
     
-        <a href="./Structural Types.html" title="Structural Types" class="chapter done " data-progress="2.8" style="left: 38.70967741935484%;"></a>
+        <a href="../Structural Types.html" title="Structural Types" class="chapter done " data-progress="2.8" style="left: 38.70967741935484%;"></a>
     
-        <a href="./Union and Intersection types.html" title="Union and Intersection types" class="chapter done " data-progress="2.9" style="left: 41.935483870967744%;"></a>
+        <a href="../Union and Intersection types.html" title="Union and Intersection types" class="chapter done " data-progress="2.9" style="left: 41.935483870967744%;"></a>
     
-        <a href="./Patterns.html" title="Patterns" class="chapter done new-chapter" data-progress="3" style="left: 45.16129032258065%;"></a>
+        <a href="../Patterns.html" title="Patterns" class="chapter done new-chapter" data-progress="3" style="left: 45.16129032258065%;"></a>
     
-        <a href="./Cake.html" title="Cake" class="chapter done " data-progress="3.1" style="left: 48.38709677419355%;"></a>
+        <a href="../Cake.html" title="Cake" class="chapter done " data-progress="3.1" style="left: 48.38709677419355%;"></a>
     
-        <a href="./Monads and Monoids.html" title="Monads and Monoids" class="chapter done new-chapter" data-progress="4" style="left: 51.61290322580645%;"></a>
+        <a href="../Monads and Monoids.html" title="Monads and Monoids" class="chapter done new-chapter" data-progress="4" style="left: 51.61290322580645%;"></a>
     
-        <a href="./Functor.html" title="Functor" class="chapter  " data-progress="4.1" style="left: 54.83870967741935%;"></a>
+        <a href="../Functor.html" title="Functor" class="chapter done " data-progress="4.1" style="left: 54.83870967741935%;"></a>
     
-        <a href="./Applicative Functor.html" title="Applicative Functor" class="chapter  " data-progress="4.2" style="left: 58.064516129032256%;"></a>
+        <a href="../Applicative Functor.html" title="Applicative Functor" class="chapter done " data-progress="4.2" style="left: 58.064516129032256%;"></a>
     
-        <a href="./Scalaz.html" title="Scalaz" class="chapter  new-chapter" data-progress="5" style="left: 61.29032258064516%;"></a>
+        <a href="../Scalaz.html" title="Scalaz" class="chapter done new-chapter" data-progress="5" style="left: 61.29032258064516%;"></a>
     
-        <a href="./Utils.html" title="Utils" class="chapter  " data-progress="5.1" style="left: 64.51612903225806%;"></a>
+        <a href="../Utils.html" title="Utils" class="chapter done " data-progress="5.1" style="left: 64.51612903225806%;"></a>
     
-        <a href="./Tag Types.html" title="Tag Types" class="chapter  " data-progress="5.2" style="left: 67.74193548387096%;"></a>
+        <a href="../Tag Types.html" title="Tag Types" class="chapter done " data-progress="5.2" style="left: 67.74193548387096%;"></a>
     
-        <a href="./Memoization.html" title="Memoization" class="chapter  " data-progress="5.3" style="left: 70.96774193548387%;"></a>
+        <a href="../Memoization.html" title="Memoization" class="chapter done " data-progress="5.3" style="left: 70.96774193548387%;"></a>
     
-        <a href="./Failure.html" title="Failure" class="chapter  new-chapter" data-progress="6" style="left: 74.19354838709677%;"></a>
+        <a href="../Failure.html" title="Failure" class="chapter done new-chapter" data-progress="6" style="left: 74.19354838709677%;"></a>
     
-        <a href="./Collections.html" title="Collections" class="chapter  " data-progress="6.1" style="left: 77.41935483870968%;"></a>
+        <a href="../Collections.html" title="Collections" class="chapter done " data-progress="6.1" style="left: 77.41935483870968%;"></a>
     
-        <a href="./Object Init.html" title="Object Init" class="chapter  " data-progress="6.2" style="left: 80.64516129032258%;"></a>
+        <a href="../Object Init.html" title="Object Init" class="chapter done " data-progress="6.2" style="left: 80.64516129032258%;"></a>
     
-        <a href="./Implicit.html" title="Implicit" class="chapter  " data-progress="6.3" style="left: 83.87096774193549%;"></a>
+        <a href="../Implicit.html" title="Implicit" class="chapter done " data-progress="6.3" style="left: 83.87096774193549%;"></a>
     
-        <a href="./macros/README.html" title="Macros" class="chapter  new-chapter" data-progress="7" style="left: 87.09677419354838%;"></a>
+        <a href="../macros/README.html" title="Macros" class="chapter done new-chapter" data-progress="7" style="left: 87.09677419354838%;"></a>
     
-        <a href="./macros/macro_types.html" title="Macro Types" class="chapter  " data-progress="7.1" style="left: 90.3225806451613%;"></a>
+        <a href="../macros/macro_types.html" title="Macro Types" class="chapter done " data-progress="7.1" style="left: 90.3225806451613%;"></a>
     
-        <a href="./macros/macro_basics.html" title="Macro Basics" class="chapter  " data-progress="7.2" style="left: 93.54838709677419%;"></a>
+        <a href="../macros/macro_basics.html" title="Macro Basics" class="chapter done " data-progress="7.2" style="left: 93.54838709677419%;"></a>
     
-        <a href="./macros/context.html" title="Context" class="chapter  " data-progress="7.3" style="left: 96.7741935483871%;"></a>
+        <a href="../macros/context.html" title="Context" class="chapter  " data-progress="7.3" style="left: 96.7741935483871%;"></a>
     
-        <a href="./References.html" title="References" class="chapter  new-chapter" data-progress="8" style="left: 100%;"></a>
+        <a href="../References.html" title="References" class="chapter  new-chapter" data-progress="8" style="left: 100%;"></a>
     
     </div>
 </div>
 
                 <div class="page-inner">
                 
-                    <section class="normal" id="section-gitbook_11">
+                    <section class="normal" id="section-gitbook_31">
                     
-                        <h1 id="monads-and-monoids">Monads and Monoids</h1>
-<p>In functional programming there are these types called <code>Monad</code> and <code>Monoid</code> that let you build very complex things in a non-complex and composable way.  This section will reinvent these two types from bottom up.</p>
+                        <h1 id="macro-basics">Macro Basics</h1>
+<p>When defining a macro, there are always two functions created: user facing, compiler facing.  These two functions should always be mirror images of each other (name, input, output all match) with one exception; compiler facing wraps types.</p>
+<p>So what is the basic structor of a macro?</p>
+<h2 id="user-facing">User Facing</h2>
+<p>User facing API is very similar to writing a normal function but the implementation is missing and replaced by the keyword <code>macro</code> which references the compiler facing API.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">def</span> printparam(param: Any): Unit = macro printparam_impl
+</code></pre>
+<h2 id="compiler-facing">Compiler Facing</h2>
+<p>As stated above, the compiler facing API must be a mirror image of the user facing API, but wrap input/output in compiler types.</p>
+<pre><code class="lang-scala"><span class="hljs-keyword">def</span> printparam_impl(c: Context)(param: c.Expr[Any]): c.Expr[Unit] = {
+    <span class="hljs-keyword">import</span> c.universe._
+
+    reify { println(param.splice) }
+}
+</code></pre>
+<p>Here we see the second group of params looks a lot like the params from the user facing one:</p>
+<ul>
+<li>name is <code>param</code></li>
+<li>type is <code>c.Expr[Any]</code> and user was <code>Any</code></li>
+</ul>
+<h3 id="curried-api-">Curried API?</h3>
+<p>So whats up with the curried API?  The macro system was written following the cake pattern.  Because of this, you will need access to the <code>Context</code> of the compiler, and need to reference types from its <code>universe</code>.  All macro compiler functions will have the same boilerplate of taking the <code>Context</code> in the first param group, and importing its <code>universe</code> as its first statement.  This setup has one big drawback to it...</p>
+<h4 id="code-sharing">Code sharing</h4>
+<p>Scala&#39;s compiler will load the compiler function into its code, but nothing else.  This means that when the compiler runs your function, you won&#39;t have access to functions defined outside.  This is a big issue when building bigger macros, so a pattern has come up of not using macro functions but macro bundles (better name?).</p>
+<h3 id="macro-bundles">Macro Bundles</h3>
+<p>When defining the user facing API, you can tell it that the macro can be found inside a given class (<code>Foo.bar</code>).  This lets you define the <code>Context</code> as a param to the class and import its <code>universe</code> one time.  Each function inside this class will look like the function above, but with the first param group omitted.</p>
+<p>There is one issue with this though, macro bundles was only added in scala 2.11.  If you want support for this in 2.10 you will need a compiler plugin called <a href="http://docs.scala-lang.org/overviews/macros/paradise.html" target="_blank">Macro Paradise</a>. Need to test it, but I belive that users of the macro code that depends on macro paradise will also need to include macro paradise.  This still needs to be tested.</p>
 
                     
                     </section>
@@ -494,10 +519,10 @@
         </div>
 
         
-        <a href="./Cake.html" class="navigation navigation-prev"><i class="fa fa-angle-left"></i></a>
+        <a href="../macros/macro_types.html" class="navigation navigation-prev"><i class="fa fa-angle-left"></i></a>
         
         
-        <a href="./Functor.html" class="navigation navigation-next"><i class="fa fa-angle-right"></i></a>
+        <a href="../macros/context.html" class="navigation navigation-next"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
@@ -506,12 +531,12 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/mode-javascript.js"></script>
-        <script src="gitbook/jsrepl/jsrepl.js" id="jsrepl-script"></script>
-        <script src="gitbook/app.js"></script>
+        <script src="../gitbook/jsrepl/jsrepl.js" id="jsrepl-script"></script>
+        <script src="../gitbook/app.js"></script>
         
 
     
-    <script src="gitbook/plugins/gitbook-plugin-mixpanel/plugin.js"></script>
+    <script src="../gitbook/plugins/gitbook-plugin-mixpanel/plugin.js"></script>
     
 
     
@@ -519,7 +544,7 @@
     
 
     
-    <script src="gitbook/plugins/gitbook-plugin-mathjax/plugin.js"></script>
+    <script src="../gitbook/plugins/gitbook-plugin-mathjax/plugin.js"></script>
     
 
 <script>
